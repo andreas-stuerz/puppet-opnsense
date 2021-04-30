@@ -1,0 +1,5 @@
+#!/bin/sh
+test_path=${1:-}
+localhost_port=${2:-2222}
+pdk bundle exec rake litmus:reinstall_module && \
+RSPEC_DEBUG=1 TARGET_HOST=localhost:${localhost_port} pdk bundle exec rspec ${test_path}

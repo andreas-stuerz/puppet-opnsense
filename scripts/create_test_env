@@ -1,0 +1,13 @@
+#!/bin/sh
+provision_list=${1:-default}
+
+if [ "${provision_list}" == "-l" ]; then
+  echo "available provision tags:"
+  grep -E "^\S.*:" provision.yaml| sed s/://
+  exit 0
+fi
+
+pdk bundle install
+pdk bundle exec rake "litmus:provision_list[${provision_list}]"
+pdk bundle exec rake "litmus:install_agent[puppet7]"
+pdk bundle exec rake litmus:install_module

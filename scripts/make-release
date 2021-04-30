@@ -1,0 +1,19 @@
+#!/bin/bash
+version=${1:-}
+
+if [ -z "${version}" ]; then
+  echo "Please provide the version to release as argument to the script"
+  echo "$0 1.0.0"
+  exit 1
+fi
+
+pdk bundle exec rake "module:bump_to_version[${version}]"
+pdk bundle exec rake "strings:generate:reference"
+pdk bundle exec rake "changelog"
+git commit -a -m "Release $(cat metadata.json | jq -r '.version')"
+pdk bundle exec rake "module:clean"
+pdk bundle exec rake "module:tag"
+
+
+
+

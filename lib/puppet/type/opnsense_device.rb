@@ -11,18 +11,18 @@ Puppet::ResourceApi.register_type(
     https://docs.opnsense.org/development/how-tos/api.html#use-the-api
   @example
   opnsense_device { 'foo.example.com':
-    api_url    => 'https://foo.example.com/api',
+    url        => 'https://foo.example.com/api',
     api_key    => 'your_api_key',
     api_secret => Sensitive('your_api_secret'),
     timeout    => 60,
     ssl_verify => true,
-    ca         => /path/to/ca.pem',
+    ca         => '/path/to/ca.pem',
     ensure     => 'present',
   }
   
   This type provides Puppet with the capabilities to manage OPNSense device access data.
 EOS
-  features: [],
+  features: ['simple_get_filter', 'canonicalize'],
   attributes: {
     ensure: {
       type: 'Enum[present, absent]',
@@ -30,11 +30,12 @@ EOS
       default: 'present',
     },
     name: {
+        #type: 'Pattern[/\A[0-9A-Za-z.-]+/]',
       type: 'String',
       desc: 'The name of the OPNsense device you want to manage.',
       behaviour: :namevar,
     },
-    api_url: {
+    url: {
         type: 'String',
         desc: 'The api url of the OPNsense device.',
     },

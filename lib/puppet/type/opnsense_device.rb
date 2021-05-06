@@ -19,7 +19,7 @@ Puppet::ResourceApi.register_type(
     ca         => '/path/to/ca.pem',
     ensure     => 'present',
   }
-  
+#{'  '}
   This type provides Puppet with the capabilities to manage OPNSense device access data.
 EOS
   features: ['simple_get_filter', 'canonicalize'],
@@ -30,35 +30,34 @@ EOS
       default: 'present',
     },
     name: {
-        #type: 'Pattern[/\A[0-9A-Za-z.-]+/]',
-      type: 'String',
+      type: 'Pattern[/\A[0-9A-Za-z.-]+/]',
       desc: 'The name of the OPNsense device you want to manage.',
       behaviour: :namevar,
     },
     url: {
-        type: 'String',
+      type: 'String',
         desc: 'The api url of the OPNsense device.',
     },
     api_key: {
-        type: 'String',
+      type: 'String',
         desc: 'The api key from the generated key/secret pair.',
     },
     api_secret: {
-        type: 'Sensitive[String]',
+      type: 'Sensitive[String]',
         desc: 'The api secret from the generated key/secret pair.',
     },
     timeout: {
-        type: 'Integer',
+      type: 'Integer',
         desc: 'The timeout for API calls in seconds.',
         default: 60,
     },
     ssl_verify: {
-        type: 'Boolean',
+      type: 'Boolean',
         desc: 'The timeout for API calls in seconds.',
         default: true,
     },
     ca: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'The path to the ca bundle file for ssl verification.',
     },
   },

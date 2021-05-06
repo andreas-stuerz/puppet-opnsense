@@ -1,0 +1,3 @@
+#!/bin/bash
+pdk validate --parallel -a
+SIMPLECOV=yes pdk test unit

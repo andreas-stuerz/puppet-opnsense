@@ -7,6 +7,8 @@ if [ "${provision_list}" == "-l" ]; then
   exit 0
 fi
 
+rm -rf spec/fixtures/litmus_inventory.yaml
+
 pdk bundle install
 pdk bundle exec rake "litmus:provision_list[${provision_list}]"
 pdk bundle exec rake "litmus:install_agent[puppet7]"

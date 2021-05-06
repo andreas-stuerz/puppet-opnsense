@@ -23,7 +23,7 @@ describe 'opnsense_device' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      describe file("/root/.puppet-opnsense/opnsense.example.com-config.yaml") do
+      describe file('/root/.puppet-opnsense/opnsense.example.com-config.yaml') do
         it { is_expected.to be_file }
         its(:content) { is_expected.to match %r{api_key: your_api_key} }
         its(:content) { is_expected.to match %r{api_secret: your_api_secret} }
@@ -51,7 +51,7 @@ describe 'opnsense_device' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      describe file("/root/.puppet-opnsense/opnsense.example.com-config.yaml") do
+      describe file('/root/.puppet-opnsense/opnsense.example.com-config.yaml') do
         it { is_expected.to be_file }
         its(:content) { is_expected.to match %r{api_key: your_api_key2} }
         its(:content) { is_expected.to match %r{api_secret: your_api_secret2} }
@@ -60,7 +60,6 @@ describe 'opnsense_device' do
         its(:content) { is_expected.to match %r{ssl_verify: false} }
         its(:content) { is_expected.to match %r{ca: "/path/to/other/ca.pem"} }
       end
-
     end
 
     describe 'delete device configuration' do
@@ -73,10 +72,9 @@ describe 'opnsense_device' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      describe file("/root/.puppet-opnsense/opnsense.example.com-config.yaml") do
+      describe file('/root/.puppet-opnsense/opnsense.example.com-config.yaml') do
         it { is_expected.not_to exist }
       end
     end
-
   end
 end

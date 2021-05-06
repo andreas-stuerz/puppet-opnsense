@@ -24,7 +24,7 @@ RSpec.describe 'the opnsense_device type' do
           timeout: 60,
           ssl_verify: true,
           ca: '/path/to/ca.pem',
-      )
+        )
     end
 
     it 'accepts a name' do
@@ -61,8 +61,5 @@ RSpec.describe 'the opnsense_device type' do
       device[:ca] = '/path/to/other/ca.pem'
       expect(device[:ca]).to eq('/path/to/other/ca.pem')
     end
-
   end
-
-
 end

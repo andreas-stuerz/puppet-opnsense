@@ -1,11 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'opnsense_device' do
-  before(:all) do
-  end
-  after(:all) do
-  end
-
   context 'for device opnsense.example.com' do
     describe 'add device configuration' do
       pp = <<-MANIFEST

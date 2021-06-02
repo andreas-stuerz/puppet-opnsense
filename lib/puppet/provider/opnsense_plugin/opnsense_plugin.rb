@@ -4,7 +4,14 @@ require 'puppet/resource_api/simple_provider'
 
 # Implementation for the opnsense_plugin type using the Resource API.
 class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::ResourceApi::SimpleProvider
+  def opn_cli_cmd(context, *args)
+    args.unshift('opn-cli')
+    Puppet::Util::Execution.execute(args, failonfail: true,)
+  end
+
   def get(context)
+    pp context
+    #opn_cli_cmd([])
     context.debug('Returning pre-canned example data')
     [
       {

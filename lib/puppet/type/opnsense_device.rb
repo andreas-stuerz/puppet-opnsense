@@ -10,8 +10,8 @@ Puppet::ResourceApi.register_type(
   @see
     https://docs.opnsense.org/development/how-tos/api.html#use-the-api
   @example
-  opnsense_device { 'foo.example.com':
-    url        => 'https://foo.example.com/api',
+  opnsense_device { 'opnsense.example.com':
+    url        => 'https://opnsense.example.com/api',
     api_key    => 'your_api_key',
     api_secret => Sensitive('your_api_secret'),
     timeout    => 60,
@@ -19,7 +19,7 @@ Puppet::ResourceApi.register_type(
     ca         => '/path/to/ca.pem',
     ensure     => 'present',
   }
-#{'  '}
+
   This type provides Puppet with the capabilities to manage OPNSense device access data.
 EOS
   features: ['simple_get_filter', 'canonicalize'],

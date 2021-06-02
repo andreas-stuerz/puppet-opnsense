@@ -5,7 +5,6 @@ require 'yaml'
 
 ensure_module_defined('Puppet::Provider::OpnsenseDevice')
 require 'puppet/provider/opnsense_device/opnsense_device'
-# require 'puppet/provider/opnsense_device/sensitive'
 
 RSpec.describe Puppet::Provider::OpnsenseDevice::OpnsenseDevice do
   subject(:provider) { described_class.new }

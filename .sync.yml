@@ -7,10 +7,15 @@
 # for the default values.
 ---
 spec/spec_helper.rb:
+  spec_overrides:
+    - require 'spec_helper_local'
+  mock_with: ':rspec'
   coverage_report: true
   minimum_code_coverage_percentage: 90
 Gemfile:
   optional:
     ":development":
       - gem: puppet-resource_api
+      - gem: fakefs
+
 

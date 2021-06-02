@@ -1,0 +1,17 @@
+---
+version: 2
+groups:
+- name: docker_nodes
+  targets: []
+- name: ssh_nodes
+  targets:
+  - uri: 127.0.0.1:2222
+    config:
+      transport: ssh
+      ssh:
+        user: root
+        password: opnsense
+        host-key-check: false
+        login-shell: sh
+- name: winrm_nodes
+  targets: []

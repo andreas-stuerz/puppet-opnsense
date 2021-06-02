@@ -1,4 +1,7 @@
 ---
 default:
   provisioner: docker
-  images: ['litmusimage/centos:7']
+  images: [ 'litmusimage/centos:7' ]
+
+
+

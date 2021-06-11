@@ -55,16 +55,6 @@ jobs:
       PUPPET_GEM_VERSION: ${{ matrix.puppet_version }}
 
     steps:
-      - run: |
-          echo "SANITIZED_PUPPET_VERSION=$(echo '${{ matrix.puppet_version }}' | sed 's/~> //g')" >> $GITHUB_ENV
-
-      - run: |
-          echo 'puppet_version=${{ env.SANITIZED_PUPPET_VERSION }}' >> $BUILDEVENT_FILE
-
-      - name: "Honeycomb: Start first step"
-        run: |
-          echo "STEP_ID=${{ env.SANITIZED_PUPPET_VERSION }}-spec" >> $GITHUB_ENV
-          echo STEP_START=$(date +%s) >> $GITHUB_ENV
 
       - name: Checkout Source
         uses: actions/checkout@v2
@@ -75,12 +65,6 @@ jobs:
           ruby-version: ${{matrix.ruby_version}}
           bundler-cache: true
 
-      - name: Print bundle environment
-        run: |
-          echo ::group::bundler environment
-          buildevents cmd $TRACE_ID $STEP_ID 'bundle env' -- bundle env
-          echo ::endgroup::
-
       - name: Run Static & Syntax Tests
         run: |
           bundle exec rake syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop
@@ -88,3 +72,8 @@ jobs:
       - name: Run parallel_spec tests
         run: |
           bundle exec rake parallel_spec
+
+      - name: Run test coverage
+        run: |
+          bundle exec rake spec:simplecov
+

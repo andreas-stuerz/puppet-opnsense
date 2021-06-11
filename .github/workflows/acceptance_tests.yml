@@ -1,0 +1,94 @@
+name: "Acceptance Tests"
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  setup_matrix:
+    name: "Setup Test Matrix"
+    runs-on: macos-10.15
+    outputs:
+      matrix: ${{ steps.get-matrix.outputs.matrix }}
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: Activate Ruby 2.7
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "2.7"
+        bundler-cache: true
+
+    - name: Setup Acceptance Test Matrix
+      id: get-matrix
+      run: |
+          bundle exec matrix_from_metadata_v2
+
+  Acceptance:
+    name: "${{matrix.platforms.label}}, ${{matrix.collection}}"
+    needs:
+      - setup_matrix
+    if: ${{ needs.setup_matrix.outputs.matrix != '{}' }}
+
+    runs-on: macos-10.15
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.setup_matrix.outputs.matrix)}}
+
+    env:
+      BUILDEVENT_FILE: '../buildevents.txt'
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: Activate Ruby 2.7
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "2.7"
+        bundler-cache: true
+
+    - name: Provision test environment
+      run: |
+        bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
+        echo ::group::=== REQUEST ===
+        cat request.json || true
+        echo
+        echo ::endgroup::
+        echo ::group::=== INVENTORY ===
+        if [ -f 'spec/fixtures/litmus_inventory.yaml' ];
+        then
+          FILE='spec/fixtures/litmus_inventory.yaml'
+        elif [ -f 'inventory.yaml' ];
+        then
+          FILE='inventory.yaml'
+        fi
+        sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
+        echo ::endgroup::
+
+    - name: Install agent
+      run: |
+        bundle exec rake 'litmus:install_agent[${{ matrix.collection }}]'
+
+    - name: Install module
+      run: |
+        bundle exec rake 'litmus:install_module'
+
+    - name: Run acceptance tests
+      run: |
+        bundle exec rake 'litmus:acceptance:parallel'
+
+    - name: Remove test environment
+      if: ${{ always() }}
+      continue-on-error: true
+      run: |
+        if [[ -f inventory.yaml || -f spec/fixtures/litmus_inventory.yaml ]]; then
+          bundle exec rake 'litmus:tear_down'
+          echo ::group::=== REQUEST ===
+          cat request.json || true
+          echo
+          echo ::endgroup::
+        fi

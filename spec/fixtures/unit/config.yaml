@@ -1,0 +1,7 @@
+---
+api_key: api_secret_unit_test
+api_secret: api_secret_unit_test
+url: https://127.0.0.1:10443/api
+timeout: 60
+ssl_verify: false
+ca: /fixtures/opn-cli/ca.pem

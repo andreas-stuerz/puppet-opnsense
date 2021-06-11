@@ -1,0 +1,7 @@
+---
+api_key: api_key
+api_secret: api_secret2
+url: https://127.0.0.1/api
+timeout: 60
+ssl_verify: true
+ca: /path/to/ca

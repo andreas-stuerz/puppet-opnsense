@@ -24,12 +24,12 @@ RSpec.describe 'the opnsense_plugin type' do
           timeout: 60,
           ssl_verify: true,
           ca: '/path/to/ca.pem',
-          )
+        )
 
       Puppet::Type.type(:opnsense_plugin).new(
           name: 'os-haproxy',
           device: 'opnsense.example.com',
-          )
+        )
     end
 
     it 'accepts a name' do

@@ -13,5 +13,6 @@ groups:
         password: opnsense
         host-key-check: false
         login-shell: sh
+        connect-timeout: 60
 - name: winrm_nodes
   targets: []

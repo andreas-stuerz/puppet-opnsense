@@ -1,3 +1,4 @@
+
 if ENV['COVERAGE'] == 'yes'
   require 'simplecov'
   require 'simplecov-console'
@@ -24,5 +25,12 @@ if ENV['COVERAGE'] == 'yes'
       # system returns true if exit status is 0, which with git-check-ignore means file is ignored
       system("git check-ignore --quiet #{f.filename}")
     end
+  end
+end
+
+def write_yaml(path, data, mode = 0o600)
+  File.open(path, 'w') do |file|
+    file.write(YAML.dump(data))
+    file.chmod(mode)
   end
 end

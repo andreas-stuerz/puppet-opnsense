@@ -20,12 +20,14 @@ describe 'opnsense_device' do
 
       describe file('/root/.puppet-opnsense/opnsense.example.com-config.yaml') do
         it { is_expected.to be_file }
-        its(:content) { is_expected.to match %r{api_key: your_api_key} }
-        its(:content) { is_expected.to match %r{api_secret: your_api_secret} }
-        its(:content) { is_expected.to match %r{url: https://opnsense.example.com/api} }
-        its(:content) { is_expected.to match %r{timeout: 60} }
-        its(:content) { is_expected.to match %r{ssl_verify: true} }
-        its(:content) { is_expected.to match %r{ca: "/path/to/ca.pem"} }
+        its(:content) do
+          is_expected.to match %r{api_key: your_api_key}
+          is_expected.to match %r{api_secret: your_api_secret}
+          is_expected.to match %r{url: https://opnsense.example.com/api}
+          is_expected.to match %r{timeout: 60}
+          is_expected.to match %r{ssl_verify: true}
+          is_expected.to match %r{ca: "/path/to/ca.pem"}
+        end
       end
     end
 
@@ -48,12 +50,14 @@ describe 'opnsense_device' do
 
       describe file('/root/.puppet-opnsense/opnsense.example.com-config.yaml') do
         it { is_expected.to be_file }
-        its(:content) { is_expected.to match %r{api_key: your_api_key2} }
-        its(:content) { is_expected.to match %r{api_secret: your_api_secret2} }
-        its(:content) { is_expected.to match %r{url: https://opnsense.example.de/api} }
-        its(:content) { is_expected.to match %r{timeout: 40} }
-        its(:content) { is_expected.to match %r{ssl_verify: false} }
-        its(:content) { is_expected.to match %r{ca: "/path/to/other/ca.pem"} }
+        its(:content) do
+          is_expected.to match %r{api_key: your_api_key2}
+          is_expected.to match %r{api_secret: your_api_secret2}
+          is_expected.to match %r{url: https://opnsense.example.de/api}
+          is_expected.to match %r{timeout: 40}
+          is_expected.to match %r{ssl_verify: false}
+          is_expected.to match %r{ca: "/path/to/other/ca.pem"}
+        end
       end
     end
 

@@ -1,93 +1,56 @@
 # frozen_string_literal: true
 
-require 'puppet/resource_api/simple_provider'
+# require 'puppet/resource_api/simple_provider'
+require_relative '../opnsense_provider'
 require 'yaml'
 require 'fileutils'
 require 'puppet/provider/opnsense_device/sensitive'
 
 # Implementation for the opnsense_device type using the Resource API.
-class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::ResourceApi::SimpleProvider
-  def get_config_basedir
-    File.expand_path('~/.puppet-opnsense')
+class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::OpnsenseProvider
+  def get(_context, filter)
+    device_names = get_device_names_by_filter(filter)
+    get_devices(device_names)
   end
 
-  def get_suffix
-    '-config.yaml'
-  end
-
-  def gen_pw(pw)
-    Puppet::Provider::OpnsenseDevice::Sensitive.new(pw)
-  end
-
-  def extract_pw(sensitive)
-    sensitive.unwrap
-  end
-
-  def get_config_path(device_name)
-    File.join(get_config_basedir.to_s, "#{File.basename(device_name)}#{get_suffix}")
-  end
-
-  def write_yaml(path, data)
-    # ensure config directory exists
-    File.open(path, 'w') do |file|
-      file.write(YAML.dump(data))
-      file.chmod(0o600)
+  def get_device_names_by_filter(filter)
+    if filter.empty?
+      return get_configured_devices
     end
+    filter
+  end
+
+  def get_devices(device_names)
+    result = []
+    device_names.each do |device_name|
+      config_path = get_config_path(device_name)
+      next unless File.exist?(config_path)
+      data = read_yaml(config_path)
+      device_resource = create_opnsense_device(device_name, data)
+      result.push(device_resource)
+    end
+    result
+  end
+
+  def create_opnsense_device(device_name, data)
+    {
+      ensure: 'present',
+        name: device_name,
+        api_key: data['api_key'],
+        api_secret: gen_pw(data['api_secret']),
+        url: data['url'],
+        timeout: data['timeout'],
+        ssl_verify: data['ssl_verify'],
+        ca: data['ca'].nil? ? nil : data['ca'],
+    }
   end
 
   def read_yaml(path)
     YAML.safe_load(File.read(path))
   end
 
-  def delete_config(name)
-    path = get_config_path(name)
-    FileUtils.rm(path, force: true)
-  end
-
-  def write_config(name, should)
-    basedir = get_config_basedir
-    path = get_config_path(name)
-    yaml_data = {
-      'api_key' => should[:api_key],
-        'api_secret' => extract_pw(should[:api_secret]),
-        'url' => should[:url],
-        'timeout' => should[:timeout],
-        'ssl_verify' => should[:ssl_verify],
-        'ca' => should[:ca],
-    }
-    Dir.mkdir(basedir, 0o700) unless File.exist?(basedir)
-    write_yaml(path, yaml_data)
-  end
-
-  def get(_context, filter_names = [])
-    result = []
-    names = filter_names.empty? ? [] : filter_names
-
-    if filter_names.empty?
-      basedir = get_config_basedir
-      Dir.glob("#{basedir}/*#{get_suffix}").each do |path|
-        name = File.basename(path).gsub(%r{#{get_suffix}$}, '')
-        names.push(name)
-      end
-    end
-
-    names.each do |name|
-      path = get_config_path(name)
-
-      next unless File.readable?(path)
-      data = read_yaml(path)
-      result.push(
-          ensure: 'present',
-          name: name,
-          api_key: data['api_key'],
-          api_secret: gen_pw(data['api_secret']),
-          url: data['url'],
-          timeout: data['timeout'],
-          ssl_verify: data['ssl_verify'],
-          ca: data['ca'].nil? ? nil : data['ca'],
-        )
-    end
-    result
+  def gen_pw(pw)
+    Puppet::Provider::OpnsenseDevice::Sensitive.new(pw)
   end
 
   def create(_context, name, should)
@@ -98,8 +61,43 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::ResourceApi::Si
     write_config(name, should)
   end
 
+  def ensure_dir(path, mode = 0o700)
+    Dir.mkdir(path, mode) unless File.exist?(path)
+  end
+
+  def write_config(name, should)
+    basedir = get_config_basedir
+    ensure_dir(basedir)
+    config_path = get_config_path(name)
+    yaml_data = {
+      'api_key' => should[:api_key],
+        'api_secret' => extract_pw(should[:api_secret]),
+        'url' => should[:url],
+        'timeout' => should[:timeout],
+        'ssl_verify' => should[:ssl_verify],
+        'ca' => should[:ca],
+    }
+    write_yaml(config_path, yaml_data)
+  end
+
+  def extract_pw(sensitive)
+    sensitive.unwrap
+  end
+
+  def write_yaml(path, data, mode = 0o600)
+    File.open(path, 'w') do |file|
+      file.write(YAML.dump(data))
+      file.chmod(mode)
+    end
+  end
+
   def delete(_context, name)
     delete_config(name)
+  end
+
+  def delete_config(name)
+    path = get_config_path(name)
+    FileUtils.rm(path, force: true)
   end
 
   def canonicalize(_context, resources)

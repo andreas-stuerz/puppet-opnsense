@@ -1,3 +1,2 @@
 #!/bin/bash
 pdk validate --parallel -a
-COVERAGE="yes" pdk test unit

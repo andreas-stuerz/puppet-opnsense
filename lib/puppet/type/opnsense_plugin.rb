@@ -5,8 +5,8 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_plugin',
   docs: <<-EOS,
-  @summary 
-    Manage installed opnsense plugins 
+  @summary#{' '}
+    Manage installed opnsense plugins#{' '}
   @see
     https://docs.opnsense.org/plugins.html
   @example
@@ -17,10 +17,18 @@ Puppet::ResourceApi.register_type(
 
   This type provides Puppet with the capabilities to manage opnsense plugins.
 
-  **Autorequires**:
-  * `opnsense_device[foo.example.com]`
 EOS
-  features: [],
+  features: ['simple_get_filter'],
+  title_patterns: [
+    {
+      pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
+        desc: 'Where the name of the plugin and the device are provided with a @',
+    },
+    {
+      pattern: %r{^(?<name>.*)$},
+        desc: 'Where only the name is provided',
+    },
+  ],
   attributes: {
     ensure: {
       type: 'Enum[present, absent]',
@@ -33,11 +41,9 @@ EOS
       behaviour: :namevar,
     },
     device: {
-        type: 'String',
+      type: 'String',
         desc: 'The name of the opnsense_device type you want to manage.',
+        behaviour: :namevar,
     },
-  },
-  autorequire: {
-      opnsense_device: '$device', # evaluates to the value of the `device` attribute
   },
 )

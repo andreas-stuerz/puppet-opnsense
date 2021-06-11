@@ -10,43 +10,75 @@ RSpec.describe Puppet::Provider::OpnsensePlugin::OpnsensePlugin do
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
 
-  describe '#get' do
-    it 'processes resources' do
-      expect(context).to receive(:debug).with('Returning pre-canned example data')
-      expect(provider.get(context)).to eq [
-        {
-          name: 'foo',
-          ensure: 'present',
-        },
-        {
-          name: 'bar',
-          ensure: 'present',
-        },
-      ]
+  let(:devices) { ['opnsense.example.com', 'opnsense2.example.com'] }
+  let(:plugins_device_1) { ['os-acme-client'] }
+  let(:plugins_device_2) { ['os-clamav'] }
+
+  describe 'get' do
+    context 'with empty filter' do
+      it 'returns all resources' do
+        expect(Dir).to receive(:glob).and_return(devices)
+        expect(Puppet::Util::Execution).to receive(:execute).and_return("os-acme-client\n").twice
+
+        expect(provider.get(context, [])).to eq [
+          {
+            title: 'os-acme-client@opnsense.example.com',
+            name: 'os-acme-client',
+            device: 'opnsense.example.com',
+            ensure: 'present',
+          },
+          {
+            title: 'os-acme-client@opnsense2.example.com',
+            name: 'os-acme-client',
+            device: 'opnsense2.example.com',
+            ensure: 'present',
+          },
+        ]
+      end
+    end
+
+    context 'with filter name: os-virtualbox, device: opnsense.example.com' do
+      it 'returns resource os-virtualbox@opnsense.example.com' do
+        expect(Puppet::Util::Execution).to receive(:execute).and_return("os-acme-client\n")
+
+        expect(provider.get(context, [{ name: 'os-virtualbox', device: 'opnsense.example.com' }])).to eq [
+          {
+            title: 'os-acme-client@opnsense.example.com',
+              name: 'os-acme-client',
+              device: 'opnsense.example.com',
+              ensure: 'present',
+          },
+        ]
+      end
     end
   end
 
-  describe 'create(context, name, should)' do
+  describe 'create' do
     it 'creates the resource' do
-      expect(context).to receive(:notice).with(%r{\ACreating 'a'})
-
-      provider.create(context, 'a', name: 'a', ensure: 'present')
+      expect(Puppet::Util::Execution).to receive(:execute).and_return("ok\n")
+      provider.create(context, 'os-nginx@opnsense.example.com',
+                      name: 'os-nginx',
+                      device: 'opnsense.example.com',
+                      ensure: 'present')
     end
   end
 
-  describe 'update(context, name, should)' do
+  describe 'update' do
     it 'updates the resource' do
-      expect(context).to receive(:notice).with(%r{\AUpdating 'foo'})
-
-      provider.update(context, 'foo', name: 'foo', ensure: 'present')
+      expect(Puppet::Util::Execution).to receive(:execute).and_return("ok\n")
+      provider.update(context, 'os-nginx@opnsense.example.com',
+                      name: 'os-nginx',
+                      device: 'opnsense2.example.com',
+                      ensure: 'present')
     end
   end
 
-  describe 'delete(context, name)' do
+  describe 'delete' do
     it 'deletes the resource' do
-      expect(context).to receive(:notice).with(%r{\ADeleting 'foo'})
-
-      provider.delete(context, 'foo')
+      expect(Puppet::Util::Execution).to receive(:execute).and_return("ok\n")
+      provider.delete(context,
+                      name: 'os-nginx',
+                      device: 'opnsense.example.com')
     end
   end
 end

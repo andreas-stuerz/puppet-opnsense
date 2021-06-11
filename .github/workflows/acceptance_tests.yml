@@ -61,6 +61,7 @@ jobs:
 
     - name: Provision test environment
       run: |
+        eval $(docker-machine env default)
         bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
         echo ::group::=== REQUEST ===
         cat request.json || true

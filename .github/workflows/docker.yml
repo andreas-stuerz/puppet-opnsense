@@ -34,7 +34,7 @@ jobs:
     - name: Provision test environment
       run: |
         eval $(docker-machine env default)
-        bundle exec rake 'litmus:provision[acceptance]'
+        bundle exec rake 'litmus:provision_list[acceptance]'
         echo ::group::=== REQUEST ===
         cat request.json || true
         echo

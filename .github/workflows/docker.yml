@@ -56,14 +56,17 @@ jobs:
 
     - name: Install agent
       run: |
+        eval $(docker-machine env default)
         bundle exec rake 'litmus:install_agent[puppet7]'
 
     - name: Install module
       run: |
+        eval $(docker-machine env default)
         bundle exec rake 'litmus:install_module'
 
     - name: Run acceptance tests
       run: |
+        eval $(docker-machine env default)
         bundle exec rake 'litmus:acceptance:parallel'
 
     - name: Remove test environment
@@ -71,6 +74,7 @@ jobs:
       continue-on-error: true
       run: |
         if [[ -f inventory.yaml || -f spec/fixtures/litmus_inventory.yaml ]]; then
+          eval $(docker-machine env default)
           bundle exec rake 'litmus:tear_down'
           echo ::group::=== REQUEST ===
           cat request.json || true

@@ -50,6 +50,10 @@ jobs:
         sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
         echo ::endgroup::
 
+    - name: docker ps
+      run: |
+        docker ps
+
     - name: Install agent
       run: |
         bundle exec rake 'litmus:install_agent[puppet7]'

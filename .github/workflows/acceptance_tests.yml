@@ -13,13 +13,7 @@ jobs:
       matrix: ${{ steps.get-matrix.outputs.matrix }}
 
     steps:
-    - name: Install docker
-      run: |
-        mkdir -p ~/.docker/machine/cache
-        curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
-        brew install docker docker-machine
-        docker-machine create --driver virtualbox default
-        docker-machine env default
+
 
     - name: Checkout Source
       uses: actions/checkout@v2
@@ -50,6 +44,14 @@ jobs:
       BUILDEVENT_FILE: '../buildevents.txt'
 
     steps:
+    - name: Install docker
+      run: |
+        mkdir -p ~/.docker/machine/cache
+        curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
+        brew install docker docker-machine
+        docker-machine create --driver virtualbox default
+        docker-machine env default
+
     - name: Checkout Source
       uses: actions/checkout@v2
 
@@ -61,7 +63,7 @@ jobs:
 
     - name: Provision test environment
       run: |
-        eval $(/usr/local/opt/docker-machine/bin/docker-machine env default)
+        eval $(docker-machine env default)
         bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
         echo ::group::=== REQUEST ===
         cat request.json || true

@@ -52,6 +52,7 @@ jobs:
 
     - name: docker ps
       run: |
+        eval $(docker-machine env default)
         docker ps
 
     - name: Install agent

@@ -6,40 +6,12 @@ on:
     branches: [ main ]
 
 jobs:
-  setup_matrix:
-    name: "Setup Test Matrix"
-    runs-on: macos-10.15
-    outputs:
-      matrix: ${{ steps.get-matrix.outputs.matrix }}
-
-    steps:
-    - name: Checkout Source
-      uses: actions/checkout@v2
-
-    - name: Activate Ruby 2.7
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "2.7"
-        bundler-cache: true
-
-    - name: Setup Acceptance Test Matrix
-      id: get-matrix
-      run: |
-          bundle exec matrix_from_metadata_v2
 
   Acceptance:
-    name: "${{matrix.platforms.label}}, ${{matrix.collection}}"
-    needs:
-      - setup_matrix
-    if: ${{ needs.setup_matrix.outputs.matrix != '{}' }}
-
+    name: "CentOS-7, puppet7-nightly"
     runs-on: macos-10.15
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.setup_matrix.outputs.matrix)}}
-
-    env:
-      BUILDEVENT_FILE: '../buildevents.txt'
 
     steps:
     - name: Install docker
@@ -62,7 +34,7 @@ jobs:
     - name: Provision test environment
       run: |
         eval $(docker-machine env default)
-        bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
+        bundle exec rake 'litmus:provision[acceptance]'
         echo ::group::=== REQUEST ===
         cat request.json || true
         echo
@@ -80,7 +52,7 @@ jobs:
 
     - name: Install agent
       run: |
-        bundle exec rake 'litmus:install_agent[${{ matrix.collection }}]'
+        bundle exec rake 'litmus:install_agent[puppet7]'
 
     - name: Install module
       run: |

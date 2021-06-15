@@ -2,6 +2,9 @@
 default:
   provisioner: docker
   images: [ 'litmusimage/centos:7' ]
+acceptance:
+  provisioner: docker_exp
+  images: [ 'litmusimage/centos:7' ]
 
 
 

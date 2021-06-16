@@ -12,6 +12,11 @@ rm -rf spec/fixtures/litmus_inventory.yaml
 
 # distribute opn-cli config from dist files
 cp spec/fixtures/acceptance/opn-cli/conf.yaml.dist spec/fixtures/acceptance/opn-cli/conf.yaml
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  MY_IP=$( ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2|head -n1)
+  sed -i '' "s/<IP>/${MY_IP}/g" spec/fixtures/acceptance/opn-cli/conf.yaml
+fi
+
 cp spec/fixtures/acceptance/opn-cli/ca.pem.dist spec/fixtures/acceptance/opn-cli/ca.pem
 
 # set opnsense with vagrant

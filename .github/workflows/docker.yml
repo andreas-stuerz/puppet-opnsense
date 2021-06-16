@@ -8,7 +8,7 @@ on:
 jobs:
 
   Acceptance:
-    name: "CentOS-7, puppet7-nightly"
+    name: "OPNsense 21.6, CentOS-7, puppet7-nightly"
     runs-on: macos-10.15
     strategy:
       fail-fast: false
@@ -31,14 +31,39 @@ jobs:
         ruby-version: "2.7"
         bundler-cache: true
 
-    - name: Provision test environment
+    - name: Cache Vagrant boxes
+      uses: actions/cache@v2
+      with:
+        path: ~/.vagrant.d/boxes
+        key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+        restore-keys: |
+          ${{ runner.os }}-vagrant-
+
+    - name: Show Vagrant version
+      run: vagrant --version
+
+    - name: Run vagrant up
+      run: vagrant up
+
+    - name: show ip config for host
+      run: |
+        ifconfig
+
+    - name: Get NAT IP for vagrant box
+      run: |
+        echo "MY_IP=$( ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2|head -n1)" >> $GITHUB_ENV
+
+    - name: Deploy connection information for vagrant box
+      run: |
+        cp spec/fixtures/acceptance/opn-cli/conf.yaml.dist spec/fixtures/acceptance/opn-cli/conf.yaml
+        sed -i '' "s/<IP>/${{ env.MY_IP }}/g" spec/fixtures/acceptance/opn-cli/conf.yaml
+        echo ::group::=== OPN-CLI CONFIG ===
+        cat spec/fixtures/acceptance/opn-cli/conf.yaml
+
+    - name: Provision litmus docker container
       run: |
         eval $(docker-machine env default)
         bundle exec rake 'litmus:provision_list[acceptance]'
-        echo ::group::=== REQUEST ===
-        cat request.json || true
-        echo
-        echo ::endgroup::
         echo ::group::=== INVENTORY ===
         if [ -f 'spec/fixtures/litmus_inventory.yaml' ];
         then
@@ -50,17 +75,12 @@ jobs:
         sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
         echo ::endgroup::
 
-    - name: docker ps
-      run: |
-        eval $(docker-machine env default)
-        docker ps
-
-    - name: Install agent
+    - name: Install puppet agent
       run: |
         eval $(docker-machine env default)
         bundle exec rake 'litmus:install_agent[puppet7]'
 
-    - name: Install module
+    - name: Install puppet module
       run: |
         eval $(docker-machine env default)
         bundle exec rake 'litmus:install_module'
@@ -77,8 +97,4 @@ jobs:
         if [[ -f inventory.yaml || -f spec/fixtures/litmus_inventory.yaml ]]; then
           eval $(docker-machine env default)
           bundle exec rake 'litmus:tear_down'
-          echo ::group::=== REQUEST ===
-          cat request.json || true
-          echo
-          echo ::endgroup::
         fi

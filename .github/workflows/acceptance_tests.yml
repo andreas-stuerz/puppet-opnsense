@@ -1,103 +1,106 @@
 name: "Acceptance Tests"
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
   pull_request:
     branches: [ main ]
 
 jobs:
-  setup_matrix:
-    name: "Setup Test Matrix"
-    runs-on: macos-10.15
-    outputs:
-      matrix: ${{ steps.get-matrix.outputs.matrix }}
-
-    steps:
-    - name: Checkout Source
-      uses: actions/checkout@v2
-
-    - name: Activate Ruby 2.7
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "2.7"
-        bundler-cache: true
-
-    - name: Setup Acceptance Test Matrix
-      id: get-matrix
-      run: |
-          bundle exec matrix_from_metadata_v2
 
   Acceptance:
-    name: "${{matrix.platforms.label}}, ${{matrix.collection}}"
-    needs:
-      - setup_matrix
-    if: ${{ needs.setup_matrix.outputs.matrix != '{}' }}
-
+    name: "OPNsense 21.6, CentOS-7, puppet7-nightly"
     runs-on: macos-10.15
     strategy:
       fail-fast: false
-      matrix: ${{fromJson(needs.setup_matrix.outputs.matrix)}}
-
-    env:
-      BUILDEVENT_FILE: '../buildevents.txt'
 
     steps:
-    - name: Install docker
-      run: |
-        mkdir -p ~/.docker/machine/cache
-        curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
-        brew install docker docker-machine
-        docker-machine create --driver virtualbox default
-        docker-machine env default
+      - name: Install docker
+        run: |
+          mkdir -p ~/.docker/machine/cache
+          curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
+          brew install docker docker-machine
+          docker-machine create --driver virtualbox default
+          docker-machine env default
 
-    - name: Checkout Source
-      uses: actions/checkout@v2
+      - name: Checkout Source
+        uses: actions/checkout@v2
 
-    - name: Activate Ruby 2.7
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: "2.7"
-        bundler-cache: true
+      - name: Activate Ruby 2.7
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "2.7"
+          bundler-cache: true
 
-    - name: Provision test environment
-      run: |
-        eval $(docker-machine env default)
-        bundle exec rake 'litmus:provision[${{matrix.platforms.provider}},${{ matrix.platforms.image }}]'
-        echo ::group::=== REQUEST ===
-        cat request.json || true
-        echo
-        echo ::endgroup::
-        echo ::group::=== INVENTORY ===
-        if [ -f 'spec/fixtures/litmus_inventory.yaml' ];
-        then
-          FILE='spec/fixtures/litmus_inventory.yaml'
-        elif [ -f 'inventory.yaml' ];
-        then
-          FILE='inventory.yaml'
-        fi
-        sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
-        echo ::endgroup::
+      - name: Cache Vagrant boxes
+        uses: actions/cache@v2
+        with:
+          path: ~/.vagrant.d/boxes
+          key: ${{ runner.os }}-vagrant-${{ hashFiles('Vagrantfile') }}
+          restore-keys: |
+            ${{ runner.os }}-vagrant-
 
-    - name: Install agent
-      run: |
-        bundle exec rake 'litmus:install_agent[${{ matrix.collection }}]'
+      - name: Show Vagrant version
+        run: vagrant --version
 
-    - name: Install module
-      run: |
-        bundle exec rake 'litmus:install_module'
+      - name: Run vagrant up
+        run: vagrant up
 
-    - name: Run acceptance tests
-      run: |
-        bundle exec rake 'litmus:acceptance:parallel'
+      - name: show ip config for host
+        run: |
+          ifconfig
 
-    - name: Remove test environment
-      if: ${{ always() }}
-      continue-on-error: true
-      run: |
-        if [[ -f inventory.yaml || -f spec/fixtures/litmus_inventory.yaml ]]; then
-          bundle exec rake 'litmus:tear_down'
-          echo ::group::=== REQUEST ===
-          cat request.json || true
-          echo
+      - name: Get NAT IP for vagrant box
+        run: |
+          echo "MY_IP=$( ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2|head -n1)" >> $GITHUB_ENV
+
+      - name: Deploy connection information for vagrant box
+        run: |
+          cp spec/fixtures/acceptance/opn-cli/conf.yaml.dist spec/fixtures/acceptance/opn-cli/conf.yaml
+          sed -i '' "s/<IP>/${{ env.MY_IP }}/g" spec/fixtures/acceptance/opn-cli/conf.yaml
+          cp spec/fixtures/acceptance/opn-cli/ca.pem.dist spec/fixtures/acceptance/opn-cli/ca.pem
+          echo ::group::=== OPN-CLI CONFIG ===
+          cat spec/fixtures/acceptance/opn-cli/conf.yaml
+          echo ::group::=== OPN-CLI CERT ===
+          cat spec/fixtures/acceptance/opn-cli/ca.pem
+
+      - name: Provision litmus docker container
+        run: |
+          eval $(docker-machine env default)
+          bundle exec rake 'litmus:provision_list[acceptance]'
+          echo ::group::=== INVENTORY ===
+          if [ -f 'spec/fixtures/litmus_inventory.yaml' ];
+          then
+            FILE='spec/fixtures/litmus_inventory.yaml'
+          elif [ -f 'inventory.yaml' ];
+          then
+            FILE='inventory.yaml'
+          fi
+          sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
           echo ::endgroup::
-        fi
+
+      - name: Install puppet agent
+        run: |
+          eval $(docker-machine env default)
+          bundle exec rake 'litmus:install_agent[puppet7]'
+
+      - name: Install puppet module
+        run: |
+          eval $(docker-machine env default)
+          bundle exec rake 'litmus:install_module'
+
+      - name: Run acceptance tests
+        run: |
+          eval $(docker-machine env default)
+          bundle exec rake 'litmus:acceptance:parallel'
+
+      - name: Remove test environment
+        if: ${{ always() }}
+        continue-on-error: true
+        run: |
+          if [[ -f inventory.yaml || -f spec/fixtures/litmus_inventory.yaml ]]; then
+            eval $(docker-machine env default)
+            bundle exec rake 'litmus:tear_down'
+          fi
+          vagrant destroy -f

@@ -108,9 +108,12 @@ Types and providers are documented in [REFERENCE.md](REFERENCE.md).
 
 For an extensive list of supported operating systems, see [metadata.json](metadata.json)
 
+## CI/CD
+CI/CD is done via [Github Actions](https://github.com/andeman/puppet-opnsense/actions). 
+
 ## Development
 
-You need the following requirements for the development environment:
+Install the you following requirements if you need alocal development environment:
 
 * [vagrant](vagrantup.com/docs/installation)
 * [docker](https://runnable.com/docker/getting-started/)

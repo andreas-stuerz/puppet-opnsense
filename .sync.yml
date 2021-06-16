@@ -17,6 +17,7 @@ Gemfile:
     ':default':
       - gem: 'puppet-resource_api'
     ":development":
+      - gem: 'github_changelog_generator'
       - gem: 'fakefs'
 .github/workflows/nightly.yml:
   unmanaged: false

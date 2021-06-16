@@ -21,7 +21,7 @@ describe 'opnsense_plugin' do
       end
 
       it 'sleeps to ensure async plugin install' do
-        sleep(1)
+        sleep(5)
       end
 
       it 'displays the plugin as installed via the cli' do

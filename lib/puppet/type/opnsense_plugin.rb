@@ -5,15 +5,15 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_plugin',
   docs: <<-EOS,
-  @summary#{' '}
-    Manage installed opnsense plugins#{' '}
+  @summary
+    Manage installed opnsense plugins
   @see
     https://docs.opnsense.org/plugins.html
   @example
-  opnsense_plugin { 'os-acme-client':
-    device => 'opnsense.example.com'
-    ensure => 'present',
-  }
+    opnsense_plugin { 'os-acme-client':
+      device => 'opnsense.example.com'
+      ensure => 'present',
+    }
 
   This type provides Puppet with the capabilities to manage opnsense plugins.
 

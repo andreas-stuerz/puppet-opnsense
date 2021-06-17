@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'singleton'
+require 'rspec/retry'
 
 class LitmusHelper
   include Singleton
@@ -82,6 +83,11 @@ def build_opn_cli_cmd(cmd)
 end
 
 RSpec.configure do |c|
+  # show retry status in spec process
+  c.verbose_retry = true
+  # show exception that triggers a retry if verbose_retry is set to true
+  c.display_try_failure_messages = true
+
   c.before :suite do
     vmhostname = LitmusHelper.instance.run_shell('hostname').stdout.strip
     vmipaddr = LitmusHelper.instance.run_shell("ip route get 8.8.8.8 | awk '{print $NF; exit}'").stdout.strip

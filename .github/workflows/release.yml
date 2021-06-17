@@ -1,8 +1,8 @@
-name: "Publish module to puppet forge"
+name: "Publish module"
 
 on:
   workflow_dispatch:
-
+  
 jobs:
   create-github-release:
     name: Deploy GitHub Release

@@ -20,11 +20,7 @@ describe 'opnsense_plugin' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'sleeps to ensure async plugin install' do
-        sleep(1)
-      end
-
-      it 'displays the plugin as installed via the cli' do
+      it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
         run_shell(build_opn_cli_cmd('plugin installed -c name')) do |r|
           expect(r.stdout).to match %r{os-helloworld}
         end
@@ -42,11 +38,7 @@ describe 'opnsense_plugin' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'sleeps to ensure async plugin install' do
-        sleep(1)
-      end
-
-      it 'displays the plugin as installed via the cli' do
+      it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
         run_shell(build_opn_cli_cmd('plugin installed -c name')) do |r|
           expect(r.stdout).not_to match %r{os-helloworld}
         end

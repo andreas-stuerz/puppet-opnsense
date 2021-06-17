@@ -19,6 +19,7 @@ Gemfile:
     ":development":
       - gem: 'github_changelog_generator'
       - gem: 'fakefs'
+      - gem: 'rspec-retry'
 .github/workflows/nightly.yml:
   unmanaged: false
 .github/workflows/pr_test.yml:

@@ -2,14 +2,27 @@
 
 ## Table of Contents
 
-1. [Description](#description)
-1. [Setup - The basics of getting started with opnsense](#setup)
-    * [What opnsense affects](#what-opnsense-affects)
-    * [Setup requirements](#setup-requirements)
-    * [Beginning with opnsense](#beginning-with-opnsense)
-1. [Usage - Configuration options and additional functionality](#usage)
-1. [Limitations - OS compatibility, etc.](#limitations)
-1. [Development - Guide for contributing to the module](#development)
+- [Description](#description)
+- [Setup](#setup)
+  * [OPNsense firewall](#opnsense-firewall)
+    + [Requirements](#requirements)
+    + [Install requirements](#install-requirements)
+  * [Bastion host](#bastion-host)
+    + [Requirements](#requirements-1)
+    + [Install requirements](#install-requirements-1)
+- [Usage](#usage)
+  * [Creating the device](#creating-the-device)
+  * [Configure your OPNsense Firewall](#configure-your-opnsense-firewall)
+- [Reference](#reference)
+- [Limitations](#limitations)
+- [CI/CD](#ci-cd)
+- [Development](#development)
+  * [Create the local development environment](#create-the-local-development-environment)
+  * [Running unit tests](#running-unit-tests)
+  * [Running acceptance tests](#running-acceptance-tests)
+  * [Teardown](#teardown)
+  * [Contributing](#contributing)
+
 
 ## Description
 
@@ -20,23 +33,29 @@ and/or manage multiple firewalls from a bastion host running a puppet-agent with
 
 ## Setup
 
-### Requirements
-
-#### OPNsense firewall
+### OPNsense firewall
+If you want to manage your firewall directly with a puppet-agent running on the device.
+ 
+#### Requirements
 * OPNsense plugin: [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent)
 * puppetlabs/resource_api (puppet < 6.0)
 
-#### Bastion host
-* [opn-cli](https://pypi.org/project/opn-cli/)
-* puppetlabs/resource_api (puppet < 6.0)
-
-### Install requirements on an OPNsense firewall
+#### Install requirements
+```
 Menu->Firmware->Plugins
 
 Install Plugin: sysutils/puppet-agent
+```
 
-### Install requirements on a bastion host
-Example to setup the requirements:
+### Bastion host
+If you want a bastion hosts running a puppet-agent which could manage multiple firewalls via https API calls.
+
+
+#### Requirements
+* [opn-cli](https://pypi.org/project/opn-cli/)
+* puppetlabs/resource_api (puppet < 6.0)
+
+#### Install requirements
 ```
 $packages = [
     'python3',
@@ -83,12 +102,12 @@ If you use a ca signed certificate, go to System->Trust->Authorities and press t
 
 Save the cert or ca and make sure the puppet agent is able to read it.
 
-### Configure the OPNsense Firewall
+### Configure your OPNsense Firewall
 
 If you have at least one configured opnsense_device, you could start to use other puppet types to manage the device.
 
 In the following example we use the [opnsense_plugin](REFERENCE.md#opnsense_plugin) type to manage the installed plugins 
-on the opnsense device "opnsense.example.com:
+on the opnsense device "opnsense.example.com":
 
 ```
 opnsense_plugin { 'os-helloworld':

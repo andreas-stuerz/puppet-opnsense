@@ -26,7 +26,7 @@
   * [Running unit tests](#running-unit-tests)
   * [Running acceptance tests](#running-acceptance-tests)
   * [Teardown](#teardown)
-  * [Contributing](#contributing)
+- [Contributing](#contributing)
 
 
 ## Description
@@ -165,7 +165,7 @@ scripts/acceptance_tests
 scripts/remove_test_env
 ```
 
-### Contributing
+## Contributing
 
 Please use the GitHub issues functionality to report any bugs or requests for new features. Feel free to fork and submit pull requests for potential contributions.
 

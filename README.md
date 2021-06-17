@@ -43,7 +43,6 @@ If you want to manage your firewall directly with a puppet-agent running on the 
  
 #### Requirements
 * OPNsense plugin: [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent)
-* puppetlabs/resource_api (puppet < 6.0)
 
 #### Install requirements
 ```

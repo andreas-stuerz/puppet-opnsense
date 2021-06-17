@@ -20,17 +20,22 @@ Vagrant.configure("2") do |config|
     v.customize ['modifyvm',:id, '--nic1', 'nat', '--nic2', 'intnet']
   end
 
-  config.vm.provision 'shell', inline: <<-SHELL
+  $auto_update_script = <<-'SCRIPT'
     # auto-update to latest minor version
     version_local=$(opnsense-version -v)
-    version_remote=$(configctl firmware remote | grep -e "^opnsense||" | awk -F'\\|\\|\\|' '{print $2}')
+    version_remote=$(configctl firmware remote | grep -e "^opnsense||" | awk -F '\\|\\|\\|' '{ print $2 }')
+    echo "installed version: $version_local"
+    echo "remote version: $version_remote"
     if [ "$version_local" != "$version_remote" ]; then
       echo "New opnsense version ${version_remote} is available."
       echo "Updating..."
       configctl firmware flush
       configctl firmware update
-      sleep 
+      sleep 1
       tail -f /tmp/pkg_upgrade.progress
     fi
-  SHELL
+  SCRIPT
+
+  config.vm.provision 'shell', inline: $auto_update_script
+
 end

@@ -6,12 +6,8 @@ if [ -z "${version}" ]; then
   echo "$0 1.0.0"
   exit 1
 fi
+pdk release prep --version=${version} --force
 
-pdk bundle exec rake "module:bump_to_version[${version}]"
-pdk bundle exec rake "strings:generate:reference"
-pdk bundle exec rake "changelog"
-pdk bundle exec rake "module:clean"
-pdk bundle exec rake "module:tag"
 
 
 

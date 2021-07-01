@@ -19,7 +19,7 @@ fi
 
 cp spec/fixtures/acceptance/opn-cli/ca.pem.dist spec/fixtures/acceptance/opn-cli/ca.pem
 
-# set opnsense with vagrant
+# setup opnsense with vagrant
 vagrant up
 
 # setup test docker containers

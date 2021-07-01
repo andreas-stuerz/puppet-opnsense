@@ -19,7 +19,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'network_alias':
       device      => 'opnsense-test.device.com',
       type        => 'network',
@@ -29,7 +29,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'ports_alias':
       device      => 'opnsense-test.device.com',
       type        => 'port',
@@ -38,7 +38,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'url_alias':
       device      => 'opnsense-test.device.com',
       type        => 'url',
@@ -48,7 +48,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'url_table_alias':
       device      => 'opnsense-test.device.com',
       type        => 'urltable',
@@ -59,7 +59,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'geoip_alias':
       device      => 'opnsense-test.device.com',
       type        => 'geoip',
@@ -70,7 +70,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'networkgroup_alias':
       device      => 'opnsense-test.device.com',
       type        => 'networkgroup',
@@ -80,7 +80,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'mac_alias':
       device      => 'opnsense-test.device.com',
       type        => 'mac',
@@ -90,7 +90,7 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-    
+
     opnsense_firewall_alias { 'external_alias':
       device      => 'opnsense-test.device.com',
       type        => 'external',
@@ -100,20 +100,20 @@ Puppet::ResourceApi.register_type(
       enabled     => true,
       ensure      => 'present',
     }
-  
+
   This type provides Puppet with the capabilities to manage opnsense firewall aliases.
 
 EOS
   features: ['simple_get_filter'],
   title_patterns: [
-      {
-          pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
-          desc: 'Where the name of the plugin and the device are provided with a @',
-      },
-      {
-          pattern: %r{^(?<name>.*)$},
-          desc: 'Where only the name is provided',
-      },
+    {
+      pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
+        desc: 'Where the name of the plugin and the device are provided with a @',
+    },
+    {
+      pattern: %r{^(?<name>.*)$},
+        desc: 'Where only the name is provided',
+    },
   ],
   attributes: {
     ensure: {

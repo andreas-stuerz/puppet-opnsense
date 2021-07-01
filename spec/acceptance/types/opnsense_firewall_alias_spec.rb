@@ -20,7 +20,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'network_alias':
           device      => 'opnsense-test.device.com',
           type        => 'network',
@@ -30,7 +30,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'ports_alias':
           device      => 'opnsense-test.device.com',
           type        => 'port',
@@ -39,7 +39,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'url_alias':
           device      => 'opnsense-test.device.com',
           type        => 'url',
@@ -49,7 +49,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'url_table_alias':
           device      => 'opnsense-test.device.com',
           type        => 'urltable',
@@ -60,7 +60,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'geoip_alias':
           device      => 'opnsense-test.device.com',
           type        => 'geoip',
@@ -71,7 +71,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'networkgroup_alias':
           device      => 'opnsense-test.device.com',
           type        => 'networkgroup',
@@ -81,7 +81,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'mac_alias':
           device      => 'opnsense-test.device.com',
           type        => 'mac',
@@ -91,7 +91,7 @@ describe 'opnsense_firewall_alias' do
           enabled     => true,
           ensure      => 'present',
         }
-        
+
         opnsense_firewall_alias { 'external_alias':
           device      => 'opnsense-test.device.com',
           type        => 'external',

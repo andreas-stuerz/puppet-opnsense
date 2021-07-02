@@ -9,10 +9,6 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
     get_plugins_from_devices(device_names)
   end
 
-  def get_device_names_by_filter(filter)
-    filter.empty? ? get_configured_devices : filter.map { |item| item[:device] }.compact.uniq
-  end
-
   def get_plugins_from_devices(devices)
     result = []
     devices.each do |device|

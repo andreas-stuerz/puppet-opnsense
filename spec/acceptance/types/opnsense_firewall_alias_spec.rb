@@ -5,7 +5,7 @@ describe 'opnsense_firewall_alias' do
     setup_test_api_endpoint
   end
   after(:all) do
-    teardown_test_api_endpoint
+    #teardown_test_api_endpoint
   end
 
   context 'for opnsense-test.device.com' do

@@ -37,11 +37,11 @@ RSpec.describe Puppet::Provider::OpnsensePlugin::OpnsensePlugin do
       end
     end
 
-    context 'with filter name: os-virtualbox, device: opnsense.example.com' do
+    context 'with filter name: os-acme-client, device: opnsense.example.com' do
       it 'returns resource os-virtualbox@opnsense.example.com' do
         expect(Puppet::Util::Execution).to receive(:execute).and_return("os-acme-client\n")
 
-        expect(provider.get(context, [{ name: 'os-virtualbox', device: 'opnsense.example.com' }])).to eq [
+        expect(provider.get(context, [{ name: 'os-acme-client', device: 'opnsense.example.com' }])).to eq [
           {
             title: 'os-acme-client@opnsense.example.com',
               name: 'os-acme-client',

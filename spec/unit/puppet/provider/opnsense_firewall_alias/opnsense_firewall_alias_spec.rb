@@ -169,7 +169,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
         expect(Dir).to receive(:glob).and_return(devices)
         expect(Puppet::Util::Execution).to receive(:execute).with(
             [
-              'opn-cli', '-c', '/Users/as/.puppet-opnsense/opnsense1.example.com-config.yaml',
+              'opn-cli', '-c', File.expand_path('~/.puppet-opnsense/opnsense1.example.com-config.yaml'),
               ['firewall', 'alias', 'list', '-o', 'json']
             ],
             { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true },
@@ -177,7 +177,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
 
         expect(Puppet::Util::Execution).to receive(:execute).with(
             [
-              'opn-cli', '-c', '/Users/as/.puppet-opnsense/opnsense2.example.com-config.yaml',
+              'opn-cli', '-c', File.expand_path('~/.puppet-opnsense/opnsense2.example.com-config.yaml'),
               ['firewall', 'alias', 'list', '-o', 'json']
             ],
             { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true },

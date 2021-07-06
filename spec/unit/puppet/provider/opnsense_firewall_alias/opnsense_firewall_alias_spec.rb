@@ -117,7 +117,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
   let(:aliases_device_2) do
     [
       {
-          "enabled": '1',
+        "enabled": '1',
           "name": 'bogons',
           "type": 'external',
           "proto": '',
@@ -128,7 +128,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "uuid": 'bogons'
       },
       {
-          "enabled": '1',
+        "enabled": '1',
           "name": 'bogonsv6',
           "type": 'external',
           "proto": '',
@@ -139,7 +139,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "uuid": 'bogonsv6'
       },
       {
-          "enabled": '1',
+        "enabled": '1',
           "name": 'sshlockout',
           "type": 'external',
           "proto": '',
@@ -150,7 +150,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "uuid": 'sshlockout'
       },
       {
-          "enabled": '1',
+        "enabled": '1',
           "name": 'virusprot',
           "type": 'external',
           "proto": '',

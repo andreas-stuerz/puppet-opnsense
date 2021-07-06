@@ -5,7 +5,7 @@ describe 'opnsense_firewall_alias' do
     setup_test_api_endpoint
   end
   after(:all) do
-    # teardown_test_api_endpoint
+    teardown_test_api_endpoint
   end
 
   context 'for opnsense-test.device.com' do
@@ -106,9 +106,17 @@ describe 'opnsense_firewall_alias' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'displays the created aliased via the cli', retry: 3, retry_wait: 10 do
-        run_shell(build_opn_cli_cmd('firewall alias show new_url_table')) do |r|
-          expect(r.stdout).to match %r{os-helloworld}
+      it 'displays the created aliases via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('firewall alias list')) do |r|
+          expect(r.stdout).to match %r{hosts_alias}
+          expect(r.stdout).to match %r{network_alias}
+          expect(r.stdout).to match %r{ports_alias}
+          expect(r.stdout).to match %r{url_alias}
+          expect(r.stdout).to match %r{url_table_alias}
+          expect(r.stdout).to match %r{geoip_alias}
+          expect(r.stdout).to match %r{networkgroup_alias}
+          expect(r.stdout).to match %r{mac_alias}
+          expect(r.stdout).to match %r{external_alias}
         end
       end
     end
@@ -130,17 +138,15 @@ describe 'opnsense_firewall_alias' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'displays the alias via the cli', retry: 3, retry_wait: 10 do
-        run_shell(build_opn_cli_cmd('firewall alias list')) do |r|
-          expect(r.stdout).to match %r{hosts_alias}
-          expect(r.stdout).to match %r{network_alias}
-          expect(r.stdout).to match %r{ports_alias}
-          expect(r.stdout).to match %r{url_alias}
-          expect(r.stdout).to match %r{url_table_alias}
-          expect(r.stdout).to match %r{geoip_alias}
-          expect(r.stdout).to match %r{networkgroup_alias}
-          expect(r.stdout).to match %r{mac_alias}
-          expect(r.stdout).to match %r{external_alias}
+      it 'displays the updated alias via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('firewall alias show url_table_alias -o json')) do |r|
+          expect(r.stdout).to match %r{"name": "url_table_alias"}
+          expect(r.stdout).to match %r{"type": "urltable"}
+          expect(r.stdout).to match %r{"content": "https://www.spamhaus.org/drop/drop.txt"}
+          expect(r.stdout).to match %r{"description": "Spamhaus block list reduced"}
+          expect(r.stdout).to match %r{"updatefreq": "0.75"}
+          expect(r.stdout).to match %r{"counters": ""}
+          expect(r.stdout).to match %r{"enabled": "0"}
         end
       end
     end
@@ -148,13 +154,13 @@ describe 'opnsense_firewall_alias' do
     describe 'delete firewall alias new_url_table' do
       pp = <<-MANIFEST
         $delete_aliases = [
+          'networkgroup_alias',
           'hosts_alias',
           'network_alias',
           'ports_alias',
           'url_alias',
           'url_table_alias',
           'geoip_alias',
-          'networkgroup_alias',
           'mac_alias',
           'external_alias',
         ]
@@ -167,7 +173,7 @@ describe 'opnsense_firewall_alias' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
+      it 'displays the aliases as deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('firewall alias list')) do |r|
           expect(r.stdout).not_to match %r{hosts_alias}
           expect(r.stdout).not_to match %r{network_alias}

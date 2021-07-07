@@ -16,16 +16,6 @@ RSpec.describe 'the opnsense_plugin type' do
 
   context 'os-haproxy on opnsense.example.com' do
     let(:plugin) do
-      Puppet::Type.type(:opnsense_device).new(
-          name: 'opnsense.example.com',
-          url: 'https://opnsense.example.de/api',
-          api_key: 'your_api_key',
-          api_secret: Puppet::Pops::Types::PSensitiveType::Sensitive.new('your_api_secret'),
-          timeout: 60,
-          ssl_verify: true,
-          ca: '/path/to/ca.pem',
-        )
-
       Puppet::Type.type(:opnsense_plugin).new(
           name: 'os-haproxy',
           device: 'opnsense.example.com',

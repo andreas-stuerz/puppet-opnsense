@@ -11,8 +11,8 @@ RSpec.describe Puppet::Provider::OpnsenseDevice::OpnsenseDevice do
   subject(:provider) { described_class.new }
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
-  let(:sensitive_pw) { Puppet::Provider::OpnsenseDevice::Sensitive.new('api_secret') }
-  let(:sensitive_pw2) { Puppet::Provider::OpnsenseDevice::Sensitive.new('api_secret2') }
+  let(:sensitive_pw) { Puppet::Provider::OpnsenseSensitive.new('api_secret') }
+  let(:sensitive_pw2) { Puppet::Provider::OpnsenseSensitive.new('api_secret2') }
   let(:devices) { ['opnsense1.example.com', 'opnsense2.example.com'] }
   let(:device_config) do
     {
@@ -182,9 +182,17 @@ RSpec.describe Puppet::Provider::OpnsenseDevice::OpnsenseDevice do
         },
       ]
       # rubocop:disable RSpec/SubjectStub
-      expect(provider).to receive(:gen_pw).with('api_secret')
+      expect(provider).to receive(:_gen_pw).with('api_secret')
 
       provider.canonicalize(context, resources)
+    end
+  end
+
+  describe 'get_device_names_by_filter' do
+    context 'with filter ["opnsense1.example.com"]' do
+      it 'returns the filter unmodified' do
+        provider.get_device_names_by_filter(['opnsense1.example.com'])
+      end
     end
   end
 end

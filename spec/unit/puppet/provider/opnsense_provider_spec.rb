@@ -35,4 +35,10 @@ RSpec.describe Puppet::Provider::OpnsenseProvider do
       expect(provider.get_configured_devices).to eq ['opnsense1.example.com', 'opnsense2.example.com']
     end
   end
+
+  describe 'bool_from_value' do
+    it 'raise ArgumentError if value will not result in boolean' do
+      expect { provider.bool_from_value('something') }.to raise_error(ArgumentError, %r{invalid value for Boolean()})
+    end
+  end
 end

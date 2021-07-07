@@ -7,6 +7,7 @@
 ### Resource types
 
 * [`opnsense_device`](#opnsense_device): Manage an OPNsense device access.
+* [`opnsense_firewall_alias`](#opnsense_firewall_alias): Manage opnsense firewall aliases.
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
 
 ## Resource types
@@ -100,6 +101,193 @@ Data type: `Pattern[/\A[0-9A-Za-z.-]+/]`
 _*this data type contains a regex that may not be accurately reflected in generated documentation_
 
 The name of the OPNsense device you want to manage.
+
+### <a name="opnsense_firewall_alias"></a>`opnsense_firewall_alias`
+
+This type provides Puppet with the capabilities to manage opnsense firewall aliases.
+
+* **See also**
+  * https://wiki.opnsense.org/manual/aliases.html
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_firewall_alias { 'hosts_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'host',
+  content     => '10.0.0.1,!10.0.0.5',
+  description => 'Some hosts',
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'network_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'network',
+  content     => '192.168.1.0/24,!192.168.1.128/25',
+  description => 'Some networks',
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'ports_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'port',
+  content     => '80,443',
+  description => 'Some ports',
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'url_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'url',
+  content     => 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
+  description => 'spamhaus fetched once.',
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'url_table_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'urltable',
+  content     => 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
+  description => 'Spamhaus block list',
+  updatefreq  => 0.5,
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'geoip_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'geoip',
+  content     => 'DE,GR',
+  description => 'Only german and greek IPv4 and IPV6 addresses',
+  proto       => "IPv4,IPv6",
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'networkgroup_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'networkgroup',
+  content     => ['hosts_alias','network_alias'],
+  description => 'Combine different network aliases into one',
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'mac_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'mac',
+  content     => ['f4:90:ea', '0c:4d:e9:b1:05:f0'],
+  description => 'MAC address or partial mac addresses',
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+
+opnsense_firewall_alias { 'external_alias':
+  device      => 'opnsense-test.device.com',
+  type        => 'external',
+  description => 'Externally managed alias, this only handles the placeholder.',
+  proto       => "IPv4",
+  counters    => true,
+  enabled     => true,
+  ensure      => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_firewall_alias` type.
+
+##### `content`
+
+Data type: `Array[String]`
+
+The content of the firewall alias.
+
+Default value: `[]`
+
+##### `counters`
+
+Data type: `Boolean`
+
+Enable or disable pfTable statistics for the firewall alias.
+
+##### `description`
+
+Data type: `String`
+
+The description of the firewall alias.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable the firewall alias.
+
+Default value: `true`
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `proto`
+
+Data type: `Optional[Enum["", "IPv4", "IPv6", "IPv4,IPv6"]]`
+
+The ip protocol which should be used by the firewall alias.
+
+Default value: `''`
+
+##### `type`
+
+Data type: `Enum["host", "network", "port", "url", "urltable", "geoip", "networkgroup", "mac", "external"]`
+
+The type of the firewall alias.
+
+##### `updatefreq`
+
+Data type: `Optional[Float]`
+
+How often should the alias be updated in days.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_firewall_alias` type.
+
+* [`device`](#device)
+* [`name`](#name)
+
+##### <a name="device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
+
+##### <a name="name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the firewall alias you want to manage.
 
 ### <a name="opnsense_plugin"></a>`opnsense_plugin`
 

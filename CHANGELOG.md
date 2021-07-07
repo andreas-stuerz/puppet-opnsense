@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.1.0](https://github.com/andeman/puppet-opnsense/tree/v1.1.0) (2021-07-07)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.0.0...v1.1.0)
+
+### Added
+
+- Manage opnsense firewall aliases [\#2](https://github.com/andeman/puppet-opnsense/pull/2) ([andeman](https://github.com/andeman))
+
 ## [v1.0.0](https://github.com/andeman/puppet-opnsense/tree/v1.0.0) (2021-06-17)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/9c6bc69b7b476916fd4635c3f7e6203b32d58bc8...v1.0.0)

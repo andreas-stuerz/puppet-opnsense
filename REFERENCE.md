@@ -117,7 +117,7 @@ This type provides Puppet with the capabilities to manage opnsense firewall alia
 opnsense_firewall_alias { 'hosts_alias':
   device      => 'opnsense-test.device.com',
   type        => 'host',
-  content     => '10.0.0.1,!10.0.0.5',
+  content     => ['10.0.0.1', '!10.0.0.5'],
   description => 'Some hosts',
   counters    => true,
   enabled     => true,
@@ -127,7 +127,7 @@ opnsense_firewall_alias { 'hosts_alias':
 opnsense_firewall_alias { 'network_alias':
   device      => 'opnsense-test.device.com',
   type        => 'network',
-  content     => '192.168.1.0/24,!192.168.1.128/25',
+  content     => ['192.168.1.0/24', '!192.168.1.128/25'],
   description => 'Some networks',
   counters    => true,
   enabled     => true,
@@ -137,7 +137,7 @@ opnsense_firewall_alias { 'network_alias':
 opnsense_firewall_alias { 'ports_alias':
   device      => 'opnsense-test.device.com',
   type        => 'port',
-  content     => '80,443',
+  content     => ['80', '443'],
   description => 'Some ports',
   enabled     => true,
   ensure      => 'present',
@@ -146,7 +146,7 @@ opnsense_firewall_alias { 'ports_alias':
 opnsense_firewall_alias { 'url_alias':
   device      => 'opnsense-test.device.com',
   type        => 'url',
-  content     => 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
+  content     => ['https://www.spamhaus.org/drop/drop.txt', 'https://www.spamhaus.org/drop/edrop.txt'],
   description => 'spamhaus fetched once.',
   counters    => true,
   enabled     => true,
@@ -156,7 +156,7 @@ opnsense_firewall_alias { 'url_alias':
 opnsense_firewall_alias { 'url_table_alias':
   device      => 'opnsense-test.device.com',
   type        => 'urltable',
-  content     => 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
+  content     => ['https://www.spamhaus.org/drop/drop.txt', 'https://www.spamhaus.org/drop/edrop.txt'],
   description => 'Spamhaus block list',
   updatefreq  => 0.5,
   counters    => true,
@@ -167,7 +167,7 @@ opnsense_firewall_alias { 'url_table_alias':
 opnsense_firewall_alias { 'geoip_alias':
   device      => 'opnsense-test.device.com',
   type        => 'geoip',
-  content     => 'DE,GR',
+  content     => ['DE', 'GR'],
   description => 'Only german and greek IPv4 and IPV6 addresses',
   proto       => "IPv4,IPv6",
   counters    => true,
@@ -178,7 +178,7 @@ opnsense_firewall_alias { 'geoip_alias':
 opnsense_firewall_alias { 'networkgroup_alias':
   device      => 'opnsense-test.device.com',
   type        => 'networkgroup',
-  content     => ['hosts_alias','network_alias'],
+  content     => ['hosts_alias', 'network_alias'],
   description => 'Combine different network aliases into one',
   counters    => true,
   enabled     => true,
@@ -220,7 +220,7 @@ Default value: `[]`
 
 ##### `counters`
 
-Data type: `Boolean`
+Data type: `Optional[Variant[Enum[""], Boolean]]`
 
 Enable or disable pfTable statistics for the firewall alias.
 
@@ -232,7 +232,7 @@ The description of the firewall alias.
 
 ##### `enabled`
 
-Data type: `Boolean`
+Data type: `Optional[Variant[Enum[""], Boolean]]`
 
 Enable or disable the firewall alias.
 
@@ -262,9 +262,11 @@ The type of the firewall alias.
 
 ##### `updatefreq`
 
-Data type: `Optional[Float]`
+Data type: `Variant[Enum[""], Float]`
 
 How often should the alias be updated in days.
+
+Default value: `''`
 
 #### Parameters
 

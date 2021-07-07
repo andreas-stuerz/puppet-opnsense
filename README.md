@@ -8,6 +8,7 @@
 ## Table of Contents
 
 - [Description](#description)
+- [Features](#features)
 - [Setup](#setup)
   * [OPNsense firewall](#opnsense-firewall)
     + [Requirements](#requirements)
@@ -35,6 +36,14 @@ The opnsense module configures OPNsense firewalls with custom types and provider
 
 It allows administrators to manage an OPNsense firewall directly via the [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent) opnsense plugin 
 and/or manage multiple firewalls from a bastion host running a puppet-agent with [opn-cli](https://pypi.org/project/opn-cli/) installed.
+
+## Features
+You can automate the following with the module:
+
+- plugins
+- firewall aliases
+
+more to come...
 
 ## Setup
 

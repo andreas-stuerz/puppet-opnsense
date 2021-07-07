@@ -46,7 +46,7 @@ RSpec.configure do |c|
   end
   c.filter_run_excluding(bolt: true) unless ENV['GEM_BOLT']
   c.after(:suite) do
-    RSpec::Puppet::Coverage.report!(70)
+    RSpec::Puppet::Coverage.report!(95)
   end
 
   # Filter backtrace noise

@@ -51,16 +51,12 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     when false, 'false', nil, '', 0, '0' then
       false
     else
-      raise ArgumentError, "invalid value for Boolean(): \"#{value.inspect}\""
+      raise ArgumentError, 'invalid value for Boolean()'
     end
   end
 
   def get_device_names_by_filter(filter)
     filter.empty? ? get_configured_devices : filter.map { |item| item[:device] }.compact.uniq
-  end
-
-  def get_names_by_filter(filter)
-    filter.empty? ? [] : filter.map { |item| item[:name] }.compact.uniq
   end
 
   private :_get_config_glob_pattern, :get_config_basedir, :_get_suffix

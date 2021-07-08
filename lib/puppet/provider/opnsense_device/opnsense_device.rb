@@ -7,11 +7,16 @@ require 'fileutils'
 
 # Implementation for the opnsense_device type using the Resource API.
 class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::OpnsenseProvider
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [Array<Hash<Symbol>>] filter
+  # @return [Array<Hash<Symbol>>]
   def get(_context, filter)
     device_names = get_device_names_by_filter(filter)
     _get_devices(device_names)
   end
 
+  # @param [Array<Hash<Symbol>>] filter
+  # @return [Array<Hash<Symbol>>, Array<String>]
   def get_device_names_by_filter(filter)
     if filter.empty?
       return get_configured_devices
@@ -19,6 +24,8 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     filter
   end
 
+  # @param [Array<String>] device_names
+  # @return [Array<Hash<Symbol>>]
   def _get_devices(device_names)
     result = []
     device_names.each do |device_name|
@@ -31,6 +38,9 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     result
   end
 
+  # @param [String] device_name
+  # @param [Array<Hash<String>>] data
+  # @return [Hash{Symbol->Hash<String>}]
   def _create_opnsense_device(device_name, data)
     {
       ensure: 'present',
@@ -44,22 +54,36 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     }
   end
 
+  # @param [String] path
+  # @return [Psych::Exception, nil]
   def _read_yaml(path)
     YAML.safe_load(File.read(path))
   end
 
+  # @param [String] pw
+  # @return [Puppet::Provider::OpnsenseSensitive]
   def _gen_pw(pw)
     Puppet::Provider::OpnsenseSensitive.new(pw)
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] name
+  # @param [Hash<Symbol>] should
+  # @return [File]
   def create(_context, name, should)
     _write_config(name, should)
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] name
+  # @param [Hash<Symbol>] should
   def update(_context, name, should)
     _write_config(name, should)
   end
 
+  # @param [String] name
+  # @param [Hash<Symbol>] should
+  # @return [File]
   def _write_config(name, should)
     basedir = get_config_basedir
     _ensure_dir(basedir)
@@ -75,14 +99,22 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     _write_yaml(config_path, yaml_data)
   end
 
+  # @param [String] path
+  # @param [Integer] mode
+  # @return [Integer]
   def _ensure_dir(path, mode = 0o700)
     Dir.mkdir(path, mode) unless File.exist?(path)
   end
 
+  # @param [Puppet::Provider::OpnsenseSensitive] sensitive
+  # @return [String]
   def _extract_pw(sensitive)
     sensitive.unwrap
   end
 
+  # @param [String] path
+  # @param [Hash] data
+  # @param [Integer] mode
   def _write_yaml(path, data, mode = 0o600)
     File.open(path, 'w') do |file|
       file.write(YAML.dump(data))
@@ -90,11 +122,15 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     end
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] name
   def delete(_context, name)
     path = get_config_path(name)
     FileUtils.rm(path, force: true)
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [Hash] resources
   def canonicalize(_context, resources)
     resources.each do |r|
       if r.key?(:api_secret) && r[:api_secret].is_a?(Puppet::Pops::Types::PSensitiveType::Sensitive)

@@ -7,7 +7,7 @@
 
 ## Table of Contents
 
-- [Description](#description)
+- [Module Description](#module-description)
 - [Features](#features)
 - [Setup](#setup)
   * [OPNsense firewall](#opnsense-firewall)

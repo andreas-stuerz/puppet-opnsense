@@ -5,14 +5,18 @@ require 'json'
 
 # Implementation for the opnsense_firewall_alias type using the Resource API.
 class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::Provider::OpnsenseProvider
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [Array<Hash<Symbol>>] filter
+  # @return [Array<Hash<Symbol>>]
   def get(_context, filter)
     device_names = get_device_names_by_filter(filter)
     _get_firewall_aliases_from_devices(device_names)
   end
 
+  # @param [Array<String>] devices
+  # @return [Array<Hash<Symbol>>]
   def _get_firewall_aliases_from_devices(devices)
     result = []
-
     devices.each do |device|
       aliases = _aliases_list(device)
       aliases.each do |fw_alias|
@@ -34,23 +38,36 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     result
   end
 
+  # @param [String] device_name
+  # @return [Array]
   def _aliases_list(device_name)
     json_output = opn_cli_base_cmd(device_name, ['firewall', 'alias', 'list', '-o', 'json'])
     JSON.parse(json_output)
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] _name
+  # @param [Hash<Symbol>] should
+  # @return [Puppet::Util::Execution::ProcessOutput]
   def create(_context, _name, should)
     args = _get_command_args('create', should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] _name
+  # @param [Hash<Symbol>] should
+  # @return [Puppet::Util::Execution::ProcessOutput]
   def update(_context, _name, should)
     args = _get_command_args('update', should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)
   end
 
+  # @param [Integer] mode
+  # @param [Hash<Symbol>] should
+  # @return [Array<String>]
   def _get_command_args(mode, should)
     args = ['firewall', 'alias', mode, should[:name]]
     args.push('-t', should[:type])
@@ -66,6 +83,9 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     args
   end
 
+  # @param [Puppet::ResourceApi::BaseContext] _context
+  # @param [String] name
+  # @return [Puppet::Util::Execution::ProcessOutput]
   def delete(_context, name)
     alias_name = name.fetch(:name).to_s
     device_name = name.fetch(:device).to_s

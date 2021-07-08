@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.1.1](https://github.com/andeman/puppet-opnsense/tree/v1.1.1) (2021-07-08)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.1.0...v1.1.1)
+
+### Fixed
+
+- add rdoc documentation to ruby code [\#3](https://github.com/andeman/puppet-opnsense/pull/3) ([andeman](https://github.com/andeman))
+
 ## [v1.1.0](https://github.com/andeman/puppet-opnsense/tree/v1.1.0) (2021-07-07)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.0.0...v1.1.0)

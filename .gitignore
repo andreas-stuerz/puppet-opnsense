@@ -28,3 +28,4 @@
 /spec/fixtures/litmus_inventory.yaml
 /spec/fixtures/acceptance/opn-cli/ca.pem
 /spec/fixtures/acceptance/opn-cli/conf.yaml
+/spec/fixtures/modules/opnsense/

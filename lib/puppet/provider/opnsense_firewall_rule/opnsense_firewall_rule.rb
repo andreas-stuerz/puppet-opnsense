@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'puppet/resource_api/simple_provider'
+require_relative '../opnsense_provider'
 require 'json'
 
 # Implementation for the opnsense_firewall_rule type using the Resource API.

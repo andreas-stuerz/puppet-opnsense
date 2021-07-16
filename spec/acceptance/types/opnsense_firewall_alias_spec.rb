@@ -126,7 +126,7 @@ describe 'opnsense_firewall_alias' do
       opnsense_firewall_alias { 'url_table_alias':
         device      => 'opnsense-test.device.com',
         type        => 'urltable',
-        content     => ['https://www.spamhaus.org/drop/drop.txt'],
+        content     => ['https://www.spamhaus.org/drop/drop.txt', 'https://www.spamhaus.org/drop/asndrop.txt'],
         description => 'Spamhaus block list reduced',
         updatefreq  => 0.75,
         counters    => false,

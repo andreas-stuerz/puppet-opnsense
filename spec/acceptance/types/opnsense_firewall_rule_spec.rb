@@ -13,9 +13,9 @@ describe 'opnsense_firewall_rule' do
   context 'for opnsense-test.device.com' do
     describe 'add rule test' do
       pp = <<-MANIFEST
-        opnsense_firewall_rule { 'test':
+        opnsense_firewall_rule { 'acceptance test rule':
           device           => 'opnsense-test.device.com',
-          sequence         => 1,
+          sequence         => '1',
           action           => 'pass',
           direction        => 'in',
           ipprotocol       => 'inet',
@@ -27,7 +27,7 @@ describe 'opnsense_firewall_rule' do
           destination_net  => '10.0.40.0/24',
           destination_port => '443',
           destination_not  => false,
-          description      => 'acceptance test rule 1',
+          #description      => 'acceptance test rule',
           gateway          => '',
           quick            => true,
           log              => false,
@@ -65,9 +65,9 @@ describe 'opnsense_firewall_rule' do
 
     describe 'update rule test' do
       pp = <<-MANIFEST
-        opnsense_firewall_rule { 'test':
+        opnsense_firewall_rule { 'acceptance test rule':
           device           => 'opnsense-test.device.com',
-          sequence         => 2,
+          sequence         => '2',
           action           => 'block',
           direction        => 'out',
           ipprotocol       => 'inet',
@@ -116,7 +116,7 @@ describe 'opnsense_firewall_rule' do
 
     describe 'delete rule test' do
       pp = <<-MANIFEST
-        opnsense_firewall_rule { 'test':
+        opnsense_firewall_rule { 'acceptance test rule':
           device => 'opnsense-test.device.com',
           ensure => 'absent',
         }

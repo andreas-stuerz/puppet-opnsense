@@ -10,18 +10,16 @@ Puppet::ResourceApi.register_type(
   @see:
     https://docs.opnsense.org/manual/firewall.html
   @example
-    opnsense_firewall_rule { 'minimal example':
+    opnsense_firewall_rule { '1 allow any from any to lan and wan':
       device      => 'opnsense-test.device.com',
-      sequence    => 1,
       action      => 'pass',
       interface   => ['lan', 'wan'],
-      description => 'allow any from any to lan and wan',
       ensure      => 'present',
     }
 
-    opnsense_firewall_rule { 'full example':
+    opnsense_firewall_rule { 'allow any from any to lan and wan':
       device           => 'opnsense-test.device.com',
-      sequence         => 2,
+      sequence         => '2',
       action           => 'pass',
       direction        => 'in',
       ipprotocol       => 'inet',
@@ -47,12 +45,16 @@ EOS
   features: ['simple_get_filter'],
   title_patterns: [
     {
-      pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
-        desc: 'Where the name of the rule and the device are provided with a @',
+      pattern: %r{^(?<sequence>\d*) (?<description>.*)@(?<device>.*)$},
+        desc: 'Where the sequence and description of the rule and the device are provided with a @',
     },
     {
-      pattern: %r{^(?<name>.*)$},
-        desc: 'Where only the name is provided',
+      pattern: %r{^(?<sequence>\d*) (?<description>.*)$},
+        desc: 'Where only the sequence number and description is provided',
+    },
+    {
+      pattern: %r{^(?<description>.*)$},
+        desc: 'Where only the description is provided',
     },
   ],
   attributes: {
@@ -61,10 +63,15 @@ EOS
       desc: 'Whether this resource should be present or absent on the target system.',
       default: 'present',
     },
-    name: {
+    sequence: {
       type: 'String',
-      desc: 'The name of the firewall rule you want to manage.',
-      behaviour: :namevar,
+        desc: 'The sequence number of this rule.',
+        behaviour: :namevar,
+    },
+    description: {
+      type: 'String',
+        desc: 'The rule description.',
+        behaviour: :namevar,
     },
     device: {
       type: 'String',
@@ -72,13 +79,9 @@ EOS
       behaviour: :namevar,
     },
     uuid: {
-      type: 'String',
+      type: 'Optional[String]',
       desc: 'The uuid of the rule.',
       behaviour: :init_only,
-    },
-    sequence: {
-      type: 'Integer',
-      desc: 'The sequence number of this rule.',
     },
     action: {
       type: 'Enum["pass", "block", "reject"]',
@@ -87,10 +90,6 @@ EOS
     interface: {
       type: 'Array[String]',
       desc: 'The network interface(s).',
-    },
-    description: {
-      type: 'String',
-      desc: 'The rule description.',
     },
     direction: {
       type: 'Enum["in", "out"]',

@@ -64,7 +64,7 @@ describe 'opnsense_firewall_rule' do
       end
     end
 
-    describe 'update ruletest' do
+    describe 'update rule test' do
       pp = <<-MANIFEST
         opnsense_firewall_rule { 'test':
           device           => 'opnsense-test.device.com',
@@ -115,7 +115,7 @@ describe 'opnsense_firewall_rule' do
       end
     end
 
-    describe 'delete firewall rule test' do
+    describe 'delete rule test' do
       pp = <<-MANIFEST
         opnsense_firewall_rule { 'test':
           device => 'opnsense-test.device.com',

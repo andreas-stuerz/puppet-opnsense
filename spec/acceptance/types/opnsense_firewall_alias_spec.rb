@@ -142,7 +142,7 @@ describe 'opnsense_firewall_alias' do
         run_shell(build_opn_cli_cmd('firewall alias show url_table_alias -o json')) do |r|
           expect(r.stdout).to match %r{"name": "url_table_alias"}
           expect(r.stdout).to match %r{"type": "urltable"}
-          expect(r.stdout).to match %r{"content": "https://www.spamhaus.org/drop/drop.txt"}
+          expect(r.stdout).to match %r{"content": "https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/asndrop.txt"}
           expect(r.stdout).to match %r{"description": "Spamhaus block list reduced"}
           expect(r.stdout).to match %r{"updatefreq": "0.75"}
           expect(r.stdout).to match %r{"counters": ""}

@@ -41,7 +41,6 @@ describe 'opnsense_firewall_rule' do
       end
 
       it 'displays the created rule via the cli', retry: 3, retry_wait: 3 do
-
         run_shell(build_opn_cli_cmd('firewall rule list -o yaml')) do |r|
           expect(r.stdout).to match %r{sequence: '1'}
           expect(r.stdout).to match %r{action: pass}

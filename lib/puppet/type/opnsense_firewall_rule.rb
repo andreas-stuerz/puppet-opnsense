@@ -47,11 +47,11 @@ EOS
   features: ['simple_get_filter'],
   title_patterns: [
     {
-        pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
+      pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
         desc: 'Where the name of the rule and the device are provided with a @',
     },
     {
-        pattern: %r{^(?<name>.*)$},
+      pattern: %r{^(?<name>.*)$},
         desc: 'Where only the name is provided',
     },
   ],

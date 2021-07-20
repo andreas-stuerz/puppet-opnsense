@@ -37,7 +37,7 @@ RSpec.describe 'the opnsense_firewall_rule type' do
           log: false,
           enabled: true,
           ensure: 'present',
-      )
+        )
     end
 
     it 'accepts a name' do

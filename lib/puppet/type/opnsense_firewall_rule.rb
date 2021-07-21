@@ -10,14 +10,15 @@ Puppet::ResourceApi.register_type(
   @see:
     https://docs.opnsense.org/manual/firewall.html
   @example
-    opnsense_firewall_rule { '1 allow any from any to lan and wan':
+    opnsense_firewall_rule { 'minimal example - use description as resource title':
       device      => 'opnsense-test.device.com',
+      sequence    => '1',
       action      => 'pass',
       interface   => ['lan', 'wan'],
       ensure      => 'present',
     }
 
-    opnsense_firewall_rule { 'allow any from any to lan and wan':
+    opnsense_firewall_rule { 'full example - use description as resource title':
       device           => 'opnsense-test.device.com',
       sequence         => '2',
       action           => 'pass',
@@ -45,12 +46,8 @@ EOS
   features: ['simple_get_filter'],
   title_patterns: [
     {
-      pattern: %r{^(?<sequence>\d*) (?<description>.*)@(?<device>.*)$},
+      pattern: %r{^(?<description>.*)@(?<device>.*)$},
         desc: 'Where the sequence and description of the rule and the device are provided with a @',
-    },
-    {
-      pattern: %r{^(?<sequence>\d*) (?<description>.*)$},
-        desc: 'Where only the sequence number and description is provided',
     },
     {
       pattern: %r{^(?<description>.*)$},
@@ -66,7 +63,6 @@ EOS
     sequence: {
       type: 'String',
         desc: 'The sequence number of this rule.',
-        behaviour: :namevar,
     },
     description: {
       type: 'String',

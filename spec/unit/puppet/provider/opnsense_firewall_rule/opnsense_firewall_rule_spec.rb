@@ -55,6 +55,33 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule do
     ]
   end
 
+  let(:rules_device_2) do
+    [
+        {
+            "enabled": '1',
+            "sequence": '1',
+            "action": 'block',
+            "quick": '1',
+            "interface": 'lan',
+            "direction": 'in',
+            "ipprotocol": 'inet',
+            "protocol": 'TCP',
+            "source_net": '10.0.50.0/24',
+            "source_not": '0',
+            "source_port": '',
+            "destination_net": 'any',
+            "destination_not": '0',
+            "destination_port": '',
+            "gateway": '',
+            "log": '0',
+            "description": 'example rule1',
+            "uuid": '624cb3ca-3b76-4177-b736-4381c6525f37'
+        },
+    ]
+
+  end
+
+
   describe '#get' do
     context 'with empty filter' do
       it 'returns all resources' do

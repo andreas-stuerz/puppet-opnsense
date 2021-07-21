@@ -48,8 +48,8 @@ end
 def install_opnsense_plugin(name)
   pp_install_plugin = <<-MANIFEST
     opnsense_plugin { '#{name}':
-      device => 'opnsense-test.device.com'
-      ensure => 'absent',
+      device => 'opnsense-test.device.com',
+      ensure => 'present',
     }
   MANIFEST
   LitmusHelper.instance.apply_manifest(pp_install_plugin, catch_failures: true)
@@ -58,7 +58,7 @@ end
 def uninstall_opnsense_plugin(name)
   pp_uninstall_plugin = <<-MANIFEST
     opnsense_plugin { '#{name}':
-      device => 'opnsense-test.device.com'
+      device => 'opnsense-test.device.com',
       ensure => 'absent',
     }
   MANIFEST
@@ -119,10 +119,15 @@ RSpec.configure do |c|
 
     puts "Running acceptance test on #{vmhostname} with address #{vmipaddr} and OS #{vmos} #{vmrelease}"
 
-    puts 'Setup dependencies for test'
+    puts 'Setup dependencies for module under test'
     install_test_dependencies
+    setup_test_api_endpoint
+    install_opnsense_plugin('os-firewall')
 
     puts 'Deploying fixtures to /fixtures'
     deploy_fixtures('/fixtures/acceptance', '/fixtures')
+  end
+  c.after :suite do
+    #teardown_test_api_endpoint
   end
 end

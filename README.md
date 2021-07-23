@@ -1,5 +1,6 @@
 [![Unit Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml)
 [![Acceptance Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml)
+[![codecov](https://codecov.io/gh/andeman/puppet-opnsense/branch/main/graph/badge.svg?token=0BoY091pEV)](https://codecov.io/gh/andeman/puppet-opnsense)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)
 [![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)
 
@@ -37,11 +38,16 @@ The opnsense module configures OPNsense firewalls with custom types and provider
 It allows administrators to manage an OPNsense firewall directly via the [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent) opnsense plugin 
 and/or manage multiple firewalls from a bastion host running a puppet-agent with [opn-cli](https://pypi.org/project/opn-cli/) installed.
 
+The main target of module is to enable GitOps for your network security policies. Developers could submit
+pull request for new firewall rules and the network or ops team could review it and deploy it to a pre production environment for
+testing.
+
 ## Features
 You can automate the following with the module:
 
 - plugins
 - firewall aliases
+- firewall rules (needs the opnsense plugin: os-firewall)
 
 more to come...
 
@@ -51,7 +57,9 @@ more to come...
 If you want to manage your firewall directly with a puppet-agent running on the device.
  
 #### Requirements
-* OPNsense plugin: [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent)
+OPNsense plugins:
+* [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent)
+* [os-firewall](https://github.com/opnsense/plugins/tree/master/net/firewall) for managing firewall rules
 
 #### Install requirements
 ```
@@ -66,6 +74,7 @@ If you want a bastion hosts running a puppet-agent which could manage multiple f
 
 #### Requirements
 * [opn-cli](https://pypi.org/project/opn-cli/)
+* [os-firewall](https://github.com/opnsense/plugins/tree/master/net/firewall) for managing firewall rules
 * puppetlabs/resource_api (puppet < 6.0)
 
 #### Install requirements
@@ -123,7 +132,7 @@ In the following example we use the [opnsense_plugin](REFERENCE.md#opnsense_plug
 on the opnsense device "opnsense.example.com":
 
 ```
-opnsense_plugin { 'os-helloworld':
+opnsense_plugin { 'os-firewall':
   device => 'opnsense.example.com',
   ensure => 'present',
 }
@@ -145,7 +154,7 @@ CI/CD is done via [Github Actions](https://github.com/andeman/puppet-opnsense/ac
 
 ## Development
 
-Install the you following requirements if you need alocal development environment:
+You need to install the following requirements to setup the local development environment:
 
 * [vagrant](vagrantup.com/docs/installation)
 * [docker](https://runnable.com/docker/getting-started/)

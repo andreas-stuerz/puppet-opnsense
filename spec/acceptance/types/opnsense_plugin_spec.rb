@@ -1,13 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'opnsense_plugin' do
-  before(:all) do
-    setup_test_api_endpoint
-  end
-  after(:all) do
-    teardown_test_api_endpoint
-  end
-
   context 'for opnsense-test.device.com' do
     describe 'add plugin os-helloworld' do
       pp = <<-MANIFEST

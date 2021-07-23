@@ -45,6 +45,26 @@ def get_abolute_path_from_spec_dir(rel_path)
   File.join(File.dirname(__FILE__), rel_path)
 end
 
+def install_opnsense_plugin(name)
+  pp_install_plugin = <<-MANIFEST
+    opnsense_plugin { '#{name}':
+      device => 'opnsense-test.device.com',
+      ensure => 'present',
+    }
+  MANIFEST
+  LitmusHelper.instance.apply_manifest(pp_install_plugin, catch_failures: true)
+end
+
+def uninstall_opnsense_plugin(name)
+  pp_uninstall_plugin = <<-MANIFEST
+    opnsense_plugin { '#{name}':
+      device => 'opnsense-test.device.com',
+      ensure => 'absent',
+    }
+  MANIFEST
+  LitmusHelper.instance.apply_manifest(pp_uninstall_plugin, catch_failures: true)
+end
+
 def setup_test_api_endpoint
   api_config = hash_from_fixture_yaml_file('/acceptance/opn-cli/conf.yaml')
   pp_setup = <<-MANIFEST
@@ -99,10 +119,15 @@ RSpec.configure do |c|
 
     puts "Running acceptance test on #{vmhostname} with address #{vmipaddr} and OS #{vmos} #{vmrelease}"
 
-    puts 'Setup dependencies for test'
+    puts 'Setup dependencies for module under test'
     install_test_dependencies
+    setup_test_api_endpoint
+    install_opnsense_plugin('os-firewall')
 
     puts 'Deploying fixtures to /fixtures'
     deploy_fixtures('/fixtures/acceptance', '/fixtures')
+  end
+  c.after :suite do
+    teardown_test_api_endpoint
   end
 end

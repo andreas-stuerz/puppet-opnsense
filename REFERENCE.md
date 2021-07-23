@@ -8,6 +8,7 @@
 
 * [`opnsense_device`](#opnsense_device): Manage an OPNsense device access.
 * [`opnsense_firewall_alias`](#opnsense_firewall_alias): Manage opnsense firewall aliases.
+* [`opnsense_firewall_rule`](#opnsense_firewall_rule): Manage opnsense firewall rules
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
 
 ## Resource types
@@ -290,6 +291,218 @@ namevar
 Data type: `String`
 
 The name of the firewall alias you want to manage.
+
+### <a name="opnsense_firewall_rule"></a>`opnsense_firewall_rule`
+
+@see:
+  https://docs.opnsense.org/manual/firewall.html
+This type provides Puppet with the capabilities to manage opnsense firewall rules.
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_firewall_rule { 'minimal example - use description as resource title':
+  device      => 'opnsense-test.device.com',
+  sequence    => '1',
+  action      => 'pass',
+  interface   => ['lan', 'wan'],
+  ensure      => 'present',
+}
+
+opnsense_firewall_rule { 'full example - use description as resource title':
+  device           => 'opnsense-test.device.com',
+  sequence         => '2',
+  action           => 'pass',
+  direction        => 'in',
+  ipprotocol       => 'inet',
+  interface        => ['lan', 'wan'],
+  source_net       => 'any',
+  source_port      => '',
+  source_not       => false,
+  protocol         => 'any',
+  destination_net  => 'any',
+  destination_port => '',
+  destination_not  => false,
+  description      => 'allow any from any to lan and wan',
+  gateway          => '',
+  quick            => true,
+  log              => false,
+  enabled          => true,
+  ensure           => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_firewall_rule` type.
+
+##### `action`
+
+Data type: `Enum["pass", "block", "reject"]`
+
+Choose what to do with packets that match the criteria specified.
+
+##### `destination_net`
+
+Data type: `String`
+
+The destination eg. any, ip address, network or alias.
+
+Default value: `any`
+
+##### `destination_not`
+
+Data type: `Boolean`
+
+Use this option to invert the sense of the match for the destination.
+
+##### `destination_port`
+
+Data type: `String`
+
+Destination port number or well known name (imap, imaps, http, https, ...), for ranges use a dash.
+
+Default value: `''`
+
+##### `direction`
+
+Data type: `Enum["in", "out"]`
+
+Direction of the traffic.
+
+Default value: `in`
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable this rule.
+
+Default value: `true`
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `gateway`
+
+Data type: `String`
+
+Leave as default to use the system routing table. Or choose a gateway to utilize policy based routing.
+
+Default value: `''`
+
+##### `interface`
+
+Data type: `Array[String]`
+
+The network interface(s).
+
+##### `ipprotocol`
+
+Data type: `Enum["inet", "inet6"]`
+
+IP Version
+
+Default value: `inet`
+
+##### `log`
+
+Data type: `Boolean`
+
+Log packets that are handled by this rule.
+
+##### `protocol`
+
+Data type: `Enum[
+          'any', 'ICMP', 'IGMP', 'GGP', 'IPENCAP', 'ST2', 'TCP', 'CBT', 'EGP', 'IGP', 'BBN-RCC', 'NVP', 'PUP',
+          'ARGUS', 'EMCON', 'XNET', 'CHAOS', 'UDP', 'MUX', 'DCN', 'HMP', 'PRM', 'XNS-IDP', 'TRUNK-1', 'TRUNK-2',
+          'LEAF-1', 'LEAF-2', 'RDP', 'IRTP', 'ISO-TP4', 'NETBLT', 'MFE-NSP', 'MERIT-INP', 'DCCP', '3PC', 'IDPR',
+          'XTP', 'DDP', 'IDPR-CMTP', 'TP++', 'IL', 'IPV6', 'SDRP', 'IDRP', 'RSVP', 'GRE', 'DSR', 'BNA', 'ESP',
+          'AH', 'I-NLSP', 'SWIPE', 'NARP', 'MOBILE', 'TLSP', 'SKIP', 'IPV6-ICMP', 'CFTP', 'SAT-EXPAK', 'KRYPTOLAN',
+          'RVD', 'IPPC', 'SAT-MON', 'VISA', 'IPCV', 'CPNX', 'CPHB', 'WSN', 'PVP', 'BR-SAT-MON', 'SUN-ND', 'WB-MON',
+          'WB-EXPAK', 'ISO-IP', 'VMTP', 'SECURE-VMTP', 'VINES', 'TTP', 'NSFNET-IGP', 'DGP', 'TCF', 'EIGRP', 'OSPF',
+          'SPRITE-RPC', 'LARP', 'MTP', 'AX.25', 'IPIP', 'MICP', 'SCC-SP', 'ETHERIP', 'ENCAP', 'GMTP', 'IFMP', 'PNNI',
+          'PIM', 'ARIS', 'SCPS', 'QNX', 'A/N', 'IPCOMP', 'SNP', 'COMPAQ-PEER', 'IPX-IN-IP', 'CARP', 'PGM', 'L2TP',
+          'DDX', 'IATP', 'STP', 'SRP', 'UTI', 'SMP', 'SM', 'PTP', 'ISIS', 'CRTP', 'CRUDP', 'SPS', 'PIPE', 'SCTP',
+          'FC', 'RSVP-E2E-IGNORE', 'UDPLITE', 'MPLS-IN-IP', 'MANET', 'HIP', 'SHIM6', 'WESP', 'ROHC',
+          'PFSYNC', 'DIVERT'
+        ]`
+
+The Protocol that is used.
+
+Default value: `any`
+
+##### `quick`
+
+Data type: `Boolean`
+
+If a packet matches a rule specifying quick, then that rule is considered the last matching rule.
+
+Default value: `true`
+
+##### `sequence`
+
+Data type: `String`
+
+The sequence number of this rule.
+
+##### `source_net`
+
+Data type: `String`
+
+The source eg. any, ip address, network or alias.
+
+Default value: `any`
+
+##### `source_not`
+
+Data type: `Boolean`
+
+Source port number or well known name (imap, imaps, http, https, ...), for ranges use a dash.
+
+##### `source_port`
+
+Data type: `String`
+
+Source port number or well known name (imap, imaps, http, https, ...), for ranges use a dash.
+
+Default value: `''`
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the rule.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_firewall_rule` type.
+
+* [`description`](#description)
+* [`device`](#device)
+
+##### <a name="description"></a>`description`
+
+namevar
+
+Data type: `String`
+
+The rule description.
+
+##### <a name="device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
 
 ### <a name="opnsense_plugin"></a>`opnsense_plugin`
 

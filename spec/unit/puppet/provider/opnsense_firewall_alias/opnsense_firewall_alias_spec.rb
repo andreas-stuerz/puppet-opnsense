@@ -421,8 +421,9 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
 
   describe 'create(context, name, should)' do
     it 'creates the resource' do
-      expect(Puppet::Util::Execution).to receive(:execute).and_return("saved \n")
-      provider.create(context, 'geoip_alias@opnsense2.example.com',
+      expect(Puppet::Util::Execution).to receive(:execute)
+        .and_return({ "result": 'saved', "uuid": '55d17d8a-42c6-4de0-8fd5-8019d21f8923' })
+      provider.create(context, { name: 'geoip_alias', device: 'opnsense2.example.com' },
                       name: 'geoip_alias',
                       device: 'opnsense2.example.com',
                       type: 'geoip',
@@ -438,11 +439,12 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
 
   describe 'update(context, name, should)' do
     it 'updates the resource' do
-      expect(Puppet::Util::Execution).to receive(:execute).and_return("saved \n")
+      expect(Puppet::Util::Execution).to receive(:execute)
+        .and_return({ "result": 'saved' })
 
-      provider.update(context, 'geoip_alias@opnsense2.example.com',
+      provider.update(context, { name: 'geoip_alias', device: 'opnsense2.example.com' },
                       name: 'geoip_alias',
-                      device: 'opnsense1.example.com',
+                      device: 'opnsense2.example.com',
                       type: 'geoip',
                       description: 'Only german',
                       content: [],
@@ -456,11 +458,9 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
 
   describe 'delete(context, name)' do
     it 'deletes the resource' do
-      expect(Puppet::Util::Execution).to receive(:execute).and_return("deleted \n")
+      expect(Puppet::Util::Execution).to receive(:execute).and_return('{"result": "deleted"}')
 
-      provider.delete(context,
-                      name: 'geoip_alias',
-                      device: 'opnsense1.example.com')
+      provider.delete(context, { name: 'geoip_alias', device: 'opnsense2.example.com' })
     end
   end
 end

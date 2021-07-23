@@ -52,7 +52,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def create(_context, _name, should)
     args = _get_command_args('create', should)
     device_name = should[:device].to_s
-    opn_cli_base_cmd(device_name, args)
+    opn_cli_base_cmd(device_name, args, '-o', 'json')
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -62,7 +62,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def update(_context, _name, should)
     args = _get_command_args('update', should)
     device_name = should[:device].to_s
-    opn_cli_base_cmd(device_name, args)
+    opn_cli_base_cmd(device_name, args, '-o', 'json')
   end
 
   # @param [Integer] mode
@@ -89,7 +89,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def delete(_context, name)
     alias_name = name.fetch(:name).to_s
     device_name = name.fetch(:device).to_s
-    opn_cli_base_cmd(device_name, ['firewall', 'alias', 'delete', alias_name])
+    opn_cli_base_cmd(device_name, ['firewall', 'alias', 'delete', alias_name, '-o', 'json'])
   end
 
   private :_get_firewall_aliases_from_devices, :_aliases_list, :_get_command_args

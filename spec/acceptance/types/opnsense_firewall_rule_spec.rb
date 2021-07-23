@@ -27,8 +27,8 @@ describe 'opnsense_firewall_rule' do
       MANIFEST
 
       it 'throws an error' do
-        apply_manifest(pp, catch_failures: true) do |r|
-          expect(r.stderr).to match %r{failed}
+        apply_manifest(pp, expect_failures: true) do |r|
+          expect(r.stderr).to match %r{Creating: Failed.*returned 1}
         end
       end
     end
@@ -62,10 +62,10 @@ describe 'opnsense_firewall_rule' do
 
       it 'displays the created rule via the cli', retry: 3, retry_wait: 3 do
         cols = [
-            'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
-            'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
-            'log', 'enabled'
-        ].join(",")
+          'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
+          'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
+          'log', 'enabled'
+        ].join(',')
         run_shell(build_opn_cli_cmd("firewall rule list -o yaml -c #{cols}")) do |r|
           expect(r.stdout).to match %r{sequence: '1'}
           expect(r.stdout).to match %r{action: pass}
@@ -117,10 +117,10 @@ describe 'opnsense_firewall_rule' do
 
       it 'displays the updated rule via the cli', retry: 3, retry_wait: 3 do
         cols = [
-            'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
-            'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
-            'log', 'enabled'
-        ].join(",")
+          'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
+          'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
+          'log', 'enabled'
+        ].join(',')
         run_shell(build_opn_cli_cmd("firewall rule list -o yaml -c #{cols}")) do |r|
           expect(r.stdout).to match %r{sequence: '2'}
           expect(r.stdout).to match %r{action: block}

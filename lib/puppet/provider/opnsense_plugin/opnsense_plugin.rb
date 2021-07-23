@@ -20,9 +20,9 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
       plugins = _plugin_list(device)
       plugins.each do |plugin|
         result.push(
-            title: plugin + '@' + device,
+            title: plugin['name'] + '@' + device,
             ensure: 'present',
-            name: plugin,
+            name: plugin['name'],
             device: device,
           )
       end
@@ -33,8 +33,8 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
   # @param [String] device_name
   # @return [Array<String>]
   def _plugin_list(device_name)
-    result = opn_cli_base_cmd(device_name, ['plugin', 'installed', '-c', 'name'])
-    result.split("\n")
+    json_output = opn_cli_base_cmd(device_name, ['plugin', 'installed', '-o', 'json'])
+    JSON.parse(json_output)
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -57,7 +57,7 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
   # @param [String] plugin_name
   # @return [Puppet::Util::Execution::ProcessOutput]
   def _plugin_install(device_name, plugin_name)
-    opn_cli_base_cmd(device_name, ['plugin', 'install', plugin_name.to_s])
+    opn_cli_base_cmd(device_name, ['plugin', 'install', plugin_name.to_s, '-o', 'json'])
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -73,7 +73,7 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
   # @param [String] plugin_name
   # @return [Puppet::Util::Execution::ProcessOutput]
   def _plugin_uninstall(device_name, plugin_name)
-    opn_cli_base_cmd(device_name, ['plugin', 'uninstall', plugin_name.to_s])
+    opn_cli_base_cmd(device_name, ['plugin', 'uninstall', plugin_name.to_s, '-o', 'json'])
   end
 
   private :_get_plugins_from_devices, :_plugin_list, :_plugin_install, :_plugin_uninstall

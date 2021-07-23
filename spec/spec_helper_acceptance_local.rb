@@ -128,6 +128,6 @@ RSpec.configure do |c|
     deploy_fixtures('/fixtures/acceptance', '/fixtures')
   end
   c.after :suite do
-    #teardown_test_api_endpoint
+    teardown_test_api_endpoint
   end
 end

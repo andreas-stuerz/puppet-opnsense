@@ -19,7 +19,7 @@ RSpec.describe 'the opnsense_firewall_rule type' do
       Puppet::Type.type(:opnsense_firewall_rule).new(
           name: 'example rule',
           device: 'opnsense.example.com',
-          sequence: 1,
+          sequence: '1',
           action: 'pass',
           direction: 'in',
           ipprotocol: 'inet',
@@ -40,9 +40,9 @@ RSpec.describe 'the opnsense_firewall_rule type' do
         )
     end
 
-    it 'accepts a name' do
-      fw_rule[:name] = 'example rule renamed'
-      expect(fw_rule[:name]).to eq('example rule renamed')
+    it 'accepts a description' do
+      fw_rule[:description] = 'modified example'
+      expect(fw_rule[:description]).to eq('modified example')
     end
 
     it 'accepts a device' do
@@ -51,8 +51,8 @@ RSpec.describe 'the opnsense_firewall_rule type' do
     end
 
     it 'accepts a sequence' do
-      fw_rule[:sequence] = 2
-      expect(fw_rule[:sequence]).to eq(2)
+      fw_rule[:sequence] = '2'
+      expect(fw_rule[:sequence]).to eq('2')
     end
 
     it 'accepts a action' do
@@ -103,11 +103,6 @@ RSpec.describe 'the opnsense_firewall_rule type' do
     it 'accepts destination_not' do
       fw_rule[:destination_not] = false
       expect(fw_rule[:destination_not]).to eq(:false)
-    end
-
-    it 'accepts a description' do
-      fw_rule[:description] = 'modified example'
-      expect(fw_rule[:description]).to eq('modified example')
     end
 
     it 'accepts a gateway' do

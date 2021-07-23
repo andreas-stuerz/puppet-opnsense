@@ -5,6 +5,8 @@ require 'json'
 
 # Implementation for the opnsense_firewall_rule type using the Resource API.
 class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Provider::OpnsenseProvider
+  # writer for testing
+  attr_writer :resource_list
   # @return [void]
   def initialize
     super
@@ -16,13 +18,13 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @return [Array<Hash<Symbol>>]
   def get(_context, filter)
     device_names = get_device_names_by_filter(filter)
-    _set_resource_list(device_names)
+    _fetch_resource_list(device_names)
     @resource_list
   end
 
   # @param [Array<String>] device_names
   # @return [void]
-  def _set_resource_list(device_names)
+  def _fetch_resource_list(device_names)
     @resource_list = _get_firewall_rules_from_devices(device_names)
   end
 
@@ -75,7 +77,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   def create(_context, _name, should)
     args = _get_command_args('create', should[:sequence], should)
     device_name = should[:device].to_s
-    opn_cli_base_cmd(device_name, args)
+    opn_cli_base_cmd(device_name, args, '-o', 'json')
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -95,7 +97,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   def delete(_context, name)
     uuid = _find_uuid_by_namevars(name)
     device_name = name.fetch(:device).to_s
-    opn_cli_base_cmd(device_name, ['firewall', 'rule', 'delete', uuid])
+    opn_cli_base_cmd(device_name, ['firewall', 'rule', 'delete', uuid, '-o', 'json'])
   end
 
   # @param [hash] namevars

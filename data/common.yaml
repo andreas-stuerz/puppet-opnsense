@@ -1,17 +1,9 @@
 ---
 # Config auf firewall oder Brücken Host
 opnsense::devices:
-#  "%{::fqdn}":
-#    url: "https://%{::fqdn}/api"
-#    api_key:
-#    api_secret:
-#    timeout:
-#    ssl_verify:
-#    ca: /etc/ca/cert.pem
-#    plugins:
-#      - os-haproxy
-  "fw01.markt.de":
-    url: "https://fw01.markt.de/api"
+  # manage local opnsense firewall
+  "%{::fqdn}":
+    url: "https://%{::fqdn}/api"
     api_key:
     api_secret:
     timeout:
@@ -19,8 +11,20 @@ opnsense::devices:
     ca: /etc/ca/cert.pem
     plugins:
       - os-acme-client
-  "fw01.dmz.markt.de":
-    url: "https://fw01.markt.de/api"
+      - os-haproxy
+  # manage remote opnsense firewall
+  "fw01.exmple.de":
+    url: "https://fw01.exmample.de/api"
+    api_key:
+    api_secret:
+    timeout:
+    ssl_verify:
+    ca: /etc/ca/cert.pem
+    plugins:
+      - os-acme-client
+  # manage another remote opnsense firewall
+  "fw01.dmz.example.de":
+    url: "https://fw01.dmz.exmample.de/api"
     api_key:
     api_secret:
     timeout:
@@ -28,13 +32,14 @@ opnsense::devices:
     ca: /etc/ca/cert.pem
     plugins: []
 
+opnsense::manage_resources: true
 opnsense::api_manager_prefix: "%{fqdn} api manager"
 # werden überall installiert
 opnsense::required_plugins:
   - os-firewall
 opnsense::aliases:
   'my_http_ports':
-    device: "%{::fqdn}"
+    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
     type: port,
     content:
       - '80'
@@ -42,7 +47,7 @@ opnsense::aliases:
     description: 'my local web ports'
     enabled: true
   'mac_alias':
-    device: "%{::fqdn}"
+    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
     type: mac,
     content:
       - 'f4:90:ea'
@@ -53,19 +58,17 @@ opnsense::aliases:
 
 opnsense::rules:
   'allow all from lan and wan':
-    device:      => 'opnsense-test.device.com',
-    sequence:    => '1',
-    action:      => 'pass',
+    device: ['fw01.exmample.de']
+    sequence: '1'
+    action: 'pass'
     interface:
       - lan
       - wan
 
-
-
-# Hier config auf einem Client - astuerz-test01.markt.de
+# Hier config auf einem Client - astuerz-test01.example.de
 opnsense::firewall::aliases:
   'mac_alias':
-    device: "%{::fqdn}"
+    device: ['fw01.exmample.de']
     type: mac,
     content:
       - 'f4:90:ea'
@@ -76,7 +79,7 @@ opnsense::firewall::aliases:
 
 opnsense::firewall::rules:
   'allow http':
-    device:  fw01.markt.de
+    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
     sequence: 1
     action: pass
     direction: in
@@ -85,7 +88,7 @@ opnsense::firewall::rules:
     interface:
       - lan
   'allow https':
-    device:  fw01.markt.de
+    device: ['fw01.exmample.de']
     sequence: 1
     action: pass
     direction: in

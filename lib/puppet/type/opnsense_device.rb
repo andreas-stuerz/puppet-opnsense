@@ -16,7 +16,7 @@ Puppet::ResourceApi.register_type(
         api_secret => Sensitive('your_api_secret'),
         timeout    => 60,
         ssl_verify => true,
-        ca         => '/path/to/ca.pem',
+            ca     => '/path/to/ca.pem',
         ensure     => 'present',
       }
 

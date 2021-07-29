@@ -1,53 +1,15 @@
 ---
-# Config auf firewall oder Brücken Host
-opnsense::devices:
-  # manage local opnsense firewall
-  "%{::fqdn}":
-    url: "https://%{::fqdn}/api"
-    api_key:
-    api_secret:
-    timeout:
-    ssl_verify:
-    ca: /etc/ca/cert.pem
-    plugins:
-      - os-acme-client
-      - os-haproxy
-  # manage remote opnsense firewall
-  "fw01.exmple.de":
-    url: "https://fw01.exmample.de/api"
-    api_key:
-    api_secret:
-    timeout:
-    ssl_verify:
-    ca: /etc/ca/cert.pem
-    plugins:
-      - os-acme-client
-  # manage another remote opnsense firewall
-  "fw01.dmz.example.de":
-    url: "https://fw01.dmz.exmample.de/api"
-    api_key:
-    api_secret:
-    timeout:
-    ssl_verify:
-    ca: /etc/ca/cert.pem
-    plugins: []
-
-opnsense::manage_resources: true
-opnsense::api_manager_prefix: "%{fqdn} api manager"
-# werden überall installiert
+opnsense::devices: {}
+opnsense::manage_resources: false
+opnsense::api_manager_prefix: "%{fqdn} api manager - "
 opnsense::required_plugins:
-  - os-firewall
-opnsense::aliases:
-  'my_http_ports':
-    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
-    type: port,
-    content:
-      - '80'
-      - '443'
-    description: 'my local web ports'
-    enabled: true
-  'mac_alias':
-    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
+  "os-firewall": {}
+opnsense::aliases: {}
+opnsense::rules: {}
+#opnsense::client::firewall::aliases: {}
+opnsense::client::firewall::aliases:
+  'mac_alias_from_client':
+    devices: ["opnsense.example.com"]
     type: mac,
     content:
       - 'f4:90:ea'
@@ -56,46 +18,8 @@ opnsense::aliases:
     counters: true
     enabled: true
 
-opnsense::rules:
-  'allow all from lan and wan':
-    device: ['fw01.exmample.de']
-    sequence: '1'
-    action: 'pass'
-    interface:
-      - lan
-      - wan
+opnsense::client::firewall::rules: {}
 
-# Hier config auf einem Client - astuerz-test01.example.de
-opnsense::firewall::aliases:
-  'mac_alias':
-    device: ['fw01.exmample.de']
-    type: mac,
-    content:
-      - 'f4:90:ea'
-      - '0c:4d:e9:b1:05:f0'
-    description: 'My local MAC address or partial mac addresses'
-    counters: true
-    enabled: true
-
-opnsense::firewall::rules:
-  'allow http':
-    device: ['fw01.exmample.de', 'fw01.dmz.exmample.de']
-    sequence: 1
-    action: pass
-    direction: in
-    protocol: TCP
-    destination_port: http
-    interface:
-      - lan
-  'allow https':
-    device: ['fw01.exmample.de']
-    sequence: 1
-    action: pass
-    direction: in
-    protocol: TCP
-    destination_port: https
-    interface:
-      - lan
 
 
 

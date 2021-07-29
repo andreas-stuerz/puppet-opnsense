@@ -1,0 +1,144 @@
+---
+devices:
+  'opnsense.example.com':
+    url: "https://opnsense.example.com/api"
+    api_key: 3T7LyQbZSXC/WN56qL0LyvLweNICeiTOzZ2JifNAvlrL+BW8Yvx7WSAUS4xvmLM/BE7xVVtv0Mv2QwNm
+    api_secret: 2mxXt++o5Mmte3sfNJsYxlm18M2t/wAGIAHwmWoe8qc15T5wUrejJQUd/sfXSGnAG2Xk2gqMf8FzHpT2
+    ssl_verify: true
+    timeout: 60
+    ca: /etc/ca/cert.pem
+    plugins:
+      'os-acme-client': {}
+      'os-haproxy': { ensure: absent }
+    ensure: present
+aliases:
+  'hosts_alias':
+    devices: ["opnsense.example.com"]
+    type: host,
+    content:
+      - '10.0.0.1'
+      - '!10.0.0.5'
+    description: 'Some hosts'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'network_alias':
+    devices: ["opnsense.example.com"]
+    type: network,
+    content:
+      - '192.168.1.0/24'
+      - '!192.168.1.128/25'
+    description: 'Some networks'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'ports_alias':
+    devices: ["opnsense.example.com"]
+    type: port,
+    content:
+      - '80'
+      - '443'
+    description: 'Some ports'
+    enabled: true
+  'url_alias':
+    devices: ["opnsense.example.com"]
+    type: url,
+    content:
+      - 'https://www.spamhaus.org/drop/drop.txt'
+      - 'https://www.spamhaus.org/drop/edrop.txt'
+    description: 'Spamhaus fetched once.'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'url_table_alias':
+    devices: ["opnsense.example.com"]
+    type: urltable,
+    content:
+      - 'https://www.spamhaus.org/drop/drop.txt'
+      - 'https://www.spamhaus.org/drop/edrop.txt'
+    description: 'Spamhaus block list,.'
+    updatefreq: 0.5
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'geoip_alias':
+    devices: ["opnsense.example.com"]
+    type: geoip,
+    content: ['DE', 'GR']
+    description: 'Only german and greek IPv4 and IPV6 addresses'
+    proto: 'IPv4,IPv6'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'networkgroup_alias':
+    devices: ["opnsense.example.com"]
+    type: networkgroup,
+    content:
+      - hosts_alias
+      - network_alias
+    description: 'Combine different network aliases into one'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'mac_alias':
+    devices: ["opnsense.example.com"]
+    type: mac,
+    content:
+      - 'f4:90:ea'
+      - '0c:4d:e9:b1:05:f0'
+    description: 'MAC address or partial mac addresses.'
+    counters: true
+    enabled: true
+    ensure: 'present'
+  'external_alias':
+    devices: ["opnsense.example.com"]
+    type: external,
+    description: 'Externally managed alias, this only handles the placeholder.'
+    proto: 'IPv4'
+    counters: true
+    enabled: true
+    ensure: 'present'
+rules:
+  'allow all from lan and wan':
+    devices: ["opnsense.example.com"]
+    sequence: '1'
+    action: 'pass'
+    interface:
+      - lan
+      - wan
+
+manage_resources: true
+
+#opnsense::client::firewall::aliases:
+#  'mac_alias_from_client':
+#    devices: ["opnsense.example.com"]
+#    type: mac,
+#    content:
+#      - 'f4:90:ea'
+#      - '0c:4d:e9:b1:05:f0'
+#    description: 'My local MAC address or partial mac addresses'
+#    counters: true
+#    enabled: true
+#
+#opnsense::client::firewall::rules:
+#  'allow http':
+#    devices: ["opnsense.example.com"]
+#    sequence: 1
+#    action: pass
+#    direction: in
+#    protocol: TCP
+#    destination_port: http
+#    interface:
+#      - lan
+#  'allow https':
+#    device: ["opnsense.example.com"]
+#    sequence: 1
+#    action: pass
+#    direction: in
+#    protocol: TCP
+#    destination_port: https
+#    interface:
+#      - lan
+#
+#
+#

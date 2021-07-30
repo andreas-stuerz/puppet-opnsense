@@ -14,7 +14,7 @@ devices:
 aliases:
   'hosts_alias':
     devices: ["opnsense.example.com"]
-    type: host,
+    type: host
     content:
       - '10.0.0.1'
       - '!10.0.0.5'
@@ -24,7 +24,7 @@ aliases:
     ensure: 'present'
   'network_alias':
     devices: ["opnsense.example.com"]
-    type: network,
+    type: network
     content:
       - '192.168.1.0/24'
       - '!192.168.1.128/25'
@@ -34,7 +34,7 @@ aliases:
     ensure: 'present'
   'ports_alias':
     devices: ["opnsense.example.com"]
-    type: port,
+    type: port
     content:
       - '80'
       - '443'
@@ -42,7 +42,7 @@ aliases:
     enabled: true
   'url_alias':
     devices: ["opnsense.example.com"]
-    type: url,
+    type: url
     content:
       - 'https://www.spamhaus.org/drop/drop.txt'
       - 'https://www.spamhaus.org/drop/edrop.txt'
@@ -52,7 +52,7 @@ aliases:
     ensure: 'present'
   'url_table_alias':
     devices: ["opnsense.example.com"]
-    type: urltable,
+    type: urltable
     content:
       - 'https://www.spamhaus.org/drop/drop.txt'
       - 'https://www.spamhaus.org/drop/edrop.txt'
@@ -63,7 +63,7 @@ aliases:
     ensure: 'present'
   'geoip_alias':
     devices: ["opnsense.example.com"]
-    type: geoip,
+    type: geoip
     content: ['DE', 'GR']
     description: 'Only german and greek IPv4 and IPV6 addresses'
     proto: 'IPv4,IPv6'
@@ -72,7 +72,7 @@ aliases:
     ensure: 'present'
   'networkgroup_alias':
     devices: ["opnsense.example.com"]
-    type: networkgroup,
+    type: networkgroup
     content:
       - hosts_alias
       - network_alias
@@ -82,7 +82,7 @@ aliases:
     ensure: 'present'
   'mac_alias':
     devices: ["opnsense.example.com"]
-    type: mac,
+    type: mac
     content:
       - 'f4:90:ea'
       - '0c:4d:e9:b1:05:f0'
@@ -92,7 +92,7 @@ aliases:
     ensure: 'present'
   'external_alias':
     devices: ["opnsense.example.com"]
-    type: external,
+    type: external
     description: 'Externally managed alias, this only handles the placeholder.'
     proto: 'IPv4'
     counters: true

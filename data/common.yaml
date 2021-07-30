@@ -6,18 +6,7 @@ opnsense::required_plugins:
   "os-firewall": {}
 opnsense::aliases: {}
 opnsense::rules: {}
-#opnsense::client::firewall::aliases: {}
-opnsense::client::firewall::aliases:
-  'mac_alias_from_client':
-    devices: ["opnsense.example.com"]
-    type: mac,
-    content:
-      - 'f4:90:ea'
-      - '0c:4d:e9:b1:05:f0'
-    description: 'My local MAC address or partial mac addresses'
-    counters: true
-    enabled: true
-
+opnsense::client::firewall::aliases: {}
 opnsense::client::firewall::rules: {}
 
 

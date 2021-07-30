@@ -24,7 +24,7 @@ describe 'opnsense' do
       describe 'could manage local firewall' do
         let(:node) { 'opnsense.example.com' }
         let(:params) do
-          hash_from_fixture_yaml_file('unit/classes/opnsense/manage_local_fw.yaml')
+          hash_from_fixture_yaml_file('unit/classes/opnsense/local_resources.yaml')
         end
 
         it {

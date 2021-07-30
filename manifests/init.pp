@@ -14,18 +14,16 @@ class opnsense (
 ){
   $devices.each |$device_name, $device_conf| {
     # generate devices configurations
-    opnsense_device { $device_name:
-      ensure     => $device_conf['ensure'],
-      api_key    => $device_conf['api_key'],
-      api_secret => Sensitive($device_conf['api_secret']),
-      timeout    => $device_conf['timeout'],
-      ssl_verify => $device_conf['ssl_verify'],
-      ca         => $device_conf['ca'],
-      url        => $device_conf['url'],
+    $device_conf_filtered = delete($device_conf, ['plugins'])
+    if !empty($device_conf_filtered) {
+      opnsense_device { $device_name:
+        * => $device_conf_filtered
+      }
     }
 
     # install required and individual plugins on device
-    $plugins_to_install = $device_conf['plugins'] + $required_plugins
+    $device_plugins = if $device_conf['plugins'] { $device_conf['plugins'] } else { {} }
+    $plugins_to_install = $device_plugins + $required_plugins
     $plugins_to_install.each |$plugin_name, $plugin_options| {
       opnsense_plugin { $plugin_name:
         device => $device_name,

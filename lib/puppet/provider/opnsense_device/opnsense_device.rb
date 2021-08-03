@@ -138,7 +138,7 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
       end
     end
   end
-
+  #
   private :_write_config, :_ensure_dir, :_write_yaml, :_extract_pw, :_gen_pw,
           :_create_opnsense_device, :_get_devices, :_read_yaml
 end

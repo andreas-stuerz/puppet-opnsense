@@ -91,6 +91,6 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     device_name = name.fetch(:device).to_s
     opn_cli_base_cmd(device_name, ['firewall', 'alias', 'delete', alias_name, '-o', 'json'])
   end
-
+  #
   private :_get_firewall_aliases_from_devices, :_aliases_list, :_get_command_args
 end

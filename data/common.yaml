@@ -1,14 +1,10 @@
 ---
 opnsense::devices: {}
-opnsense::manage_resources: false
+opnsense::aliases: {}
+opnsense::rules: {}
 opnsense::api_manager_prefix: "%{fqdn} api manager - "
 opnsense::required_plugins:
   "os-firewall": {}
-opnsense::aliases: {}
-opnsense::rules: {}
+opnsense::manage_resources: false
 opnsense::client::firewall::aliases: {}
 opnsense::client::firewall::rules: {}
-
-
-
-

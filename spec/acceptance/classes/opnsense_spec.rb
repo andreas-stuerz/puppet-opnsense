@@ -30,11 +30,11 @@ describe 'class opnsense' do
               "ensure"      => "present"
             },
             "mac_alias_remote" => {
-              "devices"     => ["opnsense.remote.com"], 
+              "devices"     => ["opnsense.remote.com"],#{' '}
               "type"        => "mac",
-              "content"     => ["f4:90:ea", "0c:4d:e9:b1:05:f0"], 
-              "description" => "My local MAC address or partial mac addresses", 
-              "counters"    => true, 
+              "content"     => ["f4:90:ea", "0c:4d:e9:b1:05:f0"],#{' '}
+              "description" => "My local MAC address or partial mac addresses",#{' '}
+              "counters"    => true,#{' '}
               "enabled"     => true,
               "ensure"      => "present"
             }
@@ -46,7 +46,7 @@ describe 'class opnsense' do
               "action"    => "pass",
               "interface" => ["lan", "wan"]
             }
-          }, 
+          },#{' '}
           manage_resources   => true,
           api_manager_prefix => "opnsense.remote.com api manager - ",
           required_plugins   => {
@@ -107,7 +107,7 @@ describe 'class opnsense' do
               "devices" => ["opnsense.remote.com"],
               "ensure" => "absent"
             }
-          }, 
+          },#{' '}
           manage_resources   => true,
           api_manager_prefix =>"opnsense.remote.com api manager - ",
           required_plugins   => {

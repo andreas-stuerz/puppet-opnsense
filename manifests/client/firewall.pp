@@ -1,9 +1,36 @@
-# @summary A short summary of the purpose of this class
+# @summary Use exported resources to collect firewall configurations from clients.
 #
-# A description of what this class does
+# This will create resources for firewall configurations into puppetdb
+# for automatically configuring them on one or more opnsense firewall.
+#
+# @param aliases
+#   Firewall aliases that are associated with this client.
+# @param rules
+#   Firewall rules that are associated with this client.
 #
 # @example
-#   include opnsense::client::firewall::aliases
+#   class { 'opnsense::client::firewall':
+#     aliases => {
+#       "my_http_ports_from_client" => {
+#         "devices"     => ["localhost"],
+#         "type"        => "port",
+#         "content"     => ["80", "443"],
+#         "description" => "example local http ports",
+#         "enabled"     => true,
+#         "ensure"      => present
+#       },
+#     },
+#     rules => {
+#       "allow all from lan and wan" => {
+#         "devices"   => ["localhost"],
+#         "sequence"  => "1",
+#         "action"    => "pass",
+#         "interface" => ["lan", "wan"],
+#         "ensure"      => present
+#       }
+#     }
+#   }
+#
 class opnsense::client::firewall (
   Hash $aliases,
   Hash $rules,

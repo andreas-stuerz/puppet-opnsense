@@ -2,8 +2,58 @@
 #
 # Automate opnsense firewalls
 #
+# @param devices
+#   The devices that wil be managed by this class
+# @param api_manager_prefix
+#   Prefix that will be added to the description fields for non exported resource items
+# @param manage_resources
+#   When true, it will export resources to something like puppetdb.
+#   When set to true, you'll need to configure 'storeconfigs' to make
+#   this happen. Default is set to false, as not everyone has this
+#   enabled.
+# @param required_plugins
+#   The required opnsense plugins to support all features.
+# @param aliases
+#   Configured firewall aliases without using exported resources.
+# @param rules
+#   Configured firewall rules without using exported resources.
+#
 # @example
-#   include opnsense
+#   class { 'opnsense':
+#     devices => {
+#       "localhost" => {
+#         "url"        => 'https://127.0.0.1/api',
+#         "api_key"    => '3T7LyQbZSXC/WN56qL0LyvLweNICeiTOzZ2JifNAvlrL+BW8Yvx7WSAUS4xvmLM/BE7xVVtv0Mv2QwNm',
+#         "api_secret" => '2mxXt++o5Mmte3sfNJsYxlm18M2t/wAGIAHwmWoe8qc15T5wUrejJQUd/sfXSGnAG2Xk2gqMf8FzHpT2',
+#         "ssl_verify" => true,
+#         "timeout"    => 60,
+#         "ca"         => '~/.opn-cli/ca.pem',
+#         "plugins"    => {
+#           "os-helloworld" => {}
+#         }
+#       }
+#     },
+#     aliases => {
+#       "my_http_ports_local" => {
+#         "devices"     => ["localhost"],
+#         "type"        => "port",
+#         "content"     => ["80", "443"],
+#         "description" => "example local http ports",
+#         "enabled"     => true,
+#         "ensure"      => present
+#       },
+#     },
+#     rules => {
+#       "allow all from lan and wan" => {
+#         "devices"   => ["localhost"],
+#         "sequence"  => "1",
+#         "action"    => "pass",
+#         "interface" => ["lan", "wan"],
+#         "ensure"      => present
+#       }
+#     }
+#   }
+#
 class opnsense (
   Hash $devices,
   String $api_manager_prefix,

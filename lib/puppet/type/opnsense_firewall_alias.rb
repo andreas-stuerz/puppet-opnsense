@@ -108,7 +108,7 @@ EOS
   title_patterns: [
     {
       pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
-        desc: 'Where the name of the plugin and the device are provided with a @',
+        desc: 'Where the name of the alias and the device are provided with a @',
     },
     {
       pattern: %r{^(?<name>.*)$},

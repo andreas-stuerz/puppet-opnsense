@@ -4,12 +4,166 @@
 
 ## Table of Contents
 
+### Classes
+
+* [`opnsense`](#opnsense): Automate opnsense firewalls
+* [`opnsense::client::firewall`](#opnsenseclientfirewall): Use exported resources to collect firewall configurations from clients.
+
 ### Resource types
 
 * [`opnsense_device`](#opnsense_device): Manage an OPNsense device access.
 * [`opnsense_firewall_alias`](#opnsense_firewall_alias): Manage opnsense firewall aliases.
 * [`opnsense_firewall_rule`](#opnsense_firewall_rule): Manage opnsense firewall rules
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
+
+## Classes
+
+### <a name="opnsense"></a>`opnsense`
+
+Automate opnsense firewalls
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'opnsense':
+  devices => {
+    "localhost" => {
+      "url"        => 'https://127.0.0.1/api',
+      "api_key"    => '3T7LyQbZSXC/WN56qL0LyvLweNICeiTOzZ2JifNAvlrL+BW8Yvx7WSAUS4xvmLM/BE7xVVtv0Mv2QwNm',
+      "api_secret" => '2mxXt++o5Mmte3sfNJsYxlm18M2t/wAGIAHwmWoe8qc15T5wUrejJQUd/sfXSGnAG2Xk2gqMf8FzHpT2',
+      "ssl_verify" => true,
+      "timeout"    => 60,
+      "ca"         => '~/.opn-cli/ca.pem',
+      "plugins"    => {
+        "os-helloworld" => {}
+      }
+    }
+  },
+  aliases => {
+    "my_http_ports_local" => {
+      "devices"     => ["localhost"],
+      "type"        => "port",
+      "content"     => ["80", "443"],
+      "description" => "example local http ports",
+      "enabled"     => true,
+      "ensure"      => present
+    },
+  },
+  rules => {
+    "allow all from lan and wan" => {
+      "devices"   => ["localhost"],
+      "sequence"  => "1",
+      "action"    => "pass",
+      "interface" => ["lan", "wan"],
+      "ensure"      => present
+    }
+  }
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `opnsense` class:
+
+* [`devices`](#devices)
+* [`api_manager_prefix`](#api_manager_prefix)
+* [`manage_resources`](#manage_resources)
+* [`required_plugins`](#required_plugins)
+* [`aliases`](#aliases)
+* [`rules`](#rules)
+
+##### <a name="devices"></a>`devices`
+
+Data type: `Hash`
+
+The devices that wil be managed by this class
+
+##### <a name="api_manager_prefix"></a>`api_manager_prefix`
+
+Data type: `String`
+
+Prefix that will be added to the description fields for non exported resource items
+
+##### <a name="manage_resources"></a>`manage_resources`
+
+Data type: `Boolean`
+
+When true, it will export resources to something like puppetdb.
+When set to true, you'll need to configure 'storeconfigs' to make
+this happen. Default is set to false, as not everyone has this
+enabled.
+
+##### <a name="required_plugins"></a>`required_plugins`
+
+Data type: `Hash`
+
+The required opnsense plugins to support all features.
+
+##### <a name="aliases"></a>`aliases`
+
+Data type: `Hash`
+
+Configured firewall aliases without using exported resources.
+
+##### <a name="rules"></a>`rules`
+
+Data type: `Hash`
+
+Configured firewall rules without using exported resources.
+
+### <a name="opnsenseclientfirewall"></a>`opnsense::client::firewall`
+
+This will create resources for firewall configurations into puppetdb
+for automatically configuring them on one or more opnsense firewall.
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'opnsense::client::firewall':
+  aliases => {
+    "my_http_ports_from_client" => {
+      "devices"     => ["localhost"],
+      "type"        => "port",
+      "content"     => ["80", "443"],
+      "description" => "example local http ports",
+      "enabled"     => true,
+      "ensure"      => present
+    },
+  },
+  rules => {
+    "allow all from lan and wan" => {
+      "devices"   => ["localhost"],
+      "sequence"  => "1",
+      "action"    => "pass",
+      "interface" => ["lan", "wan"],
+      "ensure"      => present
+    }
+  }
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `opnsense::client::firewall` class:
+
+* [`aliases`](#aliases)
+* [`rules`](#rules)
+
+##### <a name="aliases"></a>`aliases`
+
+Data type: `Hash`
+
+Firewall aliases that are associated with this client.
+
+##### <a name="rules"></a>`rules`
+
+Data type: `Hash`
+
+Firewall rules that are associated with this client.
 
 ## Resource types
 
@@ -31,7 +185,7 @@ opnsense_device { 'opnsense.example.com':
   api_secret => Sensitive('your_api_secret'),
   timeout    => 60,
   ssl_verify => true,
-  ca         => '/path/to/ca.pem',
+      ca     => '/path/to/ca.pem',
   ensure     => 'present',
 }
 ```

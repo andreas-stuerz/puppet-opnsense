@@ -155,8 +155,8 @@ describe 'opnsense_firewall_rule' do
       end
 
       it 'displays the rule as deleted via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('firewall rule list -o json')) do |r|
-          expect(r.stdout).to match %r{\[\]}
+        run_shell(build_opn_cli_cmd('firewall rule list -o plain -c description')) do |r|
+          expect(r.stdout).not_to match %r{acceptance test rule\n}
         end
       end
     end

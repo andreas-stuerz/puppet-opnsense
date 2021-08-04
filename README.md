@@ -8,8 +8,7 @@
 
 ## Table of Contents
 
-- [Module Description](#module-description)
-- [Features](#features)
+- [Module description](#module-description)
 - [Setup](#setup)
   * [OPNsense firewall](#opnsense-firewall)
     + [Requirements](#requirements)
@@ -17,9 +16,12 @@
   * [Bastion host](#bastion-host)
     + [Requirements](#requirements-1)
     + [Install requirements](#install-requirements-1)
+  * [Access to the OPNsense api](#access-to-the-opnsense-api)
 - [Usage](#usage)
-  * [Creating the device](#creating-the-device)
-  * [Configure your OPNsense Firewall](#configure-your-opnsense-firewall)
+  * [Install and enable opnsense](#install-and-enable-opnsense)
+  * [Configure OPNsense firewall(s)](#configure-opnsense-firewall-s-)
+  * [Configure a client to export firewall aliases and rules](#configure-a-client-to-export-firewall-aliases-and-rules)
+  * [More examples](#more-examples)
 - [Reference](#reference)
 - [Limitations](#limitations)
 - [CI/CD](#ci-cd)
@@ -29,11 +31,12 @@
   * [Running acceptance tests](#running-acceptance-tests)
   * [Teardown](#teardown)
 - [Contributing](#contributing)
+- [Release Notes](#release-notes)
 
 
-## Description
+## Module description
 
-The opnsense module configures OPNsense firewalls with custom types and providers.
+The opnsense module configures OPNsense firewalls.
 
 It allows administrators to manage an OPNsense firewall directly via the [sysutils/puppet-agent](https://github.com/opnsense/plugins/tree/master/sysutils/puppet-agent) opnsense plugin 
 and/or manage multiple firewalls from a bastion host running a puppet-agent with [opn-cli](https://pypi.org/project/opn-cli/) installed.
@@ -42,14 +45,12 @@ The main target of module is to enable GitOps for your network security policies
 pull request for new firewall rules and the network or ops team could review it and deploy it to a pre production environment for
 testing.
 
-## Features
 You can automate the following with the module:
 
 - plugins
 - firewall aliases
-- firewall rules (needs the opnsense plugin: os-firewall)
+- firewall rules
 
-more to come...
 
 ## Setup
 
@@ -65,7 +66,7 @@ OPNsense plugins:
 ```
 Menu->Firmware->Plugins
 
-Install Plugin: sysutils/puppet-agent
+Install plugin: sysutils/puppet-agent
 ```
 
 ### Bastion host
@@ -74,7 +75,6 @@ If you want a bastion hosts running a puppet-agent which could manage multiple f
 
 #### Requirements
 * [opn-cli](https://pypi.org/project/opn-cli/)
-* [os-firewall](https://github.com/opnsense/plugins/tree/master/net/firewall) for managing firewall rules
 * puppetlabs/resource_api (puppet < 6.0)
 
 #### Install requirements
@@ -95,28 +95,12 @@ package { $packages:
 }
 ```
 
-## Usage
-
-### Creating the device
-
-If you want to manage an OPNsense Firewall, you need to supply credentials and connection information for the device. 
-
-For each device you want to mange create an [opnsense_device](REFERENCE.md#opnsense_device) type:
-```
-opnsense_device { 'opnsense.example.com':
-  url        => 'https://opnsense.example.com/api',
-  api_key    => 'your_api_key',
-  api_secret => Sensitive('your_api_secret'),
-  timeout    => 60,
-  ssl_verify => true,
-  ca         => '/path/to/ca.pem',
-  ensure     => 'present',
-}
-```
+### Access to the OPNsense api
+If you want to manage an OPNsense firewall, you need to supply credentials and connection information for the device. 
 
 To create an api_key and api_secret see: https://docs.opnsense.org/development/how-tos/api.html#creating-keys.
 
-**If you want to use ssl verification (recommended):**
+**If you want to use ssl verification (recommended):**`
 
 To download the default self-signed cert, open the OPNsense web gui and go to System->Trust->Certificates. Search for the name: "Web GUI SSL certificate" and press the "export user cert" button.
 
@@ -124,22 +108,99 @@ If you use a ca signed certificate, go to System->Trust->Authorities and press t
 
 Save the cert or ca and make sure the puppet agent is able to read it.
 
-### Configure your OPNsense Firewall
+## Usage
 
-If you have at least one configured opnsense_device, you could start to use other puppet types to manage the device.
-
-In the following example we use the [opnsense_plugin](REFERENCE.md#opnsense_plugin) type to manage the installed plugins 
-on the opnsense device "opnsense.example.com":
-
+### Install and enable opnsense
 ```
-opnsense_plugin { 'os-firewall':
-  device => 'opnsense.example.com',
-  ensure => 'present',
+include opnsense
+```
+
+### Configure OPNsense firewall(s)
+You can manage multiple opnsense firewalls with this module.
+
+In the following example a single OPNsense firewall running a puppet agent is manged which allows clients to
+export firewall rules and aliases via exported resources (manage_resources => true): 
+```
+# node: opnsense.example.com
+
+class { 'opnsense':
+  manage_resources => true,
+  devices => {
+    'opnsense.example.com' => {
+      'url'        => 'https://127.0.0.1/api',
+      'api_key'    => 'your_api_key',
+      'api_secret' => 'your_api_secret',
+      'ssl_verify' => true,
+      'timeout'    => 60,
+      'ca'         => '~/.opn-cli/ca.pem',
+      'plugins'    => {
+        'os-helloworld' => {}
+      }
+    }
+  },
+  aliases => {
+    'my_http_ports_local' => {
+      'devices'          => ['localhost'],
+      'type'             => 'port',
+      'content'          => ['80', '443'],
+      'description'      => 'example local http ports',
+      'enabled'          => true,
+      'devices'          => ['opnsense.example.com'],
+      'sequence'         => '100',
+      'action'           => 'pass',
+      'interface'        => ['lan'],
+      'protocol'         => 'TCP',
+      'destination_net'  => 'client1_example_com',
+      'destination_port' => 'https',
+      'ensure'           => present
+    },
+  },
+  rules   => {
+    'allow all from lan and wan' => {
+      'devices'   => ['localhost'],
+      'sequence'  => '1',
+      'action'    => 'pass',
+      'interface' => ['lan', 'wan']
+    }
+  }
 }
 ```
 
-See [Reference.md](#Reference) for all available puppet types to manage your OPNsense firewall.
+### Configure a client to export firewall aliases and rules
+This feature use exported resources. You need to enable catalog storage and searching (storeconfigs) on your primary puppet server.
 
+Here the client (client1.example.com) is exporting it´s security configuration to the firewall (opnsense.example.com) defined above:
+```
+# node: client1.example.com
+
+class { 'opnsense::client::firewall':
+  aliases => {
+    'client1_example_com' => {
+      'devices'     => ['opnsense.example.com'],
+      'type'        => 'host',
+      'content'     => ['client1.example.com'],
+      'description' => 'client.example.com alias',
+      'enabled'     => true,
+      'ensure'      => present
+    },
+  },
+  rules => {
+    'allow https from lan to client1.example.com' => {
+      'devices'          => ['opnsense.example.com'],
+      'sequence'         => '100',
+      'action'           => 'pass',
+      'interface'        => ['lan'],
+      'protocol'         => 'TCP',
+      'destination_net'  => 'client1_example_com',
+      'destination_port' => 'https',
+      'ensure'           => present
+    },
+  }
+}
+```
+
+### More examples
+You find more examples in the [examples](examples) folder.
 
 ## Reference
 
@@ -189,3 +250,5 @@ Please use the GitHub issues functionality to report any bugs or requests for ne
 
 All contributions must pass all existing tests, new features should provide additional unit/acceptance tests.
 
+## Release Notes
+See [Changelog](CHANGELOG.md).

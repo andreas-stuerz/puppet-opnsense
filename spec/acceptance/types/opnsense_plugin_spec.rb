@@ -14,7 +14,7 @@ describe 'opnsense_plugin' do
       end
 
       it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
-        run_shell(build_opn_cli_cmd('plugin installed -c name')) do |r|
+        run_shell(build_opn_cli_cmd('plugin installed -o plain -c name')) do |r|
           expect(r.stdout).to match %r{os-helloworld}
         end
       end
@@ -32,7 +32,7 @@ describe 'opnsense_plugin' do
       end
 
       it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
-        run_shell(build_opn_cli_cmd('plugin installed -c name')) do |r|
+        run_shell(build_opn_cli_cmd('plugin installed -o plain -c name')) do |r|
           expect(r.stdout).not_to match %r{os-helloworld}
         end
       end

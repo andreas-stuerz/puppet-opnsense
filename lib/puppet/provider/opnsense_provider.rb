@@ -72,6 +72,6 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   def get_device_names_by_filter(filter)
     filter.empty? ? get_configured_devices : filter.map { |item| item[:device] }.compact.uniq
   end
-
+  #
   private :_get_config_glob_pattern, :get_config_basedir, :_get_suffix
 end

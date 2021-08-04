@@ -1,0 +1,31 @@
+---
+aliases:
+  'mac_alias_from_client':
+    devices: ["opnsense1.example.com", "opnsense2.example.com"]
+    type: mac,
+    content:
+      - 'f4:90:ea'
+      - '0c:4d:e9:b1:05:f0'
+    description: 'My MAC address or partial mac addresses'
+    counters: true
+    enabled: true
+
+rules:
+  'allow http':
+    devices: ["opnsense1.example.com"]
+    sequence: 1
+    action: pass
+    direction: in
+    protocol: TCP
+    destination_port: http
+    interface:
+      - lan
+  'allow https':
+    devices: ["opnsense1.example.com", "opnsense2.example.com"]
+    sequence: 1
+    action: pass
+    direction: in
+    protocol: TCP
+    destination_port: https
+    interface:
+      - lan

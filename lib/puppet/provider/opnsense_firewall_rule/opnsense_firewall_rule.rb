@@ -143,6 +143,6 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
 
     args
   end
-
+  #
   private :_get_firewall_rules_from_devices, :_rules_list, :_find_uuid_by_namevars, :_get_command_args
 end

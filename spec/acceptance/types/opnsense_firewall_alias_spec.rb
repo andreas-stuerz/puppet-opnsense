@@ -100,16 +100,16 @@ describe 'opnsense_firewall_alias' do
       end
 
       it 'displays the created aliases via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('firewall alias list')) do |r|
-          expect(r.stdout).to match %r{hosts_alias}
-          expect(r.stdout).to match %r{network_alias}
-          expect(r.stdout).to match %r{ports_alias}
-          expect(r.stdout).to match %r{url_alias}
-          expect(r.stdout).to match %r{url_table_alias}
-          expect(r.stdout).to match %r{geoip_alias}
-          expect(r.stdout).to match %r{networkgroup_alias}
-          expect(r.stdout).to match %r{mac_alias}
-          expect(r.stdout).to match %r{external_alias}
+        run_shell(build_opn_cli_cmd('firewall alias list -o plain -c name')) do |r|
+          expect(r.stdout).to match %r{hosts_alias\n}
+          expect(r.stdout).to match %r{network_alias\n}
+          expect(r.stdout).to match %r{ports_alias\n}
+          expect(r.stdout).to match %r{url_alias\n}
+          expect(r.stdout).to match %r{url_table_alias\n}
+          expect(r.stdout).to match %r{geoip_alias\n}
+          expect(r.stdout).to match %r{networkgroup_alias\n}
+          expect(r.stdout).to match %r{mac_alias\n}
+          expect(r.stdout).to match %r{external_alias\n}
         end
       end
     end
@@ -167,16 +167,16 @@ describe 'opnsense_firewall_alias' do
       end
 
       it 'displays the aliases as deleted via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('firewall alias list')) do |r|
-          expect(r.stdout).not_to match %r{hosts_alias}
-          expect(r.stdout).not_to match %r{network_alias}
-          expect(r.stdout).not_to match %r{ports_alias}
-          expect(r.stdout).not_to match %r{url_alias}
-          expect(r.stdout).not_to match %r{url_table_alias}
-          expect(r.stdout).not_to match %r{geoip_alias}
-          expect(r.stdout).not_to match %r{networkgroup_alias}
-          expect(r.stdout).not_to match %r{mac_alias}
-          expect(r.stdout).not_to match %r{external_alias}
+        run_shell(build_opn_cli_cmd('firewall alias list -o plain -c name')) do |r|
+          expect(r.stdout).not_to match %r{hosts_alias\n}
+          expect(r.stdout).not_to match %r{network_alias\n}
+          expect(r.stdout).not_to match %r{ports_alias\n}
+          expect(r.stdout).not_to match %r{url_alias\n}
+          expect(r.stdout).not_to match %r{url_table_alias\n}
+          expect(r.stdout).not_to match %r{geoip_alias\n}
+          expect(r.stdout).not_to match %r{networkgroup_alias\n}
+          expect(r.stdout).not_to match %r{mac_alias\n}
+          expect(r.stdout).not_to match %r{external_alias\n}
         end
       end
     end

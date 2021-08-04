@@ -7,5 +7,5 @@ fixtures:
     puppet_agent: 'https://github.com/puppetlabs/puppetlabs-puppet_agent.git'
     provision: 'https://github.com/puppetlabs/provision.git'
   forge_modules:
-    #stdlib: "puppetlabs/stdlib"
+    stdlib: "puppetlabs/stdlib"
 

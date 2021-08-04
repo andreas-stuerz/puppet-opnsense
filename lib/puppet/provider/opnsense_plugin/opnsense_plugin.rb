@@ -75,6 +75,6 @@ class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::Opnse
   def _plugin_uninstall(device_name, plugin_name)
     opn_cli_base_cmd(device_name, ['plugin', 'uninstall', plugin_name.to_s, '-o', 'json'])
   end
-
+  #
   private :_get_plugins_from_devices, :_plugin_list, :_plugin_install, :_plugin_uninstall
 end

@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.3.0](https://github.com/andeman/puppet-opnsense/tree/v1.3.0) (2021-08-04)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.2.0...v1.3.0)
+
+### Added
+
+- add manifests [\#5](https://github.com/andeman/puppet-opnsense/pull/5) ([andeman](https://github.com/andeman))
+
 ## [v1.2.0](https://github.com/andeman/puppet-opnsense/tree/v1.2.0) (2021-07-23)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.1.1...v1.2.0)

@@ -1,6 +1,6 @@
 {
   "name": "andeman-opnsense",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": "andeman",
   "summary": "Manage OPNsense firewalls",
   "license": "Apache-2.0",

@@ -110,18 +110,29 @@ RSpec.configure do |c|
 
   c.before :suite do
     vmhostname = LitmusHelper.instance.run_shell('hostname').stdout.strip
-    vmipaddr = LitmusHelper.instance.run_shell("ip route get 8.8.8.8 | awk '{print $NF; exit}'").stdout.strip
-    if os[:family] == 'redhat'
-      vmipaddr = LitmusHelper.instance.run_shell("ip route get 8.8.8.8 | awk '{print $7; exit}'").stdout.strip
-    end
+    vmipaddr = if os[:family] == 'redhat'
+                 LitmusHelper.instance.run_shell("ip route get 8.8.8.8 | awk '{print $7; exit}'").stdout.strip
+               elsif os[:family] == 'freebsd'
+                 LitmusHelper.instance
+                             .run_shell("route -vn get 8.8.8.8 | tail -n1| awk '{print $NF; exit}'").stdout.strip
+               else
+                 LitmusHelper.instance.run_shell("ip route get 8.8.8.8 | awk '{print $NF; exit}'").stdout.strip
+               end
+
+    vmsh = LitmusHelper.instance.run_shell('echo $SHELL').stdout.strip
+
     vmos = os[:family]
     vmrelease = os[:release]
 
-    puts "Running acceptance test on #{vmhostname} with address #{vmipaddr} and OS #{vmos} #{vmrelease}"
+    puts "Running acceptance test on #{vmhostname} with address #{vmipaddr} and OS #{vmos} #{vmrelease} and Shell #{vmsh}"
 
     puts 'Setup dependencies for module under test'
-    install_test_dependencies
+    if os[:family] != 'freebsd'
+      install_test_dependencies
+    end
+
     setup_test_api_endpoint
+
     install_opnsense_plugin('os-firewall')
 
     puts 'Deploying fixtures to /fixtures'

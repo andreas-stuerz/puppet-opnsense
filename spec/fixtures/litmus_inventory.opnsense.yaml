@@ -3,6 +3,11 @@ version: 2
 groups:
 - name: docker_nodes
   targets: []
+# set Login shell from: /usr/local/sbin/opnsense-shell to: /usr/local/bin/bash (System -> Users -> root -> login shell)
+# install
+# pdk bundle exec rake 'litmus:install_module[127.0.0.1:3333]'
+# pdk bundle exec rake 'litmus:reinstall_module[127.0.0.1:3333]'
+# pdk bundle exec rake 'litmus:acceptance:127.0.0.1:3333'
 - name: ssh_nodes
   targets:
   - uri: 127.0.0.1:2222
@@ -12,7 +17,8 @@ groups:
         user: root
         password: opnsense
         host-key-check: false
-        login-shell: sh
+        login-shell: bash
         connect-timeout: 60
+        port: 3333
 - name: winrm_nodes
   targets: []

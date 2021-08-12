@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
-require_relative '../opnsense_provider'
-require_relative '../opnsense_sensitive'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_sensitive'))
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
+
 require 'yaml'
 require 'fileutils'
 

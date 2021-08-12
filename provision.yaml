@@ -5,6 +5,10 @@ default:
 acceptance:
   provisioner: docker_exp
   images: [ 'litmusimage/centos:7' ]
+opnsense:
+  provisioner: vagrant
+
+
 
 
 

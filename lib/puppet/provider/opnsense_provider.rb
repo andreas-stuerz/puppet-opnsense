@@ -29,6 +29,22 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     File.join(get_config_basedir.to_s, "#{File.basename(device_name)}#{_get_suffix}")
   end
 
+  # @param [Array<Hash<Symbol>>] filter
+  # @return [Array]
+  def get_device_names_by_filter(filter)
+    if filter.is_a?(Array)
+      device_names = filter.map { |item|
+        item[:device] if item.is_a?(Hash) && item.include?(:device)
+      }.compact.uniq
+    end
+
+    if device_names.empty?
+      device_names = get_configured_devices
+    end
+
+    device_names
+  end
+
   # @return [Array]
   def get_configured_devices
     devices = []
@@ -67,11 +83,6 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     end
   end
 
-  # @param [Array<Hash<Symbol>>] filter
-  # @return [Array]
-  def get_device_names_by_filter(filter)
-    filter.empty? ? get_configured_devices : filter.map { |item| item[:device] }.compact.uniq
-  end
   #
   private :_get_config_glob_pattern, :get_config_basedir, :_get_suffix
 end

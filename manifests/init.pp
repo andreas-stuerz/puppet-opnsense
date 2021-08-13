@@ -49,7 +49,7 @@
 #         "sequence"  => "1",
 #         "action"    => "pass",
 #         "interface" => ["lan", "wan"],
-#         "ensure"      => present
+#         "ensure"    => present
 #       }
 #     }
 #   }

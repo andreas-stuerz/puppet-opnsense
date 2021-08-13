@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../opnsense_provider'
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
 
 # Implementation for the opnsense_plugin type using the Resource API.
 class Puppet::Provider::OpnsensePlugin::OpnsensePlugin < Puppet::Provider::OpnsenseProvider

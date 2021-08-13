@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.4.0](https://github.com/andeman/puppet-opnsense/tree/v1.4.0) (2021-08-13)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.3.0...v1.4.0)
+
+### Added
+
+- Add test for facts [\#8](https://github.com/andeman/puppet-opnsense/pull/8) ([andeman](https://github.com/andeman))
+- add custom facts [\#6](https://github.com/andeman/puppet-opnsense/pull/6) ([fraenki](https://github.com/fraenki))
+
+### Fixed
+
+- fix running on opnsense directly [\#7](https://github.com/andeman/puppet-opnsense/pull/7) ([andeman](https://github.com/andeman))
+
 ## [v1.3.0](https://github.com/andeman/puppet-opnsense/tree/v1.3.0) (2021-08-04)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.2.0...v1.3.0)

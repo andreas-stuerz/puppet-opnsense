@@ -24,11 +24,11 @@ class { 'opnsense':
     },
   },
   rules   => {
-    'allow all from lan and wan' => {
+    'allow all from lan' => {
       'devices'   => ['localhost'],
       'sequence'  => '1',
       'action'    => 'pass',
-      'interface' => ['lan', 'wan']
+      'interface' => ['lan']
     }
   },
 }

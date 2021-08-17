@@ -6,4 +6,11 @@ class Puppet::Provider::OpnsenseSensitive < Puppet::Pops::Types::PSensitiveType:
   def ==(other)
     return true if other.is_a?(Puppet::Pops::Types::PSensitiveType::Sensitive) && unwrap == other.unwrap
   end
+
+  # YAML serialization helper for Psych.
+  # @param [Object] coder
+  def encode_with(coder)
+    coder.tag = nil
+    coder.scalar = 'Puppet::Provider::OpnsenseSensitive <<encrypted>>'
+  end
 end

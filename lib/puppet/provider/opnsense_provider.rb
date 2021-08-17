@@ -20,7 +20,7 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
         '-c',
         config_path,
       )
-    Puppet::Util::Execution.execute(args, failonfail: true, combine: true,  custom_environment: { 'LC_ALL' => 'en_US.utf8' })
+    Puppet::Util::Execution.execute(args, failonfail: true, custom_environment: { 'LC_ALL' => 'en_US.utf8' })
   end
 
   # @param [String] device_name

@@ -7,8 +7,9 @@ class Puppet::Provider::OpnsenseSensitive < Puppet::Pops::Types::PSensitiveType:
     return true if other.is_a?(Puppet::Pops::Types::PSensitiveType::Sensitive) && unwrap == other.unwrap
   end
 
-  # YAML serialization helper for Psych.
-  # @param [Object] coder
+  # The transactionstore uses psych to dump yaml to the cache file.
+  # This lets us control how that is serialized.
+  # @param [Hash] coder
   def encode_with(coder)
     coder.tag = nil
     coder.scalar = 'Puppet::Provider::OpnsenseSensitive <<encrypted>>'

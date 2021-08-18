@@ -10,6 +10,11 @@ RSpec.describe Puppet::Provider::OpnsenseProvider do
   subject(:provider) { described_class.new }
 
   let(:context) { instance_double('Puppet::ResourceApi::BaseContext', 'context') }
+  let(:execution_error) do
+    Puppet::ExecutionFailure.new(
+      "Error: {'result': 'failed', 'validations': {'rule.interface': 'option not in list'}}",
+    )
+  end
 
   describe 'opn_cli_base_cmd' do
     it 'execute an opn-cli command' do
@@ -17,6 +22,7 @@ RSpec.describe Puppet::Provider::OpnsenseProvider do
       expect(Puppet::Util::Execution).to receive(:execute)
         .with(['opn-cli', '-c', '/tmp/opnsense.example.com-config.yaml', 'plugin', 'installed', '-c', 'name'],
               failonfail: true,
+              combine: true,
               custom_environment: { 'LC_ALL' => 'en_US.utf8' })
         .and_return("os-acme-client\nos-clamav")
 
@@ -24,6 +30,16 @@ RSpec.describe Puppet::Provider::OpnsenseProvider do
           provider.opn_cli_base_cmd('opnsense.example.com', 'plugin', 'installed', '-c', 'name'),
         )
         .to eq "os-acme-client\nos-clamav"
+    end
+
+    it 'an opn-cli command fails' do
+      expect(Puppet::Util::Execution).to receive(:execute).and_raise(execution_error)
+      expect {
+        provider.opn_cli_base_cmd('opnsense.example.com', 'plugin', 'install', 'non_existing')
+      }.to raise_error(
+         Puppet::Error,
+         "Error: {'result': 'failed', 'validations': {'rule.interface': 'option not in list'}}",
+       )
     end
   end
 

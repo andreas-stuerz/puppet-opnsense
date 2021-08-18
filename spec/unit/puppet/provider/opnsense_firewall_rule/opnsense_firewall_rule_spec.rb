@@ -89,14 +89,14 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule do
               'opn-cli', '-c', File.expand_path('~/.puppet-opnsense/opnsense1.example.com-config.yaml'),
               ['firewall', 'rule', 'list', '-o', 'json']
             ],
-            { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true },
+            { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true, combine: true },
           ).and_return(rules_device_1.to_json)
         expect(Puppet::Util::Execution).to receive(:execute).with(
             [
               'opn-cli', '-c', File.expand_path('~/.puppet-opnsense/opnsense2.example.com-config.yaml'),
               ['firewall', 'rule', 'list', '-o', 'json']
             ],
-            { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true },
+            { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true, combine: true },
           ).and_return(rules_device_2.to_json)
 
         expect(provider.get(context, [])).to eq [

@@ -16,7 +16,7 @@ describe :opnsense, type: :fact do
     context 'without binary opnsense-version' do
       it 'returns nil' do
         expect(Facter::Util::Resolution).to receive(:which)
-          .with('opnsense-version')
+          .with('opnsense-version').at_least(:once)
           .and_return(nil)
         expect(fact.value).to eq(nil)
       end
@@ -25,7 +25,7 @@ describe :opnsense, type: :fact do
     context 'with binary opnsense-version' do
       it 'returns a value' do
         expect(Facter::Util::Resolution).to receive(:which)
-          .with('opnsense-version')
+          .with('opnsense-version').at_least(:once)
           .and_return('/usr/local/sbin/opnsense-version')
 
         expect(Facter::Util::Resolution).to receive(:exec)

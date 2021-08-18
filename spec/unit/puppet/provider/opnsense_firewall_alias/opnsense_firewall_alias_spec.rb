@@ -219,7 +219,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               content: ['80', '443'],
               proto: '',
               updatefreq: '',
-              counters: '',
+              counters: false,
               enabled: true,
               ensure: 'present'
           },
@@ -310,7 +310,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               content: [],
               proto: '',
               updatefreq: '',
-              counters: '',
+              counters: false,
               enabled: true,
               ensure: 'present'
           },
@@ -323,7 +323,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               content: [],
               proto: '',
               updatefreq: '',
-              counters: '',
+              counters: false,
               enabled: true,
               ensure: 'present'
           },
@@ -336,7 +336,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               content: [],
               proto: '',
               updatefreq: '',
-              counters: '',
+              counters: false,
               enabled: true,
               ensure: 'present'
           },
@@ -349,7 +349,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               content: [],
               proto: '',
               updatefreq: '',
-              counters: '',
+              counters: false,
               enabled: true,
               ensure: 'present'
           },
@@ -371,7 +371,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              content: [],
              proto: '',
              updatefreq: '',
-             counters: '',
+             counters: false,
              enabled: true,
              ensure: 'present'
           },
@@ -384,7 +384,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              content: [],
              proto: '',
              updatefreq: '',
-             counters: '',
+             counters: false,
              enabled: true,
              ensure: 'present'
           },
@@ -397,7 +397,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              content: [],
              proto: '',
              updatefreq: '',
-             counters: '',
+             counters: false,
              enabled: true,
              ensure: 'present'
           },
@@ -410,7 +410,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              content: [],
              proto: '',
              updatefreq: '',
-             counters: '',
+             counters: false,
              enabled: true,
              ensure: 'present'
           },

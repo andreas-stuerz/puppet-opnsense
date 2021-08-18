@@ -29,8 +29,8 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
             content: fw_alias['content'].split(','),
             proto: fw_alias['proto'],
             updatefreq: fw_alias['updatefreq'].empty? ? '' : fw_alias['updatefreq'].to_f,
-            counters: fw_alias['counters'].empty? ? '' : bool_from_value(fw_alias['counters']),
-            enabled: fw_alias['enabled'].empty? ? '' : bool_from_value(fw_alias['enabled']),
+            counters: bool_from_value(fw_alias['counters']),
+            enabled: bool_from_value(fw_alias['enabled']),
             ensure: 'present',
           )
       end

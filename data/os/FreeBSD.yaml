@@ -1,0 +1,2 @@
+---
+opnsense::system_ca_file: '/etc/ssl/cert.pem'

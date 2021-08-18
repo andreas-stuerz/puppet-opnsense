@@ -17,6 +17,21 @@
 #   Configured firewall aliases without using exported resources.
 # @param rules
 #   Configured firewall rules without using exported resources.
+# @param manage_ca
+#   When true, the CA file used by opn-cli will be managed to ensure that
+#   the communication to the OPNsense API is possible.
+# @param ca_content
+#   A string containing a CA certificate that should be written to the
+#   file specified in `$ca_file`.
+# @param ca_file
+#   The absolute path to the CA file that should be used by opn-cli.
+# @param use_system_ca
+#   This instructs opn-cli to use the system-wide installed CA certificates
+#   when verifying the connection to the OPNsense API.
+# @param system_ca_file
+#   The absolute path to the system-wide CA certificate file.
+# @param opncli_configdir
+#   The config directory used by opn-cli.
 #
 # @example
 #   class { 'opnsense':
@@ -61,7 +76,38 @@ class opnsense (
   Hash $required_plugins,
   Hash $aliases,
   Hash $rules,
+  Boolean $manage_ca,
+  Stdlib::Absolutepath $ca_file,
+  Boolean $use_system_ca,
+  Stdlib::Absolutepath $system_ca_file,
+  Stdlib::Absolutepath $opncli_configdir,
+  Optional[String] $ca_content,
 ){
+  if $manage_ca {
+    file { 'Create opn-cli config directory':
+      ensure => directory,
+      path   => $opncli_configdir,
+    }
+    case $use_system_ca {
+      true: {
+        file { 'Symlink opn-cli CA file to system-wide CA certificates':
+          ensure => link,
+          path   => $ca_file,
+          target => $system_ca_file,
+        }
+      }
+      default: {
+        if !empty($ca_content) {
+          file { 'Create opn-cli CA file with custom CA content':
+            ensure  => file,
+            path    => $ca_file,
+            content => $ca_content,
+          }
+        }
+      }
+    }
+  }
+
   $devices.each |$device_name, $device_conf| {
     # generate devices configurations
     $device_conf_filtered = delete($device_conf, ['plugins'])

@@ -6,5 +6,10 @@ opnsense::api_manager_prefix: "%{fqdn} api manager - "
 opnsense::required_plugins:
   "os-firewall": {}
 opnsense::manage_resources: false
+opnsense::manage_ca: true
+opnsense::ca_content: ~
+opnsense::ca_file: '/root/.opn-cli/ca.pem'
+opnsense::use_system_ca: true
+opnsense::opncli_configdir: '/root/.opn-cli'
 opnsense::client::firewall::aliases: {}
 opnsense::client::firewall::rules: {}

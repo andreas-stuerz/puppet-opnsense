@@ -57,6 +57,47 @@ describe 'opnsense' do
                    )
         }
       end
+
+      describe 'with default CA settings' do
+        it { is_expected.to contain_file('Symlink opn-cli CA file to system-wide CA certificates').with_ensure('link') }
+        it { is_expected.to contain_file('Create opn-cli config directory').with_ensure('directory') }
+
+        it { is_expected.not_to contain_file('Create opn-cli CA file with custom CA content') }
+      end
+
+      describe 'with custom CA settings' do
+        let(:params) do
+          {
+            use_system_ca: false,
+            ca_content: '-----BEGIN CERTIFICATE-----
+AAAAAABBBBBBBBBCCCCCCCCCCDDDDDDDDDDDEEEEEEEEEEEFFFFFFFFFGGGGGGGG
+-----END CERTIFICATE-----',
+          }
+        end
+
+        describe 'compiles the catalog' do
+          it { is_expected.to compile.with_all_deps }
+        end
+
+        describe 'can manage the CA file' do
+          it { is_expected.to contain_file('Create opn-cli CA file with custom CA content').with_ensure('file') }
+          it { is_expected.to contain_file('Create opn-cli CA file with custom CA content').with_content(%r{.*AAAAAABBBBBBBBBCCCCCCCCCCDDDDDDDDDDDEEEEEEEEEEEFFFFFFFFFGGGGGGGG.*}) }
+
+          it { is_expected.not_to contain_file('Symlink opn-cli CA file to system-wide CA certificates') }
+        end
+      end
+
+      describe 'with CA settings disabled' do
+        let(:params) do
+          {
+            manage_ca: false,
+          }
+        end
+
+        it { is_expected.not_to contain_file('Create opn-cli config directory') }
+        it { is_expected.not_to contain_file('Symlink opn-cli CA file to system-wide CA certificates') }
+        it { is_expected.not_to contain_file('Create opn-cli CA file with custom CA content') }
+      end
     end
   end
 end

@@ -21,6 +21,7 @@
   * [Install and enable opnsense](#install-and-enable-opnsense)
   * [Configure OPNsense firewall(s)](#configure-opnsense-firewall-s-)
   * [Configure a client to export firewall aliases and rules](#configure-a-client-to-export-firewall-aliases-and-rules)
+  * [Dealing with self-signed certificates](#dealing-with-self-signed-certificates)
   * [More examples](#more-examples)
 - [Reference](#reference)
 - [Limitations](#limitations)
@@ -198,6 +199,23 @@ class { 'opnsense::client::firewall':
   }
 }
 ```
+
+### Dealing with self-signed certificates
+When connecting to the OPNsense API, this module will tell opn-cli to use the system-wide installed CA certificates to verify the SSL connection. However, this will only work when using a valid certificate for the OPNsense WebUI.
+
+If the OPNsense WebUI still uses the pre-installed self-signed certificate, then it is possible to use the OPNsense CA certificate for SSL verification:
+
+```
+class { 'opnsense':
+  use_system_ca => false,
+  ca_file       => '/root/.opn-cli/ca.pem',
+  ca_content    => '-----BEGIN CERTIFICATE-----
+AAAAAABBBBBBBBBCCCCCCCCCCDDDDDDDDDDDEEEEEEEEEEEFFFFFFFFFGGGGGGGG
+-----END CERTIFICATE-----'
+}
+```
+
+The OPNsense CA certificate can be downloaded from `System: Trust: Authorities` on the OPNsense firewall.
 
 ### More examples
 You find more examples in the [examples](examples) folder.

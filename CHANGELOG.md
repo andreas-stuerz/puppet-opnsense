@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.0](https://github.com/andeman/puppet-opnsense/tree/v1.5.0) (2021-08-24)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.4.0...v1.5.0)
+
+### Added
+
+- add parameters to manage opn-cli CA file [\#11](https://github.com/andeman/puppet-opnsense/pull/11) ([fraenki](https://github.com/fraenki))
+- show error message when opn-cli command fails [\#10](https://github.com/andeman/puppet-opnsense/pull/10) ([andeman](https://github.com/andeman))
+
+### Fixed
+
+- fix Error: Transaction store file /var/puppet/state/transactionstore.yaml is corrupt [\#9](https://github.com/andeman/puppet-opnsense/pull/9) ([andeman](https://github.com/andeman))
+
 ## [v1.4.0](https://github.com/andeman/puppet-opnsense/tree/v1.4.0) (2021-08-13)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v1.3.0...v1.4.0)

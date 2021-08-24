@@ -73,6 +73,12 @@ The following parameters are available in the `opnsense` class:
 * [`required_plugins`](#required_plugins)
 * [`aliases`](#aliases)
 * [`rules`](#rules)
+* [`manage_ca`](#manage_ca)
+* [`ca_content`](#ca_content)
+* [`ca_file`](#ca_file)
+* [`use_system_ca`](#use_system_ca)
+* [`system_ca_file`](#system_ca_file)
+* [`opncli_configdir`](#opncli_configdir)
 
 ##### <a name="devices"></a>`devices`
 
@@ -112,6 +118,45 @@ Configured firewall aliases without using exported resources.
 Data type: `Hash`
 
 Configured firewall rules without using exported resources.
+
+##### <a name="manage_ca"></a>`manage_ca`
+
+Data type: `Boolean`
+
+When true, the CA file used by opn-cli will be managed to ensure that
+the communication to the OPNsense API is possible.
+
+##### <a name="ca_content"></a>`ca_content`
+
+Data type: `Optional[String]`
+
+A string containing a CA certificate that should be written to the
+file specified in `$ca_file`.
+
+##### <a name="ca_file"></a>`ca_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The absolute path to the CA file that should be used by opn-cli.
+
+##### <a name="use_system_ca"></a>`use_system_ca`
+
+Data type: `Boolean`
+
+This instructs opn-cli to use the system-wide installed CA certificates
+when verifying the connection to the OPNsense API.
+
+##### <a name="system_ca_file"></a>`system_ca_file`
+
+Data type: `Stdlib::Absolutepath`
+
+The absolute path to the system-wide CA certificate file.
+
+##### <a name="opncli_configdir"></a>`opncli_configdir`
+
+Data type: `Stdlib::Absolutepath`
+
+The config directory used by opn-cli.
 
 ### <a name="opnsenseclientfirewall"></a>`opnsense::client::firewall`
 

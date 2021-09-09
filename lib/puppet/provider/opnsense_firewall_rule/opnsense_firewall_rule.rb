@@ -11,6 +11,9 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   def initialize
     super
     @resource_list = []
+    @group = 'firewall'
+    @command = 'rule'
+    @find_uuid_by_column = 'description'
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -25,15 +28,15 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @param [Array<String>] device_names
   # @return [void]
   def _fetch_resource_list(device_names)
-    @resource_list = _get_firewall_rules_from_devices(device_names)
+    @resource_list = _get_from_devices(device_names)
   end
 
   # @param [Array<String>] devices
   # @return [Array<Hash<Symbol>>]
-  def _get_firewall_rules_from_devices(devices)
+  def _get_from_devices(devices)
     result = []
     devices.each do |device|
-      rules = _rules_list(device)
+      rules = get_opn_cli_json_list(device,  @group, @command)
       rules.each do |fw_rule|
         result.push(
             title: "#{fw_rule['description']}@#{device}",
@@ -63,13 +66,6 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
     result
   end
 
-  # @param [String] device_name
-  # @return [Array]
-  def _rules_list(device_name)
-    json_output = opn_cli_base_cmd(device_name, ['firewall', 'rule', 'list', '-o', 'json'])
-    JSON.parse(json_output)
-  end
-
   # @param [Puppet::ResourceApi::BaseContext] _context
   # @param [String] _name
   # @param [Hash<Symbol>] should
@@ -85,7 +81,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def update(_context, name, should)
-    uuid = _find_uuid_by_namevars(name)
+    uuid = _find_uuid_by_namevars(name,  @find_uuid_by_column)
     args = _get_command_args('update', uuid, should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)
@@ -95,21 +91,9 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @param [String] name
   # @return [Puppet::Util::Execution::ProcessOutput]
   def delete(_context, name)
-    uuid = _find_uuid_by_namevars(name)
+    uuid = _find_uuid_by_namevars(name, @find_uuid_by_column)
     device_name = name.fetch(:device).to_s
-    opn_cli_base_cmd(device_name, ['firewall', 'rule', 'delete', uuid, '-o', 'json'])
-  end
-
-  # @param [hash] namevars
-  # @return [String] uuid
-  def _find_uuid_by_namevars(namevars)
-    resource_found = @resource_list.find do |resource|
-      resource[:device] == namevars[:device] && resource[:description] == namevars[:description]
-    end
-    unless resource_found
-      raise Puppet::ResourceError, "Could not find uuid for #{namevars}"
-    end
-    resource_found[:uuid]
+    opn_cli_base_cmd(device_name, [@group, @command, 'delete', uuid, '-o', 'json'])
   end
 
   # @param [Integer] mode
@@ -117,7 +101,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @param [Hash<Symbol>] should
   # @return [Array<String>]
   def _get_command_args(mode, id, should)
-    args = ['firewall', 'rule', mode, id]
+    args = [@group, @command, mode, id]
     args.push('-s', should[:sequence]) if mode == 'update'
     args.push('--description', should[:description])
     args.push('-a', should[:action])
@@ -144,5 +128,5 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
     args
   end
   #
-  private :_get_firewall_rules_from_devices, :_rules_list, :_find_uuid_by_namevars, :_get_command_args
+  private :_get_from_devices, :_get_command_args
 end

@@ -18,7 +18,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def _get_firewall_aliases_from_devices(devices)
     result = []
     devices.each do |device|
-      aliases = _aliases_list(device)
+      aliases = get_opn_cli_json_list(device, 'firewall', 'alias')
       aliases.each do |fw_alias|
         result.push(
             title: fw_alias['name'] + '@' + device,
@@ -36,13 +36,6 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
       end
     end
     result
-  end
-
-  # @param [String] device_name
-  # @return [Array]
-  def _aliases_list(device_name)
-    json_output = opn_cli_base_cmd(device_name, ['firewall', 'alias', 'list', '-o', 'json'])
-    JSON.parse(json_output)
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
@@ -92,5 +85,5 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     opn_cli_base_cmd(device_name, ['firewall', 'alias', 'delete', alias_name, '-o', 'json'])
   end
   #
-  private :_get_firewall_aliases_from_devices, :_aliases_list, :_get_command_args
+  private :_get_firewall_aliases_from_devices, :_get_command_args
 end

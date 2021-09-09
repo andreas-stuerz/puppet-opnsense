@@ -90,6 +90,28 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     end
   end
 
+  # @param [Object] device_name
+  # @param [Object] group
+  # @param [Object] command
+  # @return [Object]
+  def get_opn_cli_json_list(device_name, group, command)
+    json_output = opn_cli_base_cmd(device_name, [group, command, 'list', '-o', 'json'])
+    JSON.parse(json_output)
+  end
+
+  # @param [hash] namevars
+  # @param [String] by_column
+  # @return [String] uuid
+  def _find_uuid_by_namevars(namevars, by_column)
+    resource_found = @resource_list.find do |resource|
+      resource[:device] == namevars[:device] && resource[by_column] == namevars[by_column]
+    end
+    unless resource_found
+      raise Puppet::ResourceError, "Could not find uuid for #{namevars}"
+    end
+    resource_found[:uuid]
+  end
+
   #
   private :_get_config_glob_pattern, :get_config_basedir, :_get_suffix
 end

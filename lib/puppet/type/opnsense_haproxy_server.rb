@@ -5,7 +5,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_haproxy_server',
   docs: <<-EOS,
-  @summary 
+  @summary#{' '}
     Manage opnsense haproxy servers
   @example
     opnsense_haproxy_server { 'webserver1':
@@ -39,14 +39,14 @@ Puppet::ResourceApi.register_type(
 EOS
   features: ['simple_get_filter'],
   title_patterns: [
-      {
-          pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
-          desc: 'Where the name of the server and the device are provided with a @',
-      },
-      {
-          pattern: %r{^(?<name>.*)$},
-          desc: 'Where only the name is provided',
-      },
+    {
+      pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
+        desc: 'Where the name of the server and the device are provided with a @',
+    },
+    {
+      pattern: %r{^(?<name>.*)$},
+        desc: 'Where only the name is provided',
+    },
   ],
   attributes: {
     ensure: {
@@ -60,112 +60,111 @@ EOS
       behaviour: :namevar,
     },
     device: {
-        type: 'String',
+      type: 'String',
         desc: 'The name of the opnsense_device type you want to manage.',
         behaviour: :namevar,
     },
     uuid: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'The uuid of the rule.',
         behaviour: :init_only,
     },
     enabled: {
-        type: 'Boolean',
+      type: 'Boolean',
         desc: 'Enable or disable this rule.',
         default: true
     },
     description: {
-        type: 'String',
+      type: 'String',
         desc: 'The server description.',
     },
     address: {
-        type: 'String',
+      type: 'String',
         desc: 'The FQDN or the IP address of this server.',
     },
     port: {
-        type: 'String',
+      type: 'String',
         desc: 'Provide the TCP or UDP communication port for this server.',
     },
     checkport: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'Provide the TCP communication port to use during check.',
     },
     mode: {
-        type: "Enum['', 'active', 'backup', 'disabled']",
+      type: "Enum['', 'active', 'backup', 'disabled']",
         desc: 'Sets the operation mode to use for this server.',
         default: 'active',
     },
     type: {
-        type: "Enum['static', 'template']",
+      type: "Enum['static', 'template']",
         desc: 'Sets the operation mode to use for this server.',
         default: 'static',
     },
     serviceName: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'FQDN for all the servers this template initializes or a service name to discover via DNS SRV records.',
     },
     number: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'The number of servers this template initializes, i.e. 5 or 1-5.',
     },
     linkedResolver: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: 'Specify the uuid of the resolver to discover available services via DNS.',
     },
     resolverOpts: {
-        type: 'Optional[Array[String]]',
+      type: 'Optional[Array[String]]',
         desc: 'Add resolver options.',
     },
     resolvePrefer: {
-        type: "Enum['', 'ipv4', 'ipv6']",
+      type: "Enum['', 'ipv4', 'ipv6']",
         desc: 'When DNS resolution is enabled and multiple IP addresses from different families are returned use this.',
         default: '',
     },
     ssl: {
-        type: 'Boolean',
+      type: 'Boolean',
         desc: 'Enable or disable SSL communication with this server.',
         default: true
     },
     sslVerify: {
-        type: 'Boolean',
+      type: 'Boolean',
         desc: 'Enable or disable server ssl certificate verification.',
         default: true
     },
     sslCA: {
-        type: 'Optional[Array[String]]',
+      type: 'Optional[Array[String]]',
         desc: "These CA Ids will be used to verify server's certificate.",
     },
     sslCRL: {
-        type: 'Optional[Array[String]]',
+      type: 'Optional[Array[String]]',
         desc: "This certificate revocation list Ids will be used to verify server's certificate.",
     },
     sslClientCertificate: {
-        type: 'Optional[String]',
-        desc: "This certificate will be sent if the server send a client certificate request.",
+      type: 'Optional[String]',
+        desc: 'This certificate will be sent if the server send a client certificate request.',
     },
     weight: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: "Adjust the server's weight relative to other servers.",
     },
     checkInterval: {
-        type: 'Optional[String]',
-        desc: "Sets the interval (in milliseconds) for running health checks on this server.",
+      type: 'Optional[String]',
+        desc: 'Sets the interval (in milliseconds) for running health checks on this server.',
     },
     checkDownInterval: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: (
-          "Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN."
+          'Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN.'
         ),
     },
     source: {
-        type: 'Optional[String]',
-        desc: "Sets the source address which will be used when connecting to the server.",
+      type: 'Optional[String]',
+        desc: 'Sets the source address which will be used when connecting to the server.',
     },
     advanced: {
-        type: 'Optional[String]',
+      type: 'Optional[String]',
         desc: (
-          "list of parameters that will be appended to the server line in every "
-          "backend where this server will be used."
+          'list of parameters that will be appended to the server line in every backend where this server will be used.'
         ),
     },
   },

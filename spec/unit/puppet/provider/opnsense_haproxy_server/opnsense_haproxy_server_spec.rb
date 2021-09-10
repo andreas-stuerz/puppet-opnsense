@@ -39,7 +39,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
           "advanced": '',
           "uuid": '15e47988-d6fd-498f-9583-cd13a37408bd',
           "Resolver": 'my_resolver'
-      }
+      },
     ]
   end
   let(:server_device_2) do
@@ -99,7 +99,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
           "advanced": '',
           "uuid": 'ceb75158-7d69-42a9-bded-5bb3080be199',
           "Resolver": ''
-      }
+      },
     ]
   end
 
@@ -205,15 +205,15 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
             source: '',
             advanced: '',
             ensure: 'present',
-        }
+        },
       ]
     end
   end
 
   describe 'create webserver1@opnsense2.example.com' do
     it 'creates the resource' do
-      expect(Puppet::Util::Execution).to receive(:execute).
-          and_return('{"result": "saved", "uuid": "1a2d6a8e-ed7a-4377-b723-e1582b2b2c18"}')
+      expect(Puppet::Util::Execution).to receive(:execute)
+        .and_return('{"result": "saved", "uuid": "1a2d6a8e-ed7a-4377-b723-e1582b2b2c18"}')
 
       provider.create(context, 'webserver1@opnsense2.example.com',
                       enabled: true,
@@ -225,7 +225,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
                       type: 'static',
                       serviceName: '',
                       linkedResolver: '',
-                      resolverOpts: ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+                      resolverOpts: ['allow-dup-ip', 'ignore-weight', 'prevent-dup-ip'],
                       resolvePrefer: 'ipv4',
                       ssl: true,
                       sslVerify: true,
@@ -237,15 +237,14 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
                       checkDownInterval: '200',
                       source: '10.0.0.1',
                       advanced: 'send-proxy',
-                      ensure: 'present'
-      )
+                      ensure: 'present')
     end
   end
 
   describe 'update webserver1@opnsense2.example.com' do
     it 'updates the resource' do
       expect(Puppet::Util::Execution).to receive(:execute)
-                                             .and_return('{"result": "saved"}')
+        .and_return('{"result": "saved"}')
       server_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = server_device_2
 
@@ -271,8 +270,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
                       checkDownInterval: '250',
                       source: '10.0.0.2',
                       advanced: '',
-                      ensure: 'present'
-      )
+                      ensure: 'present')
     end
   end
 
@@ -285,5 +283,4 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
       provider.delete(context, { name: 'webserver1', device: 'opnsense2.example.com' })
     end
   end
-
 end

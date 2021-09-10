@@ -64,8 +64,8 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
             checkDownInterval: server['checkDownInterval'],
             source: server['source'],
             advanced: server['advanced'],
-            ensure: 'present'
-        )
+            ensure: 'present',
+          )
       end
     end
     result
@@ -86,7 +86,7 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def update(_context, name, should)
-    uuid = _find_uuid_by_namevars(name,  @find_uuid_by_column)
+    uuid = _find_uuid_by_namevars(name, @find_uuid_by_column)
     args = _get_command_args('update', uuid, should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)
@@ -108,7 +108,7 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
   def _get_command_args(mode, id, should)
     args = [@group, @command, mode, id]
     args.push('--name', should[:name]) if mode == 'update'
-    args.push('--enabled') if  bool_from_value(should[:enabled]) == true
+    args.push('--enabled') if bool_from_value(should[:enabled]) == true
     args.push('--no-enabled') if bool_from_value(should[:enabled]) == false
     args.push('--description', should[:description])
     args.push('--address', should[:address])
@@ -122,9 +122,9 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
       args.push('--resolverOpts', opt)
     end
     args.push('--resolvePrefer', should[:resolvePrefer])
-    args.push('--ssl') if  bool_from_value(should[:ssl]) == true
+    args.push('--ssl') if bool_from_value(should[:ssl]) == true
     args.push('--no-ssl') if bool_from_value(should[:ssl]) == false
-    args.push('--sslVerify') if  bool_from_value(should[:sslVerify]) == true
+    args.push('--sslVerify') if bool_from_value(should[:sslVerify]) == true
     args.push('--no-sslVerify') if bool_from_value(should[:sslVerify]) == false
     should[:sslCA].each do |opt|
       args.push('--sslCA', opt)

@@ -35,7 +35,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   def _get_from_devices(devices)
     result = []
     devices.each do |device|
-      rules = get_opn_cli_json_list(device,  @group, @command)
+      rules = get_opn_cli_json_list(device, @group, @command)
       rules.each do |fw_rule|
         result.push(
             title: "#{fw_rule['description']}@#{device}",
@@ -80,7 +80,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def update(_context, name, should)
-    uuid = _find_uuid_by_namevars(name,  @find_uuid_by_column)
+    uuid = _find_uuid_by_namevars(name, @find_uuid_by_column)
     args = _get_command_args('update', uuid, should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)

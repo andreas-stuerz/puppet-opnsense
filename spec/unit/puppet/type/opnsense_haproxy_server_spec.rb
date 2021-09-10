@@ -28,7 +28,7 @@ RSpec.describe 'the opnsense_haproxy_server type' do
           type: 'static',
           serviceName: '',
           linkedResolver: '',
-          resolverOpts: ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+          resolverOpts: ['allow-dup-ip', 'ignore-weight', 'prevent-dup-ip'],
           resolvePrefer: 'ipv4',
           ssl: true,
           sslVerify: true,
@@ -40,8 +40,8 @@ RSpec.describe 'the opnsense_haproxy_server type' do
           checkDownInterval: '200',
           source: '10.0.0.1',
           advanced: 'send-proxy',
-          ensure: 'present'
-      )
+          ensure: 'present',
+        )
     end
 
     it 'accepts enabled' do

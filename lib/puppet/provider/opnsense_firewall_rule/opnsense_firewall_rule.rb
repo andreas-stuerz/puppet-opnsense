@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
-require 'json'
 
 # Implementation for the opnsense_firewall_rule type using the Resource API.
 class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Provider::OpnsenseProvider

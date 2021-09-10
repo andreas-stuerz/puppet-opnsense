@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
 require 'puppet/resource_api/simple_provider'
 
 # Implementation for the opnsense_haproxy_server type using the Resource API.
@@ -116,19 +117,19 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
     args.push('--mode', should[:mode])
     args.push('--type', should[:type])
     args.push('--serviceName', should[:servicename])
-    args.push('--linkedResolver', should[:linkedresolver])
-    should[:resolverOpts].split(',').each do |opt|
+    args.push('--linkedResolver', should[:linkedResolver])
+    should[:resolverOpts].each do |opt|
       args.push('--resolverOpts', opt)
     end
     args.push('--resolvePrefer', should[:resolvePrefer])
     args.push('--ssl') if  bool_from_value(should[:ssl]) == true
     args.push('--no-ssl') if bool_from_value(should[:ssl]) == false
-    args.push('--sslVerify') if  bool_from_value(should[:sslverify]) == true
-    args.push('--no-sslVerify') if bool_from_value(should[:sslverify]) == false
-    should[:sslca].split(',').each do |opt|
+    args.push('--sslVerify') if  bool_from_value(should[:sslVerify]) == true
+    args.push('--no-sslVerify') if bool_from_value(should[:sslVerify]) == false
+    should[:sslCA].each do |opt|
       args.push('--sslCA', opt)
     end
-    should[:sslcrl].split(',').each do |opt|
+    should[:sslCRL].each do |opt|
       args.push('--sslCRL', opt)
     end
     args.push('--sslClientCertificate', should[:sslClientCertificate])

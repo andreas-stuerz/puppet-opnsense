@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
-require 'json'
 
 # Implementation for the opnsense_firewall_alias type using the Resource API.
 class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::Provider::OpnsenseProvider
@@ -10,12 +9,12 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   # @return [Array<Hash<Symbol>>]
   def get(_context, filter)
     device_names = get_device_names_by_filter(filter)
-    _get_firewall_aliases_from_devices(device_names)
+    _get_from_devices(device_names)
   end
 
   # @param [Array<String>] devices
   # @return [Array<Hash<Symbol>>]
-  def _get_firewall_aliases_from_devices(devices)
+  def _get_from_devices(devices)
     result = []
     devices.each do |device|
       aliases = get_opn_cli_json_list(device, 'firewall', 'alias')
@@ -85,5 +84,5 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     opn_cli_base_cmd(device_name, ['firewall', 'alias', 'delete', alias_name, '-o', 'json'])
   end
   #
-  private :_get_firewall_aliases_from_devices, :_get_command_args
+  private :_get_from_devices, :_get_command_args
 end

@@ -1,5 +1,6 @@
 require 'puppet/resource_api/simple_provider'
 require 'fileutils'
+require 'json'
 
 # A base provider for all opnsense providers
 class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider

@@ -2,27 +2,32 @@ require 'spec_helper_acceptance'
 
 describe 'opnsense_haproxy_server' do
   context 'for opnsense-test.device.com' do
-    describe 'add rule acceptance test rule' do
+    describe 'add webserver1' do
       pp = <<-MANIFEST
-        opnsense_haproxy_server { 'acceptance test rule':
-          device           => 'opnsense-test.device.com',
-          sequence         => '1',
-          action           => 'pass',
-          direction        => 'in',
-          ipprotocol       => 'inet',
-          interface        => ['lan', 'wan'],
-          source_net       => '192.168.50.0/24',
-          source_port      => '10000-20000',
-          source_not       => false,
-          protocol         => 'TCP',
-          destination_net  => '10.0.40.0/24',
-          destination_port => '443',
-          destination_not  => false,
-          gateway          => '',
-          quick            => true,
-          log              => false,
-          enabled          => true,
-          ensure           => 'present',
+        opnsense_haproxy_server { 'webserver1':
+          device                 => 'opnsense-test.device.com',
+          enabled                => true,
+          description            => 'primary webserver',
+          address                => 'webserver1.example.com',
+          port                   => '443',
+          checkport              => '80',
+          mode                   => 'active',
+          type                   => 'static',
+          service_name           => '',
+          linked_resolver        => '',
+          resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+          resolve_prefer         => 'ipv4',
+          ssl                    => true,
+          ssl_verify             => true,
+          ssl_ca                 => [],
+          ssl_crl                => [],
+          ssl_client_certificate => '5eba6f0f352e3',
+          weight                 => '10',
+          check_interval         => '100',
+          check_down_interval    => '200',
+          source                 => '10.0.0.1',
+          advanced               => 'send-proxy',
+          ensure                 => 'present',
         }
       MANIFEST
       it 'works without errors' do
@@ -31,53 +36,63 @@ describe 'opnsense_haproxy_server' do
 
       it 'displays the created rule via the cli', retry: 3, retry_wait: 3 do
         cols = [
-          'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
-          'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
-          'log', 'enabled'
+          'enabled', 'name', 'description', 'address', 'port', 'checkport', 'mode', 'type', 'serviceName',
+          'linkedResolver', 'resolverOpts', 'resolvePrefer', 'ssl', 'sslVerify', 'sslCA', 'sslCRL',
+          'sslClientCertificate', 'weight', 'checkInterval', 'checkDownInterval', 'source', 'advanced'
         ].join(',')
-        run_shell(build_opn_cli_cmd("firewall rule list -o yaml -c #{cols}")) do |r|
-          expect(r.stdout).to match %r{sequence: '1'}
-          expect(r.stdout).to match %r{action: pass}
-          expect(r.stdout).to match %r{direction: in}
-          expect(r.stdout).to match %r{ipprotocol: inet}
-          expect(r.stdout).to match %r{interface: lan,wan}
-          expect(r.stdout).to match %r{source_net: 192.168.50.0/24}
-          expect(r.stdout).to match %r{source_port: 10000-20000}
-          expect(r.stdout).to match %r{source_not: '0'}
-          expect(r.stdout).to match %r{protocol: TCP}
-          expect(r.stdout).to match %r{destination_net: 10.0.40.0/24}
-          expect(r.stdout).to match %r{destination_port: '443'}
-          expect(r.stdout).to match %r{destination_not: '0'}
-          expect(r.stdout).to match %r{description: acceptance test rule}
-          expect(r.stdout).to match %r{gateway: ''}
-          expect(r.stdout).to match %r{quick: '1'}
-          expect(r.stdout).to match %r{log: '0'}
+        run_shell(build_opn_cli_cmd("haproxy server list -o yaml -c #{cols}")) do |r|
           expect(r.stdout).to match %r{enabled: '1'}
+          expect(r.stdout).to match %r{name: webserver1}
+          expect(r.stdout).to match %r{description: primary webserver}
+          expect(r.stdout).to match %r{address: webserver1.example.com}
+          expect(r.stdout).to match %r{port: '443'}
+          expect(r.stdout).to match %r{checkport: '80'}
+          expect(r.stdout).to match %r{mode: active}
+          expect(r.stdout).to match %r{type: static}
+          expect(r.stdout).to match %r{serviceName: ''}
+          expect(r.stdout).to match %r{linkedResolver: ''}
+          expect(r.stdout).to match %r{resolverOpts: allow-dup-ip,ignore-weight,prevent-dup-ip}
+          expect(r.stdout).to match %r{resolvePrefer: ipv4}
+          expect(r.stdout).to match %r{ssl: '1'}
+          expect(r.stdout).to match %r{sslVerify: '1'}
+          expect(r.stdout).to match %r{sslCA: ''}
+          expect(r.stdout).to match %r{sslCRL: ''}
+          expect(r.stdout).to match %r{sslClientCertificate: 5eba6f0f352e3}
+          expect(r.stdout).to match %r{weight: '10'}
+          expect(r.stdout).to match %r{checkInterval: '100'}
+          expect(r.stdout).to match %r{checkDownInterval: '200'}
+          expect(r.stdout).to match %r{source: 10.0.0.1}
+          expect(r.stdout).to match %r{advanced: send-proxy}
         end
       end
     end
 
-    describe 'update rule acceptance test rule' do
+    describe 'update webserver1' do
       pp = <<-MANIFEST
-        opnsense_haproxy_server { 'acceptance test rule':
-          device           => 'opnsense-test.device.com',
-          sequence         => '2',
-          action           => 'block',
-          direction        => 'out',
-          ipprotocol       => 'inet',
-          interface        => ['lan'],
-          source_net       => '192.168.60.0/24',
-          source_port      => '9999',
-          source_not       => false,
-          protocol         => 'TCP',
-          destination_net  => '10.0.60.0/24',
-          destination_port => 'http',
-          destination_not  => false,
-          gateway          => 'Null4',
-          quick            => false,
-          log              => true,
-          enabled          => false,
-          ensure           => 'present',
+        opnsense_haproxy_server { 'webserver1':
+          device                 => 'opnsense-test.device.com',
+          enabled                => false,
+          description            => 'primary webserver modified',
+          address                => 'webserver1.example.de',
+          port                   => '80',
+          checkport              => '443',
+          mode                   => 'backup',
+          type                   => 'static',
+          service_name           => '',
+          linked_resolver        => '',
+          resolver_opts          => ['allow-dup-ip','ignore-weight'],
+          resolve_prefer         => 'ipv6',
+          ssl                    => false,
+          ssl_verify             => false,
+          ssl_ca                 => [],
+          ssl_crl                => [],
+          ssl_client_certificate => '',
+          weight                 => '20',
+          check_interval         => '200',
+          check_down_interval    => '400',
+          source                 => '10.0.0.2',
+          advanced               => '',
+          ensure                 => 'present',
         }
       MANIFEST
       it 'works without errors' do
@@ -86,35 +101,40 @@ describe 'opnsense_haproxy_server' do
 
       it 'displays the updated rule via the cli', retry: 3, retry_wait: 3 do
         cols = [
-          'sequence', 'action', 'direction', 'ipprotocol', 'interface', 'source_net', 'source_port', 'source_not',
-          'protocol', 'destination_net', 'destination_port', 'destination_not', 'description', 'gateway', 'quick',
-          'log', 'enabled'
+          'enabled', 'name', 'description', 'address', 'port', 'checkport', 'mode', 'type', 'serviceName',
+          'linkedResolver', 'resolverOpts', 'resolvePrefer', 'ssl', 'sslVerify', 'sslCA', 'sslCRL',
+          'sslClientCertificate', 'weight', 'checkInterval', 'checkDownInterval', 'source', 'advanced'
         ].join(',')
-        run_shell(build_opn_cli_cmd("firewall rule list -o yaml -c #{cols}")) do |r|
-          expect(r.stdout).to match %r{sequence: '2'}
-          expect(r.stdout).to match %r{action: block}
-          expect(r.stdout).to match %r{direction: out}
-          expect(r.stdout).to match %r{ipprotocol: inet}
-          expect(r.stdout).to match %r{interface: lan}
-          expect(r.stdout).to match %r{source_net: 192.168.60.0/24}
-          expect(r.stdout).to match %r{source_port: '9999'}
-          expect(r.stdout).to match %r{source_not: '0'}
-          expect(r.stdout).to match %r{protocol: TCP}
-          expect(r.stdout).to match %r{destination_net: 10.0.60.0/24}
-          expect(r.stdout).to match %r{destination_port: http}
-          expect(r.stdout).to match %r{destination_not: '0'}
-          expect(r.stdout).to match %r{description: acceptance test rule}
-          expect(r.stdout).to match %r{gateway: Null4}
-          expect(r.stdout).to match %r{quick: '0'}
-          expect(r.stdout).to match %r{log: '1'}
+        run_shell(build_opn_cli_cmd("haproxy server list -o yaml -c #{cols}")) do |r|
           expect(r.stdout).to match %r{enabled: '0'}
+          expect(r.stdout).to match %r{name: webserver1}
+          expect(r.stdout).to match %r{description: primary webserver modified}
+          expect(r.stdout).to match %r{address: webserver1.example.de}
+          expect(r.stdout).to match %r{port: '80'}
+          expect(r.stdout).to match %r{checkport: '443'}
+          expect(r.stdout).to match %r{mode: backup}
+          expect(r.stdout).to match %r{type: static}
+          expect(r.stdout).to match %r{serviceName: ''}
+          expect(r.stdout).to match %r{linkedResolver: ''}
+          expect(r.stdout).to match %r{resolverOpts: allow-dup-ip,ignore-weight}
+          expect(r.stdout).to match %r{resolvePrefer: ipv6}
+          expect(r.stdout).to match %r{ssl: '0'}
+          expect(r.stdout).to match %r{sslVerify: '0'}
+          expect(r.stdout).to match %r{sslCA: ''}
+          expect(r.stdout).to match %r{sslCRL: ''}
+          expect(r.stdout).to match %r{sslClientCertificate: ''}
+          expect(r.stdout).to match %r{weight: '20'}
+          expect(r.stdout).to match %r{checkInterval: '200'}
+          expect(r.stdout).to match %r{checkDownInterval: '400'}
+          expect(r.stdout).to match %r{source: 10.0.0.2}
+          expect(r.stdout).to match %r{advanced: ''}
         end
       end
     end
 
-    describe 'delete rule acceptance test rule' do
+    describe 'delete webserver1' do
       pp = <<-MANIFEST
-        opnsense_haproxy_server { 'acceptance test rule':
+        opnsense_haproxy_server { 'webserver1':
           device => 'opnsense-test.device.com',
           ensure => 'absent',
         }
@@ -124,8 +144,8 @@ describe 'opnsense_haproxy_server' do
       end
 
       it 'displays the rule as deleted via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('firewall rule list -o plain -c description')) do |r|
-          expect(r.stdout).not_to match %r{acceptance test rule\n}
+        run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
+          expect(r.stdout).not_to match %r{webserver1\n}
         end
       end
     end

@@ -5,33 +5,33 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_haproxy_server',
   docs: <<-EOS,
-  @summary#{' '}
+  @summary
     Manage opnsense haproxy servers
   @example
     opnsense_haproxy_server { 'webserver1':
-      device               => 'opnsense-test.device.com',
-      enabled              => true,
-      description          => 'primary webserver',
-      address              => 'webserver1.example.com',
-      port                 => '443',
-      checkport            => '80',
-      mode                 => 'active',
-      type                 => 'static',
-      serviceName          => '',
-      linkedResolver       => 'cea8f031-9aba-4f6e-86c2-f5f5f27a10b8',
-      resolverOpts         => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
-      resolvePrefer        => 'ipv4',
-      ssl                  => true,
-      sslVerify            => true,
-      sslCA                => ['60cc45d3d7530', '610d3779926d6'],
-      sslCRL               => [],
-      sslClientCertificate => '60cc4641eb577',
-      weight               => '10',
-      checkInterval        => '100',
-      checkDownInterval    => '200',
-      source               => '10.0.0.1',
-      advanced             => 'send-proxy',
-      ensure               => 'present',
+      device                 => 'opnsense-test.device.com',
+      enabled                => true,
+      description            => 'primary webserver',
+      address                => 'webserver1.example.com',
+      port                   => '443',
+      checkport              => '80',
+      mode                   => 'active',
+      type                   => 'static',
+      service_name           => '',
+      linked_resolver        => '',
+      resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+      resolve_prefer         => 'ipv4',
+      ssl                    => true,
+      ssl_verify             => true,
+      ssl_ca                 => [],
+      ssl_crl                => [],
+      ssl_client_certificate => '5eba6f0f352e3',
+      weight                 => '10',
+      check_interval         => '100',
+      check_down_interval    => '200',
+      source                 => '10.0.0.1',
+      advanced               => 'send-proxy',
+      ensure                 => 'present',
     }
 
   This type provides Puppet with the capabilities to manage opnsense haproxy server
@@ -100,7 +100,7 @@ EOS
         desc: 'Sets the operation mode to use for this server.',
         default: 'static',
     },
-    serviceName: {
+    service_name: {
       type: 'Optional[String]',
         desc: 'FQDN for all the servers this template initializes or a service name to discover via DNS SRV records.',
     },
@@ -108,15 +108,15 @@ EOS
       type: 'Optional[String]',
         desc: 'The number of servers this template initializes, i.e. 5 or 1-5.',
     },
-    linkedResolver: {
+    linked_resolver: {
       type: 'Optional[String]',
         desc: 'Specify the uuid of the resolver to discover available services via DNS.',
     },
-    resolverOpts: {
+    resolver_opts: {
       type: 'Optional[Array[String]]',
         desc: 'Add resolver options.',
     },
-    resolvePrefer: {
+    resolve_prefer: {
       type: "Enum['', 'ipv4', 'ipv6']",
         desc: 'When DNS resolution is enabled and multiple IP addresses from different families are returned use this.',
         default: '',
@@ -126,20 +126,20 @@ EOS
         desc: 'Enable or disable SSL communication with this server.',
         default: true
     },
-    sslVerify: {
+    ssl_verify: {
       type: 'Boolean',
         desc: 'Enable or disable server ssl certificate verification.',
         default: true
     },
-    sslCA: {
+    ssl_ca: {
       type: 'Optional[Array[String]]',
         desc: "These CA Ids will be used to verify server's certificate.",
     },
-    sslCRL: {
+    ssl_crl: {
       type: 'Optional[Array[String]]',
         desc: "This certificate revocation list Ids will be used to verify server's certificate.",
     },
-    sslClientCertificate: {
+    ssl_client_certificate: {
       type: 'Optional[String]',
         desc: 'This certificate will be sent if the server send a client certificate request.',
     },
@@ -147,11 +147,11 @@ EOS
       type: 'Optional[String]',
         desc: "Adjust the server's weight relative to other servers.",
     },
-    checkInterval: {
+    check_interval: {
       type: 'Optional[String]',
         desc: 'Sets the interval (in milliseconds) for running health checks on this server.',
     },
-    checkDownInterval: {
+    check_down_interval: {
       type: 'Optional[String]',
         desc: (
           'Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN.'

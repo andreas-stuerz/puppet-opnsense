@@ -50,18 +50,18 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
             checkport: server['checkport'],
             mode: server['mode'],
             type: server['type'],
-            serviceName: server['serviceName'],
-            linkedResolver: server['linkedResolver'],
-            resolverOpts: server['resolverOpts'].split(','),
-            resolvePrefer: server['resolvePrefer'],
+            service_name: server['serviceName'],
+            linked_resolver: server['linkedResolver'],
+            resolver_opts: server['resolverOpts'].split(','),
+            resolve_prefer: server['resolvePrefer'],
             ssl: bool_from_value(server['ssl']),
-            sslVerify: bool_from_value(server['sslVerify']),
-            sslCA: server['sslCA'].split(','),
-            sslCRL: server['sslCRL'].split(','),
-            sslClientCertificate: server['sslClientCertificate'],
+            ssl_verify: bool_from_value(server['sslVerify']),
+            ssl_ca: server['sslCA'].split(','),
+            ssl_crl: server['sslCRL'].split(','),
+            ssl_client_certificate: server['sslClientCertificate'],
             weight: server['weight'],
-            checkInterval: server['checkInterval'],
-            checkDownInterval: server['checkDownInterval'],
+            check_interval: server['checkInterval'],
+            check_down_interval: server['checkDownInterval'],
             source: server['source'],
             advanced: server['advanced'],
             ensure: 'present',
@@ -76,7 +76,7 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def create(_context, _name, should)
-    args = _get_command_args('create', should[:sequence], should)
+    args = _get_command_args('create', should[:name], should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args, '-o', 'json')
   end
@@ -116,26 +116,26 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
     args.push('--checkport', should[:checkport])
     args.push('--mode', should[:mode])
     args.push('--type', should[:type])
-    args.push('--serviceName', should[:servicename])
-    args.push('--linkedResolver', should[:linkedResolver])
-    should[:resolverOpts].each do |opt|
+    args.push('--serviceName', should[:service_name])
+    args.push('--linkedResolver', should[:linked_resolver])
+    should[:resolver_opts].each do |opt|
       args.push('--resolverOpts', opt)
     end
-    args.push('--resolvePrefer', should[:resolvePrefer])
+    args.push('--resolvePrefer', should[:resolve_prefer])
     args.push('--ssl') if bool_from_value(should[:ssl]) == true
     args.push('--no-ssl') if bool_from_value(should[:ssl]) == false
-    args.push('--sslVerify') if bool_from_value(should[:sslVerify]) == true
-    args.push('--no-sslVerify') if bool_from_value(should[:sslVerify]) == false
-    should[:sslCA].each do |opt|
+    args.push('--sslVerify') if bool_from_value(should[:ssl_verify]) == true
+    args.push('--no-sslVerify') if bool_from_value(should[:ssl_verify]) == false
+    should[:ssl_ca].each do |opt|
       args.push('--sslCA', opt)
     end
-    should[:sslCRL].each do |opt|
+    should[:ssl_crl].each do |opt|
       args.push('--sslCRL', opt)
     end
-    args.push('--sslClientCertificate', should[:sslClientCertificate])
+    args.push('--sslClientCertificate', should[:ssl_client_certificate])
     args.push('--weight', should[:weight])
-    args.push('--checkInterval', should[:checkInterval])
-    args.push('--checkDownInterval', should[:checkDownInterval])
+    args.push('--checkInterval', should[:check_interval])
+    args.push('--checkDownInterval', should[:check_down_interval])
     args.push('--source', should[:source])
     args.push('--advanced', should[:advanced])
 

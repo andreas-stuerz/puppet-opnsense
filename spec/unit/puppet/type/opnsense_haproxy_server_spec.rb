@@ -26,18 +26,18 @@ RSpec.describe 'the opnsense_haproxy_server type' do
           checkport: '80',
           mode: 'active',
           type: 'static',
-          serviceName: '',
-          linkedResolver: '',
-          resolverOpts: ['allow-dup-ip', 'ignore-weight', 'prevent-dup-ip'],
-          resolvePrefer: 'ipv4',
+          service_name: '',
+          linked_resolver: '',
+          resolver_opts: ['allow-dup-ip', 'ignore-weight', 'prevent-dup-ip'],
+          resolve_prefer: 'ipv4',
           ssl: true,
-          sslVerify: true,
-          sslCA: ['60cc45d3d7530', '610d3779926d6'],
-          sslCRL: [],
-          sslClientCertificate: '60cc4641eb577',
+          ssl_verify: true,
+          ssl_ca: ['60cc45d3d7530', '610d3779926d6'],
+          ssl_crl: [],
+          ssl_client_certificate: '60cc4641eb577',
           weight: '10',
-          checkInterval: '100',
-          checkDownInterval: '200',
+          check_interval: '100',
+          check_down_interval: '200',
           source: '10.0.0.1',
           advanced: 'send-proxy',
           ensure: 'present',
@@ -80,23 +80,23 @@ RSpec.describe 'the opnsense_haproxy_server type' do
     end
 
     it 'accepts a serviceName' do
-      server[:servicename] = '_myservice._tcp.example.local'
-      expect(server[:servicename]).to eq('_myservice._tcp.example.local')
+      server[:service_name] = '_myservice._tcp.example.local'
+      expect(server[:service_name]).to eq('_myservice._tcp.example.local')
     end
 
     it 'accepts a linkedResolver' do
-      server[:linkedresolver] = 'cea8f031-9aba-4f6e-86c2-f5f5f27a10b8'
-      expect(server[:linkedresolver]).to eq('cea8f031-9aba-4f6e-86c2-f5f5f27a10b8')
+      server[:linked_resolver] = 'cea8f031-9aba-4f6e-86c2-f5f5f27a10b8'
+      expect(server[:linked_resolver]).to eq('cea8f031-9aba-4f6e-86c2-f5f5f27a10b8')
     end
 
     it 'accepts a resolverOpts' do
-      server[:resolveropts] = ['allow-dup-ip']
-      expect(server[:resolveropts]).to eq(['allow-dup-ip'])
+      server[:resolver_opts] = ['allow-dup-ip']
+      expect(server[:resolver_opts]).to eq(['allow-dup-ip'])
     end
 
     it 'accepts a resolvePrefer' do
-      server[:resolveprefer] = 'ipv6'
-      expect(server[:resolveprefer]).to eq('ipv6')
+      server[:resolve_prefer] = 'ipv6'
+      expect(server[:resolve_prefer]).to eq('ipv6')
     end
 
     it 'accepts ssl' do
@@ -105,23 +105,23 @@ RSpec.describe 'the opnsense_haproxy_server type' do
     end
 
     it 'accepts sslVerify' do
-      server[:sslverify] = false
-      expect(server[:sslverify]).to eq(:false)
+      server[:ssl_verify] = false
+      expect(server[:ssl_verify]).to eq(:false)
     end
 
     it 'accepts a sslCA' do
-      server[:sslca] = ['60cc45d3d7530']
-      expect(server[:sslca]).to eq(['60cc45d3d7530'])
+      server[:ssl_ca] = ['60cc45d3d7530']
+      expect(server[:ssl_ca]).to eq(['60cc45d3d7530'])
     end
 
     it 'accepts a sslCRL' do
-      server[:sslcrl] = ['60cc45d3d7530']
-      expect(server[:sslcrl]).to eq(['60cc45d3d7530'])
+      server[:ssl_crl] = ['60cc45d3d7530']
+      expect(server[:ssl_crl]).to eq(['60cc45d3d7530'])
     end
 
     it 'accepts a sslClientCertificate' do
-      server[:sslclientcertificate] = '610d3779926d6'
-      expect(server[:sslclientcertificate]).to eq('610d3779926d6')
+      server[:ssl_client_certificate] = '610d3779926d6'
+      expect(server[:ssl_client_certificate]).to eq('610d3779926d6')
     end
 
     it 'accepts a weight' do
@@ -130,13 +130,13 @@ RSpec.describe 'the opnsense_haproxy_server type' do
     end
 
     it 'accepts a checkInterval' do
-      server[:checkinterval] = '150'
-      expect(server[:checkinterval]).to eq('150')
+      server[:check_interval] = '150'
+      expect(server[:check_interval]).to eq('150')
     end
 
     it 'accepts a checkDownInterval' do
-      server[:checkdowninterval] = '200'
-      expect(server[:checkdowninterval]).to eq('200')
+      server[:check_down_interval] = '200'
+      expect(server[:check_down_interval]).to eq('200')
     end
 
     it 'accepts a source' do

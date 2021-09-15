@@ -66,12 +66,12 @@ EOS
     },
     uuid: {
       type: 'Optional[String]',
-        desc: 'The uuid of the rule.',
+        desc: 'The uuid of the server.',
         behaviour: :init_only,
     },
     enabled: {
       type: 'Boolean',
-        desc: 'Enable or disable this rule.',
+        desc: 'Enable or disable this server.',
         default: true
     },
     description: {

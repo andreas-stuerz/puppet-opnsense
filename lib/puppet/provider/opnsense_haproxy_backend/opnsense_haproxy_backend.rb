@@ -3,14 +3,14 @@
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
 
 # Implementation for the opnsense_haproxy_backend type using the Resource API.
-class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend  < Puppet::Provider::OpnsenseProvider
+class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet::Provider::OpnsenseProvider
   # @return [void]
   def initialize
-      super
-      @group = 'haproxy'
-      @command = 'backend'
-      @find_uuid_by_column = 'name'
-      @create_key = :name
+    super
+    @group = 'haproxy'
+    @command = 'backend'
+    @find_uuid_by_column = 'name'
+    @create_key = :name
   end
 
   # @param [String] device
@@ -26,9 +26,9 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend  < Puppet
       algorithm: json_list_item['algorithm'],
       random_draws: json_list_item['random_draws'],
       proxy_protocol: json_list_item['proxyProtocol'],
-      linked_servers: json_list_item['linkedServers'],
+      linked_servers: json_list_item['linkedServers'].split(','),
       linked_resolver: json_list_item['linkedResolver'],
-      resolver_opts: json_list_item['resolverOpts'],
+      resolver_opts: json_list_item['resolverOpts'].split(','),
       resolve_prefer: json_list_item['resolvePrefer'],
       source: json_list_item['source'],
       health_check_enabled: bool_from_value(json_list_item['healthCheckEnabled']),
@@ -41,13 +41,13 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend  < Puppet
       linked_mailer: json_list_item['linkedMailer'],
       http2_enabled: bool_from_value(json_list_item['http2Enabled']),
       http2_enabled_nontls: bool_from_value(json_list_item['http2Enabled_nontls']),
-      ba_advertised_protocols: json_list_item['ba_advertised_protocols'],
+      ba_advertised_protocols: json_list_item['ba_advertised_protocols'].split(','),
       persistence: json_list_item['persistence'],
       persistence_cookiemode: json_list_item['persistence_cookiemode'],
       persistence_cookiename: json_list_item['persistence_cookiename'],
       persistence_stripquotes: bool_from_value(json_list_item['persistence_stripquotes']),
       stickiness_pattern: json_list_item['stickiness_pattern'],
-      stickiness_data_types: json_list_item['stickiness_dataTypes'],
+      stickiness_data_types: json_list_item['stickiness_dataTypes'].split(','),
       stickiness_expire: json_list_item['stickiness_expire'],
       stickiness_size: json_list_item['stickiness_size'],
       stickiness_cookiename: json_list_item['stickiness_cookiename'],
@@ -59,8 +59,8 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend  < Puppet
       stickiness_bytes_in_rate_period: json_list_item['stickiness_bytesInRatePeriod'],
       stickiness_bytes_out_rate_period: json_list_item['stickiness_bytesOutRatePeriod'],
       basic_auth_enabled: bool_from_value(json_list_item['basicAuthEnabled']),
-      basic_auth_users: json_list_item['basicAuthUsers'],
-      basic_auth_groups: json_list_item['basicAuthGroups'],
+      basic_auth_users: json_list_item['basicAuthUsers'].split(','),
+      basic_auth_groups: json_list_item['basicAuthGroups'].split(','),
       tuning_timeout_connect: json_list_item['tuning_timeoutConnect'],
       tuning_timeout_check: json_list_item['tuning_timeoutCheck'],
       tuning_timeout_server: json_list_item['tuning_timeoutServer'],
@@ -86,37 +86,71 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend  < Puppet
     args.push('--enabled') if bool_from_value(puppet_resource[:enabled]) == true
     args.push('--no-enabled') if bool_from_value(puppet_resource[:enabled]) == false
     args.push('--description', puppet_resource[:description])
-    args.push('--address', puppet_resource[:address])
-    args.push('--port', puppet_resource[:port])
-    args.push('--checkport', puppet_resource[:checkport])
     args.push('--mode', puppet_resource[:mode])
-    args.push('--type', puppet_resource[:type])
-    args.push('--serviceName', puppet_resource[:service_name])
+    args.push('--algorithm', puppet_resource[:algorithm])
+    args.push('--checkport', puppet_resource[:random_draws])
+    args.push('--proxyProtocol', puppet_resource[:proxy_protocol])
+    args.push('--linkedServers', puppet_resource[:linked_servers].join(','))
     args.push('--linkedResolver', puppet_resource[:linked_resolver])
     puppet_resource[:resolver_opts].each do |opt|
       args.push('--resolverOpts', opt)
     end
     args.push('--resolvePrefer', puppet_resource[:resolve_prefer])
-    args.push('--ssl') if bool_from_value(puppet_resource[:ssl]) == true
-    args.push('--no-ssl') if bool_from_value(puppet_resource[:ssl]) == false
-    args.push('--sslVerify') if bool_from_value(puppet_resource[:ssl_verify]) == true
-    args.push('--no-sslVerify') if bool_from_value(puppet_resource[:ssl_verify]) == false
-    puppet_resource[:ssl_ca].each do |opt|
-      args.push('--sslCA', opt)
-    end
-    puppet_resource[:ssl_crl].each do |opt|
-      args.push('--sslCRL', opt)
-    end
-    args.push('--sslClientCertificate', puppet_resource[:ssl_client_certificate])
-    args.push('--weight', puppet_resource[:weight])
+    args.push('--source', puppet_resource[:source])
+    args.push('--healthCheckEnabled') if bool_from_value(puppet_resource[:health_check_enabled]) == true
+    args.push('--no-healthCheckEnabled') if bool_from_value(puppet_resource[:health_check_enabled]) == false
+    args.push('--healthCheck', puppet_resource[:health_check])
+    args.push('--healthCheckLogStatus') if bool_from_value(puppet_resource[:health_check_log_status]) == true
+    args.push('--no-healthCheckLogStatus') if bool_from_value(puppet_resource[:health_check_log_status]) == false
     args.push('--checkInterval', puppet_resource[:check_interval])
     args.push('--checkDownInterval', puppet_resource[:check_down_interval])
-    args.push('--source', puppet_resource[:source])
-    args.push('--advanced', puppet_resource[:advanced])
+    args.push('--healthCheckFall', puppet_resource[:health_check_fall])
+    args.push('--healthCheckRise', puppet_resource[:health_check_rise])
+    args.push('--linkedMailer', puppet_resource[:linked_mailer])
+    args.push('--http2Enabled') if bool_from_value(puppet_resource[:http2_enabled]) == true
+    args.push('--no-http2Enabled') if bool_from_value(puppet_resource[:http2_enabled]) == false
+    args.push('--http2Enabled_nontls') if bool_from_value(puppet_resource[:http2_enabled_nontls]) == true
+    args.push('--no-http2Enabled_nontls') if bool_from_value(puppet_resource[:http2_enabled_nontls]) == false
+    puppet_resource[:ba_advertised_protocols].each do |opt|
+      args.push('--ba_advertised_protocols', opt)
+    end
+    args.push('--persistence', puppet_resource[:persistence])
+    args.push('--persistence_cookiemode', puppet_resource[:persistence_cookiemode])
+    args.push('--persistence_cookiename', puppet_resource[:persistence_cookiename])
+    args.push('--persistence_stripquotes') if bool_from_value(puppet_resource[:persistence_stripquotes]) == true
+    args.push('--no-persistence_stripquotes') if bool_from_value(puppet_resource[:persistence_stripquotes]) == false
+    args.push('--stickiness_pattern', puppet_resource[:stickiness_pattern])
+    puppet_resource[:stickiness_data_types].each do |opt|
+      args.push('--stickiness_dataTypes', opt)
+    end
+    args.push('--stickiness_expire', puppet_resource[:stickiness_expire])
+    args.push('--stickiness_size', puppet_resource[:stickiness_size])
+    args.push('--stickiness_cookiename', puppet_resource[:stickiness_cookiename])
+    args.push('--stickiness_cookielength', puppet_resource[:stickiness_cookielength])
+    args.push('--stickiness_connRatePeriod', puppet_resource[:stickiness_conn_rate_period])
+    args.push('--stickiness_sessRatePeriod', puppet_resource[:stickiness_sess_rate_period])
+    args.push('--stickiness_httpReqRatePeriod', puppet_resource[:stickiness_http_req_rate_period])
+    args.push('--stickiness_httpErrRatePeriod', puppet_resource[:stickiness_http_err_rate_period])
+    args.push('--stickiness_bytesInRatePeriod', puppet_resource[:stickiness_bytes_in_rate_period])
+    args.push('--stickiness_bytesOutRatePeriod', puppet_resource[:stickiness_bytes_out_rate_period])
+    args.push('--basicAuthEnabled') if bool_from_value(puppet_resource[:basic_auth_enabled]) == true
+    args.push('--no-basicAuthEnabled') if bool_from_value(puppet_resource[:basic_auth_enabled]) == false
+    args.push('--basicAuthUsers', puppet_resource[:basic_auth_users].join(','))
+    args.push('--basicAuthGroups', puppet_resource[:basic_auth_groups].join(','))
+    args.push('--tuning_timeoutConnect', puppet_resource[:tuning_timeout_connect])
+    args.push('--tuning_timeoutCheck', puppet_resource[:tuning_timeout_check])
+    args.push('--tuning_timeoutServer', puppet_resource[:tuning_timeout_server])
+    args.push('--tuning_retries', puppet_resource[:tuning_retries])
+    args.push('--customOptions', puppet_resource[:custom_options])
+    args.push('--tuning_defaultserver', puppet_resource[:tuning_defaultserver])
+    args.push('--tuning_noport', puppet_resource[:tuning_noport])
+    args.push('--tuning_httpreuse', puppet_resource[:tuning_httpreuse])
+    args.push('--tuning_caching', puppet_resource[:tuning_caching])
+    args.push('--linkedActions', puppet_resource[:linked_actions].join(','))
+    args.push('--linkedErrorfiles', puppet_resource[:linked_errorfiles].join(','))
 
     args
   end
   #
   private :_translate_json_list_item_to_puppet_resource, :_translate_puppet_resource_to_command_args
 end
-

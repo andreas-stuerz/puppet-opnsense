@@ -46,7 +46,7 @@ RSpec.describe 'the opnsense_haproxy_backend type' do
           persistence_cookiename: 'SRVCOOKIE',
           persistence_stripquotes: true,
           stickiness_pattern: 'sourceipv4',
-          stickiness_data_types: '',
+          stickiness_data_types: [],
           stickiness_expire: '30m',
           stickiness_size: '50k',
           stickiness_cookiename: '',
@@ -211,8 +211,8 @@ RSpec.describe 'the opnsense_haproxy_backend type' do
     end
 
     it 'accepts a stickiness_data_types' do
-      backend[:stickiness_data_types] = 'conn_cnt'
-      expect(backend[:stickiness_data_types]).to eq('conn_cnt')
+      backend[:stickiness_data_types] = ['conn_cnt']
+      expect(backend[:stickiness_data_types]).to eq(['conn_cnt'])
     end
 
     it 'accepts a stickiness_expire' do

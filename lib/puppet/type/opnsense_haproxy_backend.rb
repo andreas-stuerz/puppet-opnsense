@@ -227,12 +227,12 @@ EOS
         default: 'sourceipv4',
     },
     stickiness_data_types: {
-      type: "Enum[
+      type: "Array[Enum[
             '', 'conn_cnt', 'conn_cur', 'conn_rate', 'sess_cnt', 'sess_rate', 'http_req_cnt', 'http_req_rate',
             'http_err_cnt', 'http_err_rate', 'bytes_in_cnt', 'bytes_in_rate', 'bytes_out_cnt', 'bytes_out_rate'
-            ]",
+            ]]",
        desc: 'This is used to store additional information in the stick-table.',
-       default: '',
+       default: [],
     },
     stickiness_expire: {
       type: 'String',

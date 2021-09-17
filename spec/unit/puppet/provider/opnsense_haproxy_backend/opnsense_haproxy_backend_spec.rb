@@ -289,6 +289,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
             tuning_caching: true,
             linked_actions: [],
             linked_errorfiles: [],
+            uuid: '9b3ecb61-6d20-4747-b969-c2edace33a9c',
             ensure: 'present'
         },
         {
@@ -347,6 +348,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
             tuning_caching: true,
             linked_actions: [],
             linked_errorfiles: [],
+            uuid: '8ffb5120-4ac6-4a1b-a2cb-5c9aaeaa40f3',
             ensure: 'present'
         },
         {
@@ -405,6 +407,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
             tuning_caching: true,
             linked_actions: [],
             linked_errorfiles: [],
+            uuid: '73dd4120-6993-4249-8dec-034195ef832d',
             ensure: 'present'
         },
       ]

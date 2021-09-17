@@ -20,13 +20,14 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
       title: "#{json_list_item['name']}@#{device}",
       name: json_list_item['name'],
       device: device,
+      uuid: json_list_item['uuid'],
       enabled: bool_from_value(json_list_item['enabled']),
       description: json_list_item['description'],
       mode: json_list_item['mode'],
       algorithm: json_list_item['algorithm'],
       random_draws: json_list_item['random_draws'],
       proxy_protocol: json_list_item['proxyProtocol'],
-      linked_servers: json_list_item['linkedServers'].split(','),
+      linked_servers: json_list_item['linkedServers'] == [] ? json_list_item['linkedServers'] : json_list_item['linkedServers'].split(','),
       linked_resolver: json_list_item['linkedResolver'],
       resolver_opts: json_list_item['resolverOpts'].split(','),
       resolve_prefer: json_list_item['resolvePrefer'],
@@ -59,8 +60,8 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
       stickiness_bytes_in_rate_period: json_list_item['stickiness_bytesInRatePeriod'],
       stickiness_bytes_out_rate_period: json_list_item['stickiness_bytesOutRatePeriod'],
       basic_auth_enabled: bool_from_value(json_list_item['basicAuthEnabled']),
-      basic_auth_users: json_list_item['basicAuthUsers'].split(','),
-      basic_auth_groups: json_list_item['basicAuthGroups'].split(','),
+      basic_auth_users: json_list_item['basicAuthUsers'] == [] ? json_list_item['basicAuthUsers'] : json_list_item['basicAuthUsers'].split(','),
+      basic_auth_groups: json_list_item['basicAuthGroups'] == [] ? json_list_item['basicAuthGroups'] : json_list_item['basicAuthGroups'].split(','),
       tuning_timeout_connect: json_list_item['tuning_timeoutConnect'],
       tuning_timeout_check: json_list_item['tuning_timeoutCheck'],
       tuning_timeout_server: json_list_item['tuning_timeoutServer'],
@@ -70,8 +71,8 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
       tuning_noport: bool_from_value(json_list_item['tuning_noport']),
       tuning_httpreuse: json_list_item['tuning_httpreuse'],
       tuning_caching: bool_from_value(json_list_item['tuning_caching']),
-      linked_actions: json_list_item['linkedActions'],
-      linked_errorfiles: json_list_item['linkedErrorfiles'],
+      linked_actions: json_list_item['linkedActions'] == [] ? json_list_item['linkedActions'] : json_list_item['linkedActions'].split(','),
+      linked_errorfiles: json_list_item['linkedErrorfiles'] == [] ? json_list_item['linkedErrorfiles'] : json_list_item['linkedErrorfiles'].split(','),
       ensure: 'present',
     }
   end
@@ -88,7 +89,7 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
     args.push('--description', puppet_resource[:description])
     args.push('--mode', puppet_resource[:mode])
     args.push('--algorithm', puppet_resource[:algorithm])
-    args.push('--checkport', puppet_resource[:random_draws])
+    args.push('--random_draws', puppet_resource[:random_draws])
     args.push('--proxyProtocol', puppet_resource[:proxy_protocol])
     args.push('--linkedServers', puppet_resource[:linked_servers].join(','))
     args.push('--linkedResolver', puppet_resource[:linked_resolver])
@@ -143,9 +144,11 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
     args.push('--tuning_retries', puppet_resource[:tuning_retries])
     args.push('--customOptions', puppet_resource[:custom_options])
     args.push('--tuning_defaultserver', puppet_resource[:tuning_defaultserver])
-    args.push('--tuning_noport', puppet_resource[:tuning_noport])
+    args.push('--tuning_noport') if bool_from_value(puppet_resource[:tuning_noport]) == true
+    args.push('--no-tuning_noport') if bool_from_value(puppet_resource[:tuning_noport]) == false
     args.push('--tuning_httpreuse', puppet_resource[:tuning_httpreuse])
-    args.push('--tuning_caching', puppet_resource[:tuning_caching])
+    args.push('--tuning_caching') if bool_from_value(puppet_resource[:tuning_caching]) == true
+    args.push('--no-tuning_caching') if bool_from_value(puppet_resource[:tuning_caching]) == false
     args.push('--linkedActions', puppet_resource[:linked_actions].join(','))
     args.push('--linkedErrorfiles', puppet_resource[:linked_errorfiles].join(','))
 

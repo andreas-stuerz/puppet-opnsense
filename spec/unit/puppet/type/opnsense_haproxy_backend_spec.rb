@@ -46,7 +46,7 @@ RSpec.describe 'the opnsense_haproxy_backend type' do
           persistence_cookiename: 'SRVCOOKIE',
           persistence_stripquotes: true,
           stickiness_pattern: 'sourceipv4',
-          stickiness_data_types: [],
+          stickiness_data_types: ['bytes_in_cnt', 'bytes_out_cnt'],
           stickiness_expire: '30m',
           stickiness_size: '50k',
           stickiness_cookiename: '',

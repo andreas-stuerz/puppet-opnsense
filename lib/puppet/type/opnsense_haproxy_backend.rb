@@ -72,7 +72,7 @@ EOS
   title_patterns: [
     {
       pattern: %r{^(?<name>.*[^-])@(?<device>.*)$},
-        desc: 'Where the name of the server and the device are provided with a @',
+        desc: 'Where the name of the backend and the device are provided with a @',
     },
     {
       pattern: %r{^(?<name>.*)$},

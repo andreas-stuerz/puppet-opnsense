@@ -121,7 +121,7 @@ describe 'opnsense_haproxy_backend' do
           expect(r.stdout).to match %r{stickiness_bytesInRatePeriod: 1m}
           expect(r.stdout).to match %r{stickiness_bytesOutRatePeriod: 1m}
           expect(r.stdout).to match %r{basicAuthEnabled: '1'}
-          expect(r.stdout).to match %r{basicAuthUsers: ''}
+          expect(r.stdout).to match %r{basicAuthUsers: '\[\]'}
           expect(r.stdout).to match %r{basicAuthGroups: '\[\]'}
           expect(r.stdout).to match %r{tuning_timeoutConnect: ''}
           expect(r.stdout).to match %r{tuning_timeoutCheck: ''}
@@ -257,7 +257,7 @@ describe 'opnsense_haproxy_backend' do
           expect(r.stdout).to match %r{stickiness_bytesInRatePeriod: 2m}
           expect(r.stdout).to match %r{stickiness_bytesOutRatePeriod: 2m}
           expect(r.stdout).to match %r{basicAuthEnabled: '0'}
-          expect(r.stdout).to match %r{basicAuthUsers: ''}
+          expect(r.stdout).to match %r{basicAuthUsers: '\[\]'}
           expect(r.stdout).to match %r{basicAuthGroups: '\[\]'}
           expect(r.stdout).to match %r{tuning_timeoutConnect: 20s}
           expect(r.stdout).to match %r{tuning_timeoutCheck: 20s}

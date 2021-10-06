@@ -36,6 +36,7 @@ RSpec.describe 'the opnsense_haproxy_frontend type' do
             ssl_cipher_list: ('ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:'
                              'ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:'
                              'ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256'),
+            ssl_cipher_suites: 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256',
             ssl_hsts_enabled: true,
             ssl_hsts_include_sub_domains: true,
             ssl_hsts_preload: true,
@@ -155,6 +156,11 @@ RSpec.describe 'the opnsense_haproxy_frontend type' do
     it 'accepts ssl_cipher_list' do
       frontend[:ssl_cipher_list] = 'ECDHE-ECDSA-AES256-GCM-SHA384'
       expect(frontend[:ssl_cipher_list]).to eq('ECDHE-ECDSA-AES256-GCM-SHA384')
+    end
+
+    it 'accepts ssl_cipher_suites' do
+      frontend[:ssl_cipher_suites] = 'TLS_AES_128_GCM_SHA256'
+      expect(frontend[:ssl_cipher_suites]).to eq('TLS_AES_128_GCM_SHA256')
     end
 
     it 'accepts ssl_hsts_enabled' do

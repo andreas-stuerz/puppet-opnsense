@@ -166,6 +166,12 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     end
   end
 
+  # @param [String] value
+  # @return [Array]
+  def array_from_value(value)
+    return value == [] ? value : value.split(',')
+  end
+
   # @param [Object] device_name
   # @param [Object] group
   # @param [Object] command

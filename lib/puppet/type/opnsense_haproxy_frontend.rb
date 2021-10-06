@@ -26,7 +26,7 @@ opnsense_haproxy_frontend { 'webserver_frontend':
   ssl_max_version                  => '',
   ssl_cipher_list                  => 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
   ssl_hsts_enabled                 => true,
-  ssl_hsts_include_sub_domains     => true
+  ssl_hsts_include_sub_domains     => true,
   ssl_hsts_preload                 => true,
   ssl_hsts_max_age                 => '15768000',
   ssl_client_auth_enabled          => true,
@@ -63,7 +63,7 @@ opnsense_haproxy_frontend { 'webserver_frontend':
   http2_enabled_nontls             => true,
   advertised_protocols             => ['h2', 'http11'],
   forward_for                      => true,
-  connection_behaviour             => 'http-keep-alive'',
+  connection_behaviour             => 'http-keep-alive',
   custom_options                   => '',
   linked_actions                   => [],
   linked_errorfiles                => [],

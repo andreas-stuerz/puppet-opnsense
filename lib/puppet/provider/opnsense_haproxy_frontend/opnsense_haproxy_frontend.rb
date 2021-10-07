@@ -94,6 +94,7 @@ class Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFrontend < Puppe
     args.push('--no-enabled') if bool_from_value(puppet_resource[:enabled]) == false
     args.push('--description', puppet_resource[:description])
     args.push('--bind', puppet_resource[:bind])
+    args.push('--bindOptions', puppet_resource[:bind_options])
     args.push('--mode', puppet_resource[:mode])
     args.push('--defaultBackend', puppet_resource[:default_backend])
     args.push('--ssl_enabled') if bool_from_value(puppet_resource[:ssl_enabled]) == true
@@ -126,6 +127,7 @@ class Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFrontend < Puppe
     args.push('--no-basicAuthEnabled') if bool_from_value(puppet_resource[:basic_auth_enabled]) == false
     args.push('--basicAuthUsers', puppet_resource[:basic_auth_users].join(','))
     args.push('--basicAuthGroups', puppet_resource[:basic_auth_groups].join(','))
+    args.push('--tuning_maxConnections', puppet_resource[:tuning_max_connections])
     args.push('--tuning_timeoutClient', puppet_resource[:tuning_timeout_client])
     args.push('--tuning_timeoutHttpReq', puppet_resource[:tuning_timeout_http_req])
     args.push('--tuning_timeoutHttpKeepAlive', puppet_resource[:tuning_timeout_http_keep_alive])
@@ -152,7 +154,6 @@ class Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFrontend < Puppe
     args.push('--stickiness_length', puppet_resource[:stickiness_length])
     args.push('--stickiness_connRatePeriod', puppet_resource[:stickiness_conn_rate_period])
     args.push('--stickiness_sessRatePeriod', puppet_resource[:stickiness_sess_rate_period])
-    args.push('--stickiness_cookielength', puppet_resource[:stickiness_cookielength])
     args.push('--stickiness_httpReqRatePeriod', puppet_resource[:stickiness_http_req_rate_period])
     args.push('--stickiness_sessRatePeriod', puppet_resource[:stickiness_sess_rate_period])
     args.push('--stickiness_httpReqRatePeriod', puppet_resource[:stickiness_http_req_rate_period])

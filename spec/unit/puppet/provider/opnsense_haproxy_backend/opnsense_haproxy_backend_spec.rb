@@ -478,7 +478,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
 
   describe 'update(context, name, should)' do
     it 'updates the resource' do
-      expect(Puppet::Util::Execution).to receive(:execute).and_return('{"result": "deleted"}')
+      expect(Puppet::Util::Execution).to receive(:execute).and_return('{"result": "saved"}')
       backends_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = backends_device_2
 

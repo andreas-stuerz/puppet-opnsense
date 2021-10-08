@@ -7,7 +7,7 @@ describe 'opnsense::client::firewall' do
     context "on #{os}" do
       let(:facts) { os_facts }
       let(:params) do
-        hash_from_fixture_yaml_file('unit/classes/opnsense/exported_resources.yaml')
+        hash_from_fixture_yaml_file('unit/classes/opnsense/firewall_exported_resources.yaml')
       end
       let(:node) { 'client1.example.com' }
 

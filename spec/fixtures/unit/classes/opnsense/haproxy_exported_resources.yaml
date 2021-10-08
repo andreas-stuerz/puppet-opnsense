@@ -1,0 +1,26 @@
+---
+servers:
+  'server1':
+    devices: ["opnsense1.example.com"]
+    description: 'first local server'
+    address: '127.0.0.1'
+    port: '8091'
+  'server2':
+    devices: ["opnsense1.example.com"]
+    description: 'second local server'
+    address: '127.0.0.1'
+    port: '8092'
+backends:
+  'localhost_backend':
+    devices: ["opnsense1.example.com"]
+    description: 'local server backend'
+    mode: 'http'
+    linked_servers: ["server1", "server2"]
+frontends:
+  'localhost_frontend':
+    devices: ["opnsense1.example.com"]
+    description: 'local frontend'
+    bind: '127.0.0.1:8090'
+    ssl_enabled: true
+    ssl_certificates: ["60cc4641eb577"]
+    default_backend: 'localhost_backend'

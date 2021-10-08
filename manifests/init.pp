@@ -72,7 +72,7 @@
 #     haproxy => {
 #       servers  => {
 #         "server1" => {
-#           "devices"   => ["localhost"],
+#           "devices"     => ["localhost"],
 #           "description" => "first local server",
 #           "address"     => "127.0.0.1",
 #           "port"        => "8091",
@@ -190,7 +190,7 @@ class opnsense (
         $server_options_filtered = delete($server_options, ['devices', 'description'])
         opnsense_haproxy_server { "${server_name}@${device_name}":
           description => "${api_manager_prefix}${server_options['description']}",
-          * => $server_options_filtered,
+          *           => $server_options_filtered,
         }
       }
     }
@@ -201,7 +201,7 @@ class opnsense (
         $backend_options_filtered = delete($backend_options, ['devices', 'description'])
         opnsense_haproxy_backend { "${backend_name}@${device_name}":
           description => "${api_manager_prefix}${backend_options['description']}",
-          * => $backend_options_filtered,
+          *           => $backend_options_filtered,
         }
       }
     }
@@ -212,7 +212,7 @@ class opnsense (
         $frontend_options_filtered = delete($frontend_options, ['devices', 'description'])
         opnsense_haproxy_frontend { "${frontend_name}@${device_name}":
           description => "${api_manager_prefix}${frontend_options['description']}",
-          * => $frontend_options_filtered,
+          *           => $frontend_options_filtered,
         }
       }
     }
@@ -220,6 +220,9 @@ class opnsense (
     if $manage_resources {
       Opnsense_firewall_alias <<| tag == $device_name |>>
       Opnsense_firewall_rule <<| tag == $device_name |>>
+      Opnsense_haproxy_server <<| tag == $device_name |>>
+      Opnsense_haproxy_backend <<| tag == $device_name |>>
+      Opnsense_haproxy_frontend <<| tag == $device_name |>>
     }
 
   }

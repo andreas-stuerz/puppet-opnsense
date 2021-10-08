@@ -34,13 +34,13 @@ describe 'opnsense' do
 
           is_expected.to contain_opnsense_plugin('os-acme-client').with(
               'device' => 'opnsense.example.com',
+              'ensure' => 'absent',
             )
           is_expected.to contain_opnsense_plugin('os-firewall').with(
               'device' => 'opnsense.example.com',
             )
           is_expected.to contain_opnsense_plugin('os-haproxy').with(
               'device' => 'opnsense.example.com',
-              'ensure' => 'absent',
             )
 
           is_expected.to contain_opnsense_firewall_alias('hosts_alias@opnsense.example.com')
@@ -55,13 +55,17 @@ describe 'opnsense' do
           is_expected.to contain_opnsense_firewall_rule(
                      'opnsense.example.com api manager - allow all from lan and wan@opnsense.example.com',
                    )
+          is_expected.to contain_opnsense_haproxy_server('server1@opnsense.example.com')
+          is_expected.to contain_opnsense_haproxy_server('server2@opnsense.example.com')
+          is_expected.to contain_opnsense_haproxy_backend('localhost_backend@opnsense.example.com')
+          is_expected.to contain_opnsense_haproxy_frontend('localhost_frontend@opnsense.example.com')
+
         }
       end
 
       describe 'with default CA settings' do
         it { is_expected.to contain_file('Symlink opn-cli CA file to system-wide CA certificates').with_ensure('link') }
         it { is_expected.to contain_file('Create opn-cli config directory').with_ensure('directory') }
-
         it { is_expected.not_to contain_file('Create opn-cli CA file with custom CA content') }
       end
 

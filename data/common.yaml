@@ -5,8 +5,8 @@ opnsense::firewall:
   rules: {}
 opnsense::haproxy:
   servers: {}
-  backend: {}
-  frontend: {}
+  backends: {}
+  frontends: {}
 opnsense::required_plugins:
   "os-firewall": {}
   "os-haproxy": {}

@@ -115,6 +115,7 @@ EOS
     resolver_opts: {
       type: 'Optional[Array[String]]',
         desc: 'Add resolver options.',
+      default: []
     },
     resolve_prefer: {
       type: "Enum['', 'ipv4', 'ipv6']",
@@ -133,11 +134,13 @@ EOS
     },
     ssl_ca: {
       type: 'Optional[Array[String]]',
-        desc: "These CA Ids will be used to verify server's certificate.",
+      desc: "These CA Ids will be used to verify server's certificate.",
+      default: []
     },
     ssl_crl: {
       type: 'Optional[Array[String]]',
-        desc: "This certificate revocation list Ids will be used to verify server's certificate.",
+      desc: "This certificate revocation list Ids will be used to verify server's certificate.",
+      default: []
     },
     ssl_client_certificate: {
       type: 'Optional[String]',

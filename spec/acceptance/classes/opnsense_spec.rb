@@ -117,20 +117,20 @@ describe 'class opnsense' do
 
       it 'find the created haproxy servers via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
-          expect(r.stdout).to match %r{opnsense.remote.com api manager - server1\n}
-          expect(r.stdout).to match %r{opnsense.remote.com api manager - server2\n}
+          expect(r.stdout).to match %r{server1\n}
+          expect(r.stdout).to match %r{server2\n}
         end
       end
 
-      it 'find the created haproxy backends via the cli', retry: 3, retry_wait: 3 do
+      it 'find the created haproxy backends with the linked servers via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy backend list -o plain -c name,Servers')) do |r|
-          expect(r.stdout).to match %r{opnsense.remote.com api manager - localhost_backend\n}
+          expect(r.stdout).to match %r{localhost_backend server1,server2\n}
         end
       end
 
-      it 'find the created haproxy frontends via the cli', retry: 3, retry_wait: 3 do
+      it 'find the created haproxy frontends with the linked backends via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy frontend list -o plain -c name,Backend')) do |r|
-          expect(r.stdout).to match %r{opnsense.remote.com api manager - localhost_frontend\n}
+          expect(r.stdout).to match %r{localhost_frontend localhost_backend\n}
         end
       end
     end
@@ -190,7 +190,7 @@ describe 'class opnsense' do
             },
           },
           manage_resources   => true,
-          api_manager_prefix =>"opnsense.remote.com api manager - ",
+          api_manager_prefix => "opnsense.remote.com api manager - ",
           required_plugins   => {
             "os-xen" => {
               "ensure" => "absent"
@@ -198,6 +198,12 @@ describe 'class opnsense' do
           }
         }
       MANIFEST
+
+      it 'throws an error because dependecies are not removed' do
+        apply_manifest(pp_items, expect_failures: true) do |r|
+          expect(r.stderr).to match %r{Deleting: Failed.*returned 1.*Item in use by}
+        end
+      end
 
       it 'applies remove items with no errors' do
         apply_manifest(pp_items, catch_failures: true)
@@ -225,20 +231,20 @@ describe 'class opnsense' do
 
       it 'ensure haproxy servers are deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
-          expect(r.stdout).not_to match %r{opnsense.remote.com api manager - server1\n}
-          expect(r.stdout).not_to match %r{opnsense.remote.com api manager - server2\n}
+          expect(r.stdout).not_to match %r{server1\n}
+          expect(r.stdout).not_to match %r{server2\n}
         end
       end
 
       it 'ensure haproxy backends are deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy backend list -o plain -c name')) do |r|
-          expect(r.stdout).not_to match %r{opnsense.remote.com api manager - localhost_backend\n}
+          expect(r.stdout).not_to match %r{localhost_backend\n}
         end
       end
 
       it 'ensure haproxy frontends are deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy frontend list -o plain -c name')) do |r|
-          expect(r.stdout).not_to match %r{opnsense.remote.com api manager - localhost_frontend\n}
+          expect(r.stdout).not_to match %r{localhost_frontend\n}
         end
       end
     end

@@ -164,10 +164,10 @@ describe 'opnsense_haproxy_backend' do
         http2_enabled                    => false,
         http2_enabled_nontls             => false,
         ba_advertised_protocols          => ['http11'],
-        persistence                      => 'cookie',
-        persistence_cookiemode           => 'new',
-        persistence_cookiename           => 'COOKIE',
-        persistence_stripquotes          => false,
+        persistence                      => 'sticktable',
+        persistence_cookiemode           => 'piggyback',
+        persistence_cookiename           => 'SRVCOOKIE',
+        persistence_stripquotes          => true,
         stickiness_pattern               => 'sourceipv6',
         stickiness_data_types            => ['conn_cnt'],
         stickiness_expire                => '20m',
@@ -240,10 +240,10 @@ describe 'opnsense_haproxy_backend' do
           expect(r.stdout).to match %r{http2Enabled: '0'}
           expect(r.stdout).to match %r{http2Enabled_nontls: '0'}
           expect(r.stdout).to match %r{ba_advertised_protocols: http11}
-          expect(r.stdout).to match %r{persistence: cookie}
-          expect(r.stdout).to match %r{persistence_cookiemode: new}
-          expect(r.stdout).to match %r{persistence_cookiename: COOKIE}
-          expect(r.stdout).to match %r{persistence_stripquotes: '0'}
+          expect(r.stdout).to match %r{persistence: sticktable}
+          expect(r.stdout).to match %r{persistence_cookiemode: piggyback}
+          expect(r.stdout).to match %r{persistence_cookiename: SRVCOOKIE}
+          expect(r.stdout).to match %r{persistence_stripquotes: '1'}
           expect(r.stdout).to match %r{stickiness_pattern: sourceipv6}
           expect(r.stdout).to match %r{stickiness_dataTypes: conn_cnt}
           expect(r.stdout).to match %r{stickiness_expire: 20m}
@@ -287,7 +287,7 @@ describe 'opnsense_haproxy_backend' do
 
       it 'displays the rule as deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy backend list -o plain -c name')) do |r|
-          expect(r.stdout).not_to match %r{webserver_pool\n}
+          expect(r.stdout).not_to match %r{webserver_pool}
         end
       end
     end

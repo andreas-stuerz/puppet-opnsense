@@ -179,10 +179,10 @@ EOS
     ssl_cipher_list: {
       type: 'String',
         desc: 'The default string describing the list of cipher algorithms ("cipher suite") that are negotiated during the SSL/TLS handshake up to TLSv1.2.',
-        default: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:
-                  ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:
-                  ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:
-                  ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
+        default: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:'\
+                 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:'\
+                 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:'\
+                 'ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
     },
     ssl_cipher_suites: {
       type: 'String',

@@ -29,7 +29,7 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
       mode: json_list_item['mode'],
       type: json_list_item['type'],
       service_name: json_list_item['serviceName'],
-      linked_resolver: json_list_item['linkedResolver'],
+      linked_resolver: json_list_item['Resolver'],
       resolver_opts: json_list_item['resolverOpts'].split(','),
       resolve_prefer: json_list_item['resolvePrefer'],
       ssl: bool_from_value(json_list_item['ssl']),

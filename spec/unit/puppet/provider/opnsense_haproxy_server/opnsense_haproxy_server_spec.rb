@@ -135,7 +135,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
             mode: 'active',
             type: 'static',
             service_name: 'service_1',
-            linked_resolver: 'cea8f031-9aba-4f6e-86c2-f5f5f27a10b8',
+            linked_resolver: 'my_resolver',
             resolver_opts: ['allow-dup-ip', 'ignore-weight'],
             resolve_prefer: '',
             ssl: true,

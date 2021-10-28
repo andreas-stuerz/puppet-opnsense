@@ -47,7 +47,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
       {
         "id": '6139b4a413dbc6.60034160',
           "enabled": '1',
-          "name": 'testerver',
+          "name": 'webserver1',
           "description": '',
           "address": '',
           "port": '',
@@ -75,7 +75,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
       {
         "id": '6139c6a3ea7417.18216234',
           "enabled": '1',
-          "name": 'testerver2',
+          "name": 'webserver2',
           "description": '',
           "address": '',
           "port": '',
@@ -151,8 +151,8 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
             ensure: 'present',
         },
         {
-          title: 'testerver@opnsense2.example.com',
-            name: 'testerver',
+          title: 'webserver1@opnsense2.example.com',
+            name: 'webserver1',
             device: 'opnsense2.example.com',
             uuid: '20c33893-8c65-41dd-8951-5792abe249a0',
             enabled: true,
@@ -179,8 +179,8 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
             ensure: 'present',
         },
         {
-          title: 'testerver2@opnsense2.example.com',
-            name: 'testerver2',
+          title: 'webserver2@opnsense2.example.com',
+            name: 'webserver2',
             device: 'opnsense2.example.com',
             uuid: 'ceb75158-7d69-42a9-bded-5bb3080be199',
             enabled: true,
@@ -230,7 +230,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
                       ssl: true,
                       ssl_verify: true,
                       ssl_ca: ['60cc45d3d7530', '610d3779926d6'],
-                      ssl_crl: [],
+                      ssl_crl: ['60cc45d3d7530'],
                       ssl_client_certificate: '60cc4641eb577',
                       weight: '10',
                       check_interval: '100',
@@ -281,6 +281,16 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer do
       provider.resource_list = server_device_2
 
       provider.delete(context, { name: 'webserver1', device: 'opnsense2.example.com' })
+    end
+  end
+
+  describe 'delete webserver_unkown@opnsense2.example.com' do
+    it 'raise ResourceError if server name could not be resolved to uuid' do
+      server_device_2[0][:device] = 'opnsense2.example.com'
+      provider.resource_list = server_device_2
+      expect { provider.delete(context, { name: 'webserver_unkown', device: 'opnsense2.example.com' }) }
+        .to raise_error(Puppet::ResourceError,
+                          %r{Could not find uuid for \{:name=>"webserver_unkown", :device=>"opnsense2.example.com"\}})
     end
   end
 end

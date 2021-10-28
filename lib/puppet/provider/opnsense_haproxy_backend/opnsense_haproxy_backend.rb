@@ -9,7 +9,7 @@ class Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend < Puppet:
     super
     @group = 'haproxy'
     @command = 'backend'
-    @find_uuid_by_column = 'name'
+    @find_uuid_by_column = :name
     @create_key = :name
   end
 

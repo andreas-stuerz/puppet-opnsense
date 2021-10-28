@@ -327,7 +327,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
                       ssl_default_certificate: '',
                       ssl_custom_options: '',
                       ssl_advanced_enabled: true,
-                      ssl_bind_options: [],
+                      ssl_bind_options: ['prefer-client-ciphers'],
                       ssl_min_version: 'TLSv1.2',
                       ssl_max_version: '',
                       ssl_cipher_list: 'ECDHE-ECDSA-AES256-GCM-SHA384',
@@ -354,7 +354,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
                       logging_detailed_log: true,
                       logging_socket_stats: true,
                       stickiness_pattern: '',
-                      stickiness_data_types: [],
+                      stickiness_data_types: ['conn_rate', 'sess_cnt'],
                       stickiness_expire: '30m',
                       stickiness_size: '50k',
                       stickiness_counter: true,
@@ -368,7 +368,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
                       stickiness_bytes_out_rate_period: '1m',
                       http2_enabled: true,
                       http2_enabled_nontls: true,
-                      advertised_protocols: [],
+                      advertised_protocols: ['http11'],
                       forward_for: true,
                       connection_behaviour: 'http-keep-alive',
                       custom_options: '',
@@ -384,7 +384,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
       frontends_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = frontends_device_2
 
-      provider.update(context, { name: 'example_frontend', device: 'opnsense2.example.com' },
+      provider.update(context, { name: 'webserver_frontend', device: 'opnsense2.example.com' },
                       enabled: true,
                       description: 'frontend for webserver modified',
                       bind: '127.0.0.1:8081',
@@ -453,7 +453,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
       frontends_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = frontends_device_2
 
-      provider.delete(context, { name: 'example_frontend', device: 'opnsense2.example.com' })
+      provider.delete(context, { name: 'webserver_frontend', device: 'opnsense2.example.com' })
     end
   end
 end

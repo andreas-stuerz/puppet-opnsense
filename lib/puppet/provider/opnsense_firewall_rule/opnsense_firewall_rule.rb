@@ -9,7 +9,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
     super
     @group = 'firewall'
     @command = 'rule'
-    @find_uuid_by_column = 'description'
+    @find_uuid_by_column = :description
     @create_key = :sequence
   end
 

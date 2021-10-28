@@ -428,7 +428,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
                       proxy_protocol: '',
                       linked_servers: [],
                       linked_resolver: '',
-                      resolver_opts: [],
+                      resolver_opts: ['allow-dup-ip'],
                       resolve_prefer: '',
                       source: '',
                       health_check_enabled: true,
@@ -447,7 +447,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
                       persistence_cookiename: 'SRVCOOKIE',
                       persistence_stripquotes: true,
                       stickiness_pattern: 'sourceipv4',
-                      stickiness_data_types: [],
+                      stickiness_data_types: ['conn_cur'],
                       stickiness_expire: '30m',
                       stickiness_size: '50k',
                       stickiness_cookiename: '',
@@ -482,7 +482,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
       backends_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = backends_device_2
 
-      provider.update(context, { name: 'webserver_pool', device: 'opnsense2.example.com' },
+      provider.update(context, { name: 'pool6', device: 'opnsense2.example.com' },
                       enabled: true,
                       description: 'backend for webserver modified',
                       mode: 'tcp',
@@ -545,7 +545,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyBackend::OpnsenseHaproxyBackend 
       backends_device_2[0][:device] = 'opnsense2.example.com'
       provider.resource_list = backends_device_2
 
-      provider.delete(context, { name: 'webserver_pool', device: 'opnsense2.example.com' })
+      provider.delete(context, { name: 'pool6', device: 'opnsense2.example.com' })
     end
   end
 end

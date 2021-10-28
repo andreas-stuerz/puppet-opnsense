@@ -305,7 +305,7 @@ EOS
             'http_err_cnt', 'http_err_rate', 'bytes_in_cnt', 'bytes_in_rate', 'bytes_out_cnt', 'bytes_out_rate'
             ]]",
         desc: 'This is used to store additional information in the stick-table.',
-        default: [''],
+        default: [],
     },
     stickiness_expire: {
       type: 'String',

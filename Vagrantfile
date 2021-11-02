@@ -39,4 +39,5 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision 'shell', inline: $auto_update_script
 
+
 end

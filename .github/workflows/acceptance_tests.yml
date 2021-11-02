@@ -70,6 +70,10 @@ jobs:
           eval $(docker-machine env default)
           bundle exec rake 'litmus:provision_list[acceptance]'
           echo ::group::=== INVENTORY ===
+          sed '
+          /shell-command: bash -lc/a\
+          \ \ \ \ \ \ \ \ tmpdir: "\/tmp\"
+          ' spec/fixtures/litmus_inventory.yaml
           if [ -f 'spec/fixtures/litmus_inventory.yaml' ];
           then
             FILE='spec/fixtures/litmus_inventory.yaml'

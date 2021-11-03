@@ -20,6 +20,7 @@ jobs:
         run: |
           mkdir -p ~/.docker/machine/cache
           curl -Lo ~/.docker/machine/cache/boot2docker.iso https://github.com/boot2docker/boot2docker/releases/download/v19.03.12/boot2docker.iso
+          #brew install docker
           brew install docker docker-machine
           docker-machine create --driver virtualbox default
           docker-machine env default
@@ -41,12 +42,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-vagrant-
 
+      - name: Show Vagrant version
+        run: vagrant --version
+
       - name: Run vagrant up
         run: vagrant up
+
+      - name: show ip config for host
+        run: |
+          ifconfig
+
+      - name: Get NAT IP for vagrant box
+        run: |
+          echo "MY_IP=$( ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2|head -n1)" >> $GITHUB_ENV
 
       - name: Deploy opn-cli config
         run: |
           cp spec/fixtures/acceptance/opn-cli/conf.yaml.dist spec/fixtures/acceptance/opn-cli/conf.yaml
+          sed -i '' "s/host.docker.internal/${{ env.MY_IP }}/g" spec/fixtures/acceptance/opn-cli/conf.yaml
           cp spec/fixtures/acceptance/opn-cli/ca.pem.dist spec/fixtures/acceptance/opn-cli/ca.pem
           echo ::group::=== OPN-CLI CONFIG ===
           cat spec/fixtures/acceptance/opn-cli/conf.yaml
@@ -55,7 +68,7 @@ jobs:
 
       - name: Provision litmus docker container
         run: |
-          #eval $(docker-machine env default)
+          eval $(docker-machine env default)
           bundle exec rake 'litmus:provision_list[acceptance]'
           sed -i '' '
           /shell-command: bash -lc/a\
@@ -70,6 +83,7 @@ jobs:
             FILE='inventory.yaml'
           fi
           cat $FILE
+          #sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
           echo ::endgroup::
 
       - name: Install puppet agent 7

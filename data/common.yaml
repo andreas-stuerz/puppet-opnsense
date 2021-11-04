@@ -1,10 +1,16 @@
 ---
 opnsense::devices: {}
-opnsense::aliases: {}
-opnsense::rules: {}
-opnsense::api_manager_prefix: "%{fqdn} api manager - "
+opnsense::firewall:
+  aliases: {}
+  rules: {}
+opnsense::haproxy:
+  servers: {}
+  backends: {}
+  frontends: {}
 opnsense::required_plugins:
   "os-firewall": {}
+  "os-haproxy": {}
+opnsense::api_manager_prefix: "%{fqdn} api manager - "
 opnsense::manage_resources: false
 opnsense::manage_ca: true
 opnsense::ca_content: ~
@@ -13,3 +19,6 @@ opnsense::use_system_ca: true
 opnsense::opncli_configdir: '/root/.opn-cli'
 opnsense::client::firewall::aliases: {}
 opnsense::client::firewall::rules: {}
+opnsense::client::haproxy::servers: {}
+opnsense::client::haproxy::backends: {}
+opnsense::client::haproxy::frontends: {}

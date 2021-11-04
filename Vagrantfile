@@ -1,5 +1,6 @@
 Vagrant.configure("2") do |config|
   config.vm.box = 'andeman/opnsense'
+  config.vm.box_version = "21.7.4"
   config.vm.boot_timeout = 600
 
   # sepecial configurations for bsd shell / opnsense stuff
@@ -21,9 +22,20 @@ Vagrant.configure("2") do |config|
   end
 
   $auto_update_script = <<-'SCRIPT'
-    # auto-update to latest minor version
+    # get opnsense versions
     version_local=$(opnsense-version -v)
     version_remote=$(configctl firmware remote | grep -e "^opnsense||" | awk -F '\\|\\|\\|' '{ print $2 }')
+
+    # Auto Patching
+    # patch haproxy for OPNsense version 21.7.4
+    # See: https://github.com/opnsense/plugins/issues/2616
+    if [ "$version_local" = "21.7.4" ]; then
+      configctl firmware install os-haproxy
+      sleep 10
+      opnsense-patch -c plugins 31b82cd 18cd9f6
+    fi
+
+    # auto-update to latest minor version
     echo "installed version: $version_local"
     echo "remote version: $version_remote"
     if [ "$version_local" != "$version_remote" ]; then

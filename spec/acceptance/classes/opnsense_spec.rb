@@ -20,32 +20,68 @@ describe 'class opnsense' do
               "ensure"      => "present"
             }
           },
-          aliases => {
-            "my_http_ports_remote" => {
-              "devices"     => ["opnsense.remote.com"],
-              "type"        => "port",
-              "content"     => ["80", "443"],
-              "description" => "my local web ports",
-              "enabled"     => true,
-              "ensure"      => "present"
+          firewall => {
+            aliases => {
+              "my_http_ports_remote" => {
+                "devices"     => ["opnsense.remote.com"],
+                "type"        => "port",
+                "content"     => ["80", "443"],
+                "description" => "my local web ports",
+                "enabled"     => true,
+                "ensure"      => "present"
+              },
+              "mac_alias_remote" => {
+                "devices"     => ["opnsense.remote.com"],
+                "type"        => "mac",
+                "content"     => ["f4:90:ea", "0c:4d:e9:b1:05:f0"],
+                "description" => "My local MAC address or partial mac addresses",
+                "counters"    => true,
+                "enabled"     => true,
+                "ensure"      => "present"
+              }
             },
-            "mac_alias_remote" => {
-              "devices"     => ["opnsense.remote.com"],
-              "type"        => "mac",
-              "content"     => ["f4:90:ea", "0c:4d:e9:b1:05:f0"],
-              "description" => "My local MAC address or partial mac addresses",
-              "counters"    => true,
-              "enabled"     => true,
-              "ensure"      => "present"
-            }
+            rules => {
+              "allow all from lan and wan" => {
+                "devices"   => ["opnsense.remote.com"],
+                "sequence"  => "1",
+                "action"    => "pass",
+                "interface" => ["lan", "wan"]
+              }
+            },
           },
-          rules => {
-            "allow all from lan and wan" => {
-              "devices"   => ["opnsense.remote.com"],
-              "sequence"  => "1",
-              "action"    => "pass",
-              "interface" => ["lan", "wan"]
-            }
+          haproxy => {
+            servers => {
+              "server1" => {
+                "devices"     => ["opnsense.remote.com"],
+                "description" => "first local server",
+                "address"     => "127.0.0.1",
+                "port"        => "8091",
+              },
+              "server2" => {
+                "devices"   => ["opnsense.remote.com"],
+                "description" => "second local server",
+                "address"     => "127.0.0.1",
+                "port"        => "8092",
+              },
+            },
+            backends => {
+              "localhost_backend" => {
+                "devices"        => ["opnsense.remote.com"],
+                "description"    => "local server backend",
+                "mode"           => "http",
+                "linked_servers" => ["server1", "server2"],
+              }
+            },
+            frontends => {
+              "localhost_frontend" => {
+                "devices"           => ["opnsense.remote.com"],
+                "description"       => "local frontend",
+                "bind"              => "127.0.0.1:8090",
+                "ssl_enabled"       => true,
+                "ssl_certificates"  => ["60cc4641eb577"],
+                "default_backend"   => "localhost_backend",
+              }
+            },
           },
           manage_resources   => true,
           api_manager_prefix => "opnsense.remote.com api manager - ",
@@ -66,21 +102,38 @@ describe 'class opnsense' do
         end
       end
 
-      it 'find the created aliases via the cli', retry: 3, retry_wait: 3 do
+      it 'find the created firewall aliases via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('firewall alias list -o plain -c name')) do |r|
           expect(r.stdout).to match %r{my_http_ports_remote\n}
           expect(r.stdout).to match %r{mac_alias_remote\n}
         end
       end
 
-      it 'find the created rules via the cli', retry: 3, retry_wait: 3 do
+      it 'find the created firewall rules via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('firewall rule list -o plain -c description')) do |r|
           expect(r.stdout).to match %r{opnsense.remote.com api manager - allow all from lan and wan\n}
         end
       end
-    end
 
-    describe 'shows opn-cli error to the user'
+      it 'find the created haproxy servers via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
+          expect(r.stdout).to match %r{server1\n}
+          expect(r.stdout).to match %r{server2\n}
+        end
+      end
+
+      it 'find the created haproxy backends with the linked servers via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy backend list -o plain -c name,Servers')) do |r|
+          expect(r.stdout).to match %r{localhost_backend server1,server2\n}
+        end
+      end
+
+      it 'find the created haproxy frontends with the linked backends via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy frontend list -o plain -c name,Backend')) do |r|
+          expect(r.stdout).to match %r{localhost_frontend localhost_backend\n}
+        end
+      end
+    end
 
     describe 'remove items' do
       pp_items = <<-MANIFEST
@@ -94,24 +147,50 @@ describe 'class opnsense' do
               }
             }
           },
-          aliases => {
-            "my_http_ports_remote" => {
-              "devices" => ["opnsense.remote.com"],
-              "ensure" => "absent"
+          firewall => {
+            aliases => {
+              "my_http_ports_remote" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure" => "absent"
+              },
+              "mac_alias_remote" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure" => "absent"
+              }
             },
-            "mac_alias_remote" => {
-              "devices" => ["opnsense.remote.com"],
-              "ensure" => "absent"
-            }
+            rules => {
+              "allow all from lan and wan" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure" => "absent"
+              }
+            },
           },
-          rules => {
-            "allow all from lan and wan" => {
-              "devices" => ["opnsense.remote.com"],
-              "ensure" => "absent"
-            }
+          haproxy => {
+            servers  => {
+              "server1" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure"  => "absent",
+              },
+              "server2" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure"  => "absent",
+              },
+            },
+            backends => {
+              "localhost_backend" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure"  => "absent",
+              }
+            },
+            frontends => {
+              "localhost_frontend" => {
+                "devices" => ["opnsense.remote.com"],
+                "ensure"  => "absent",
+              }
+            },
           },
           manage_resources   => true,
-          api_manager_prefix =>"opnsense.remote.com api manager - ",
+          api_manager_prefix => "opnsense.remote.com api manager - ",
           required_plugins   => {
             "os-xen" => {
               "ensure" => "absent"
@@ -119,6 +198,12 @@ describe 'class opnsense' do
           }
         }
       MANIFEST
+
+      it 'throws an error because dependecies are not removed' do
+        apply_manifest(pp_items, expect_failures: true) do |r|
+          expect(r.stderr).to match %r{Deleting: Failed.*returned 1.*Item in use by}
+        end
+      end
 
       it 'applies remove items with no errors' do
         apply_manifest(pp_items, catch_failures: true)
@@ -141,6 +226,25 @@ describe 'class opnsense' do
       it 'ensure firewall rules are deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('firewall rule list -o plain -c description')) do |r|
           expect(r.stdout).not_to match %r{opnsense.remote.com api manager - allow all from lan and wan\n}
+        end
+      end
+
+      it 'ensure haproxy servers are deleted via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
+          expect(r.stdout).not_to match %r{server1\n}
+          expect(r.stdout).not_to match %r{server2\n}
+        end
+      end
+
+      it 'ensure haproxy backends are deleted via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy backend list -o plain -c name')) do |r|
+          expect(r.stdout).not_to match %r{localhost_backend\n}
+        end
+      end
+
+      it 'ensure haproxy frontends are deleted via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('haproxy frontend list -o plain -c name')) do |r|
+          expect(r.stdout).not_to match %r{localhost_frontend\n}
         end
       end
     end

@@ -277,7 +277,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule do
       provider.resource_list = rules_device_2
 
       expect { provider.delete(context, { description: 'non existent rule', device: 'opnsense2.example.com' }) }
-        .to raise_error(Puppet::ResourceError)
+        .to raise_error(Puppet::Error)
     end
   end
 end

@@ -12,11 +12,6 @@ rm -rf spec/fixtures/litmus_inventory.yaml
 
 # distribute opn-cli config from dist files
 cp spec/fixtures/acceptance/opn-cli/conf.yaml.dist spec/fixtures/acceptance/opn-cli/conf.yaml
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  MY_IP=$( ifconfig | grep "inet " | grep -v 127.0.0.1 | cut -d\  -f2|head -n1)
-  sed -i '' "s/<IP>/${MY_IP}/g" spec/fixtures/acceptance/opn-cli/conf.yaml
-fi
-
 cp spec/fixtures/acceptance/opn-cli/ca.pem.dist spec/fixtures/acceptance/opn-cli/ca.pem
 
 # setup opnsense with vagrant
@@ -25,5 +20,12 @@ vagrant up
 # setup test docker containers
 pdk bundle install
 pdk bundle exec rake "litmus:provision_list[${provision_list}]"
+
+# fix puppet agent install - use docker tmp path
+sed -i '' '
+/shell-command: bash -lc/a\
+\ \ \ \ \ \ \ \ tmpdir: "\/\"
+' spec/fixtures/litmus_inventory.yaml
+
 pdk bundle exec rake "litmus:install_agent[puppet7]"
 pdk bundle exec rake litmus:install_module

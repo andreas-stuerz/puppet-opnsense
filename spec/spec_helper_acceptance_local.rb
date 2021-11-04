@@ -16,10 +16,13 @@ def create_remote_file(name, dest_filepath, file_content)
 end
 
 def install_test_dependencies
+  python_pkg = 'python39'
+  python_pip_pkg = 'python39-pip'
+
   pp_setup = <<-MANIFEST
           $packages = [
-            'python3',
-            'python3-pip',
+            '#{python_pkg}',
+            '#{python_pip_pkg}',
           ]
           $pip_packages = [
             'opn-cli',
@@ -134,6 +137,7 @@ RSpec.configure do |c|
     setup_test_api_endpoint
 
     install_opnsense_plugin('os-firewall')
+    install_opnsense_plugin('os-haproxy')
 
     puts 'Deploying fixtures to /fixtures'
     deploy_fixtures('/fixtures/acceptance', '/fixtures')

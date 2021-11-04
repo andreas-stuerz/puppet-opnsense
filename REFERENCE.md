@@ -8,12 +8,14 @@
 
 * [`opnsense`](#opnsense): Automate opnsense firewalls
 * [`opnsense::client::firewall`](#opnsenseclientfirewall): Use exported resources to collect firewall configurations from clients.
+* [`opnsense::client::haproxy`](#opnsenseclienthaproxy): Use exported resources to collect haproxy configurations from clients.
 
 ### Resource types
 
 * [`opnsense_device`](#opnsense_device): Manage an OPNsense device access.
 * [`opnsense_firewall_alias`](#opnsense_firewall_alias): Manage opnsense firewall aliases.
 * [`opnsense_firewall_rule`](#opnsense_firewall_rule): Manage opnsense firewall rules
+* [`opnsense_haproxy_backend`](#opnsense_haproxy_backend): Manage opnsense haproxy backends
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
 
 ## Classes
@@ -41,24 +43,60 @@ class { 'opnsense':
       }
     }
   },
-  aliases => {
-    "my_http_ports_local" => {
-      "devices"     => ["localhost"],
-      "type"        => "port",
-      "content"     => ["80", "443"],
-      "description" => "example local http ports",
-      "enabled"     => true,
-      "ensure"      => present
+  firewall => {
+    aliases => {
+      "my_http_ports_local" => {
+        "devices"     => ["localhost"],
+        "type"        => "port",
+        "content"     => ["80", "443"],
+        "description" => "example local http ports",
+        "enabled"     => true,
+        "ensure"      => present
+      },
     },
-  },
-  rules => {
-    "allow all from lan and wan" => {
-      "devices"   => ["localhost"],
-      "sequence"  => "1",
-      "action"    => "pass",
-      "interface" => ["lan", "wan"],
-      "ensure"    => present
+    rules  => {
+      "allow all from lan and wan" => {
+        "devices"   => ["localhost"],
+        "sequence"  => "1",
+        "action"    => "pass",
+        "interface" => ["lan", "wan"],
+        "ensure"    => present
+      }
     }
+  },
+  haproxy => {
+    servers  => {
+      "server1" => {
+        "devices"     => ["localhost"],
+        "description" => "first local server",
+        "address"     => "127.0.0.1",
+        "port"        => "8091",
+      },
+      "server2" => {
+        "devices"   => ["localhost"],
+        "description" => "second local server",
+        "address"     => "127.0.0.1",
+        "port"        => "8092",
+      },
+    },
+    backends => {
+      "localhost_backend" => {
+        "devices"        => ["localhost"],
+        "description"    => "local server backend",
+        "mode"           => "http",
+        "linked_servers" => ["server1", "server2"],
+      }
+    },
+    frontends => {
+      "localhost_frontend" => {
+        "devices"           => ["localhost"],
+        "description"       => "local frontend",
+        "bind"              => "127.0.0.1:8090",
+        "ssl_enabled"       => true,
+        "ssl_certificates"  => ["60cc4641eb577"],
+        "default_backend"   => "localhost_backend",
+      }
+    },
   }
 }
 ```
@@ -71,8 +109,8 @@ The following parameters are available in the `opnsense` class:
 * [`api_manager_prefix`](#api_manager_prefix)
 * [`manage_resources`](#manage_resources)
 * [`required_plugins`](#required_plugins)
-* [`aliases`](#aliases)
-* [`rules`](#rules)
+* [`firewall`](#firewall)
+* [`haproxy`](#haproxy)
 * [`manage_ca`](#manage_ca)
 * [`ca_content`](#ca_content)
 * [`ca_file`](#ca_file)
@@ -107,17 +145,17 @@ Data type: `Hash`
 
 The required opnsense plugins to support all features.
 
-##### <a name="aliases"></a>`aliases`
+##### <a name="firewall"></a>`firewall`
 
 Data type: `Hash`
 
-Configured firewall aliases without using exported resources.
+Configured the opnsense firewall.
 
-##### <a name="rules"></a>`rules`
+##### <a name="haproxy"></a>`haproxy`
 
 Data type: `Hash`
 
-Configured firewall rules without using exported resources.
+Configured the opnsense haproxy loadbalancer.
 
 ##### <a name="manage_ca"></a>`manage_ca`
 
@@ -205,6 +243,78 @@ Data type: `Hash`
 Firewall aliases that are associated with this client.
 
 ##### <a name="rules"></a>`rules`
+
+Data type: `Hash`
+
+Firewall rules that are associated with this client.
+
+### <a name="opnsenseclienthaproxy"></a>`opnsense::client::haproxy`
+
+This will create resources for haproxy configurations into puppetdb
+for automatically configuring them on one or more opnsense firewall.
+
+#### Examples
+
+##### 
+
+```puppet
+class { 'opnsense::client::haproxy':
+  servers  => {
+    "server1" => {
+      "devices"     => ["localhost"],
+      "description" => "first local server",
+      "address"     => "127.0.0.1",
+      "port"        => "8091",
+    },
+    "server2" => {
+      "devices"     => ["localhost"],
+      "description" => "second local server",
+      "address"     => "127.0.0.1",
+      "port"        => "8092",
+    },
+  },
+  backends => {
+    "localhost_backend" => {
+      "devices"        => ["localhost"],
+      "description"    => "local server backend",
+      "mode"           => "http",
+      "linked_servers" => ["server1", "server2"],
+    }
+  },
+  frontends => {
+    "localhost_frontend" => {
+      "devices"           => ["localhost"],
+      "description"       => "local frontend",
+      "bind"              => "127.0.0.1:8090",
+      "ssl_enabled"       => true,
+      "ssl_certificates"  => ["60cc4641eb577"],
+      "default_backend"   => "localhost_backend",
+    }
+  },
+}
+```
+
+#### Parameters
+
+The following parameters are available in the `opnsense::client::haproxy` class:
+
+* [`servers`](#servers)
+* [`backends`](#backends)
+* [`frontends`](#frontends)
+
+##### <a name="servers"></a>`servers`
+
+Data type: `Hash`
+
+HaProxy servers that are associated with this client.
+
+##### <a name="backends"></a>`backends`
+
+Data type: `Hash`
+
+HaProxy backends that are associated with this client.
+
+##### <a name="frontends"></a>`frontends`
 
 Data type: `Hash`
 
@@ -702,6 +812,499 @@ namevar
 Data type: `String`
 
 The name of the opnsense_device type you want to manage.
+
+### <a name="opnsense_haproxy_backend"></a>`opnsense_haproxy_backend`
+
+This type provides Puppet with the capabilities to manage haproxy backends
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_haproxy_backend { 'webserver_pool':
+  device                           => 'opnsense-test.device.com',
+  enabled                          => true,
+  description                      => 'backend for webserver',
+  mode                             => 'http',
+  algorithm                        => 'source',
+  random_draws                     => '2',
+  proxy_protocol                   => '',
+  linked_servers                   => [],
+  linked_resolver                  => '',
+  resolver_opts                    => [],
+  resolve_prefer                   => '',
+  source                           => '',
+  health_check_enabled             => true,
+  health_check                     => '',
+  health_check_log_status          => true,
+  check_interval                   => '',
+  check_down_interval              => '',
+  health_check_fall                => '',
+  health_check_rise                => '',
+  linked_mailer                    => '',
+  http2_enabled                    => true,
+  http2_enabled_nontls             => true,
+  ba_advertised_protocols          => ['h2', 'http11'],
+  persistence                      => 'sticktable',
+  persistence_cookiemode           => 'piggyback',
+  persistence_cookiename           => 'SRVCOOKIE',
+  persistence_stripquotes          => true,
+  stickiness_pattern               => 'sourceipv4',
+  stickiness_data_types            => [],
+  stickiness_expire                => '30m',
+  stickiness_size                  => '50k',
+  stickiness_cookiename            => '',
+  stickiness_cookielength          => '',
+  stickiness_conn_rate_period      => '10s',
+  stickiness_sess_rate_period      => '10s',
+  stickiness_http_req_rate_period  => '10s',
+  stickiness_http_err_rate_period  => '10s',
+  stickiness_bytes_in_rate_period  => '1m',
+  stickiness_bytes_out_rate_period => '1m',
+  basic_auth_enabled               => true,
+  basic_auth_users                 => [],
+  basic_auth_groups                => [],
+  tuning_timeout_connect           => '',
+  tuning_timeout_check             => '',
+  tuning_timeout_server            => '',
+  tuning_retries                   => '',
+  custom_options                   => '',
+  tuning_defaultserver             => '',
+  tuning_noport                    => true,
+  tuning_httpreuse                 => 'safe',
+  tuning_caching                   => true,
+  linked_actions                   => [],
+  linked_errorfiles                => [],
+  ensure                           => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_haproxy_backend` type.
+
+##### `algorithm`
+
+Data type: `Enum['source', 'roundrobin', 'static-rr', 'leastconn', 'uri', 'random']`
+
+Define the load balancing algorithm to be used in a backend pool.
+
+Default value: `source`
+
+##### `ba_advertised_protocols`
+
+Data type: `Array[String]`
+
+Enable support for HTTP/2 even if TLS is not enabled.
+
+Default value: `["h2"]`
+
+##### `basic_auth_enabled`
+
+Data type: `Boolean`
+
+Enable HTTP basic authentication.
+
+Default value: `true`
+
+##### `basic_auth_groups`
+
+Data type: `Array[String]`
+
+Specify the uuids of the basic auth groups for this backend.
+
+Default value: `[]`
+
+##### `basic_auth_users`
+
+Data type: `Array[String]`
+
+Specify the uuids of the basic auth users for this backend.
+
+Default value: `[]`
+
+##### `check_down_interval`
+
+Data type: `Optional[String]`
+
+Sets the interval (in ms) for running health checks on a configured server when the server state is DOWN
+
+##### `check_interval`
+
+Data type: `Optional[String]`
+
+Sets the interval (in ms) for running health checks on all configured servers.
+
+##### `custom_options`
+
+Data type: `Optional[String]`
+
+These lines will be added to the HAProxy backend configuration.
+
+##### `description`
+
+Data type: `String`
+
+The backend description.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable this backend.
+
+Default value: `true`
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `health_check`
+
+Data type: `Optional[String]`
+
+Specify the uuid of the health check for servers in this backend.
+
+##### `health_check_enabled`
+
+Data type: `Boolean`
+
+Enable or disable health checking.
+
+Default value: `true`
+
+##### `health_check_fall`
+
+Data type: `Optional[String]`
+
+The number of consecutive unsuccessful health checks before a server is considered as unavailable.
+
+##### `health_check_log_status`
+
+Data type: `Boolean`
+
+Enable to log health check status updates.
+
+Default value: `true`
+
+##### `health_check_rise`
+
+Data type: `Optional[String]`
+
+The number of consecutive successful health checks before a server is considered as available.
+
+##### `http2_enabled`
+
+Data type: `Boolean`
+
+Enable support for end-to-end HTTP/2 communication.
+
+Default value: `true`
+
+##### `http2_enabled_nontls`
+
+Data type: `Boolean`
+
+Enable support for HTTP/2 even if TLS is not enabled.
+
+Default value: `true`
+
+##### `linked_actions`
+
+Data type: `Array[String]`
+
+Specify the uuids of the rules to be included in this backend.
+
+Default value: `[]`
+
+##### `linked_errorfiles`
+
+Data type: `Array[String]`
+
+Specify the uuids of the error messages to be included in this backend.
+
+Default value: `[]`
+
+##### `linked_mailer`
+
+Data type: `Optional[String]`
+
+Specify the uuid of the e-mail alert configuration linked to this backend.
+
+##### `linked_resolver`
+
+Data type: `Optional[String]`
+
+Specify the uuid of the custom resolver configuration that should be used for all servers in this backend.
+
+##### `linked_servers`
+
+Data type: `Array[String]`
+
+Specify the uuids of the servers linked to this backend.
+
+Default value: `[]`
+
+##### `mode`
+
+Data type: `Enum['http', 'tcp']`
+
+Set the running mode or protocol of the backend pool.
+
+Default value: `http`
+
+##### `persistence`
+
+Data type: `Enum['', 'sticktable', 'cookie']`
+
+Choose how HAProxy should track user-to-server mappings.
+
+Default value: `sticktable`
+
+##### `persistence_cookiemode`
+
+Data type: `Enum['piggyback', 'new']`
+
+Cookie mode to use for persistence.
+
+Default value: `piggyback`
+
+##### `persistence_cookiename`
+
+Data type: `String`
+
+Cookie name to use for persistence.
+
+Default value: `SRVCOOKIE`
+
+##### `persistence_stripquotes`
+
+Data type: `Boolean`
+
+Enable to automatically strip quotes from the cookie value.
+
+Default value: `true`
+
+##### `proxy_protocol`
+
+Data type: `Enum['', 'v1', 'v2']`
+
+Enforces use of the PROXY protocol over any connection established to the configured servers.
+
+Default value: `''`
+
+##### `random_draws`
+
+Data type: `String`
+
+When using the Random Balancing Algorithm, this value indicates the number of draws.
+
+Default value: `2`
+
+##### `resolve_prefer`
+
+Data type: `Enum['', 'ipv4', 'ipv6']`
+
+When DNS resolution is enabled and multiple IP addresses from different families are returned use this.
+
+Default value: `''`
+
+##### `resolver_opts`
+
+Data type: `Array[String]`
+
+Add resolver options.
+
+Default value: `[]`
+
+##### `source`
+
+Data type: `Optional[String]`
+
+Sets the source address which will be used when connecting to the server(s).
+
+##### `stickiness_bytes_in_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `1m`
+
+##### `stickiness_bytes_out_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `1m`
+
+##### `stickiness_conn_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_cookielength`
+
+Data type: `Optional[String]`
+
+The maximum number of characters that will be stored in the stick table.
+
+##### `stickiness_cookiename`
+
+Data type: `Optional[String]`
+
+Cookie name to use for stick table.
+
+##### `stickiness_data_types`
+
+Data type: `Array[Enum[
+            '', 'conn_cnt', 'conn_cur', 'conn_rate', 'sess_cnt', 'sess_rate', 'http_req_cnt', 'http_req_rate',
+            'http_err_cnt', 'http_err_rate', 'bytes_in_cnt', 'bytes_in_rate', 'bytes_out_cnt', 'bytes_out_rate'
+            ]]`
+
+This is used to store additional information in the stick-table.
+
+Default value: `[]`
+
+##### `stickiness_expire`
+
+Data type: `String`
+
+The maximum duration of an entry in the stick table. Valid suffixes d, h, m, s, ms.
+
+Default value: `30m`
+
+##### `stickiness_http_err_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_http_req_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_pattern`
+
+Data type: `Enum['', 'sourceipv4', 'sourceipv6', 'cookievalue', 'rdpcookie']`
+
+Choose a request pattern to associate a user to a server.
+
+Default value: `sourceipv4`
+
+##### `stickiness_sess_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_size`
+
+Data type: `String`
+
+The maximum number of entries that can fit in the stick table. Valid suffixes k, m, g.
+
+Default value: `50k`
+
+##### `tuning_caching`
+
+Data type: `Boolean`
+
+Enable caching of responses from this backend.
+
+Default value: `true`
+
+##### `tuning_defaultserver`
+
+Data type: `Optional[String]`
+
+Default option for all server entries.
+
+##### `tuning_httpreuse`
+
+Data type: `Enum['', 'never', 'safe', 'aggressive', 'always']`
+
+Choose a request pattern to associate a user to a server.
+
+Default value: `safe`
+
+##### `tuning_noport`
+
+Data type: `Boolean`
+
+Don't use port on server, use the same port as frontend receive.
+
+Default value: `true`
+
+##### `tuning_retries`
+
+Data type: `Optional[String]`
+
+Set the number of retries to perform on a server after a connection failure.
+
+##### `tuning_timeout_check`
+
+Data type: `Optional[String]`
+
+Sets an additional read timeout for running health checks on a server. Valid suffixes d, h, m, s, ms, us
+
+##### `tuning_timeout_connect`
+
+Data type: `Optional[String]`
+
+Set the maximum time to wait for a connection attempt to a server to succeed. Valid suffixes d, h, m, s, ms, us
+
+##### `tuning_timeout_server`
+
+Data type: `Optional[String]`
+
+Set the maximum inactivity time on the server side. Valid suffixes d, h, m, s, ms, us
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the backend.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_haproxy_backend` type.
+
+* [`device`](#device)
+* [`name`](#name)
+
+##### <a name="device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
+
+##### <a name="name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the resource you want to manage.
 
 ### <a name="opnsense_plugin"></a>`opnsense_plugin`
 

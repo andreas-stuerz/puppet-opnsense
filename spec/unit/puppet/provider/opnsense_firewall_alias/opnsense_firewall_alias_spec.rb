@@ -19,7 +19,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'host',
           "proto": '',
           "counters": '1',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '10.0.0.1,!10.0.0.5',
           "description": 'Some hosts',
           "uuid": 'b6ae4857-8414-4440-acce-c09e4ae899fa'
@@ -30,7 +30,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'network',
           "proto": '',
           "counters": '1',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '192.168.1.0/24,!192.168.1.128/25',
           "description": 'Some networks',
           "uuid": 'a6ae4857-8414-5550-acce-c09e4ae899fa'
@@ -41,7 +41,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'port',
           "proto": '',
           "counters": '',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '80,443',
           "description": 'Some ports',
           "uuid": 'd6ae1257-8414-4440-acce-c09e4ae899fb'
@@ -52,7 +52,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'url',
           "proto": '',
           "counters": '1',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
           "description": 'spamhaus fetched once.',
           "uuid": 'b6ae4857-8414-4440-acce-c09e4ae899fd'
@@ -63,7 +63,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'urltable',
           "proto": 'IPv4,IPv6',
           "counters": '0',
-          "updatefreq": '0.5',
+          "updatefreq": 0.5,
           "content": 'https://www.spamhaus.org/drop/drop.txt,https://www.spamhaus.org/drop/edrop.txt',
           "description": 'Spamhaus block list',
           "uuid": 'ad51e4ea-ee3f-49dc-a662-1f8f88b5f18a'
@@ -74,7 +74,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'geoip',
           "proto": 'IPv4,IPv6',
           "counters": '1',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": 'DE,GR',
           "description": 'Only german and greek',
           "uuid": '5d385340-5d56-432d-8bd1-77267c122ede'
@@ -85,7 +85,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'networkgroup',
           "proto": '',
           "counters": '0',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": 'hosts_alias,network_alias',
           "description": 'Combine different network aliases into one',
           "uuid": 'bd51e4ea-ee3f-49dc-a662-1f8f88b5f11f'
@@ -96,7 +96,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'mac',
           "proto": '',
           "counters": '0',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": 'f4:90:ea,0c:4d:e9:b1:05:f0',
           "description": 'MAC address or partial mac addresses',
           "uuid": 'cd41e4ea-ee3f-49dc-a662-1f8f88b5f22a'
@@ -107,7 +107,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'external',
           "proto": 'IPv4',
           "counters": '1',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '',
           "description": 'Externally managed',
           "uuid": 'dd22e4ea-ee3f-49dc-a662-1f8f88b5f33b'
@@ -122,7 +122,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'external',
           "proto": '',
           "counters": '',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '',
           "description": 'bogon networks (internal)',
           "uuid": 'bogons'
@@ -133,7 +133,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'external',
           "proto": '',
           "counters": '',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '',
           "description": 'bogon networks IPv6 (internal)',
           "uuid": 'bogonsv6'
@@ -144,7 +144,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'external',
           "proto": '',
           "counters": '',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '',
           "description": 'abuse lockout table (internal)',
           "uuid": 'sshlockout'
@@ -155,7 +155,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
           "type": 'external',
           "proto": '',
           "counters": '',
-          "updatefreq": '',
+          "updatefreq": 0,
           "content": '',
           "description": 'overload table for rate limitting (internal)',
           "uuid": 'virusprot'
@@ -192,7 +192,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Some hosts',
               content: ['10.0.0.1', '!10.0.0.5'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: true,
               enabled: true,
               ensure: 'present'
@@ -205,7 +205,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Some networks',
               content: ['192.168.1.0/24', '!192.168.1.128/25'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: true,
               enabled: true,
               ensure: 'present'
@@ -218,7 +218,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Some ports',
               content: ['80', '443'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -231,7 +231,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'spamhaus fetched once.',
               content: ['https://www.spamhaus.org/drop/drop.txt', 'https://www.spamhaus.org/drop/edrop.txt'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: true,
               enabled: false,
               ensure: 'present'
@@ -257,7 +257,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Only german and greek',
               content: ['DE', 'GR'],
               proto: 'IPv4,IPv6',
-              updatefreq: '',
+              updatefreq: 0,
               counters: true,
               enabled: true,
               ensure: 'present'
@@ -270,7 +270,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Combine different network aliases into one',
               content: ['hosts_alias', 'network_alias'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -283,7 +283,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'MAC address or partial mac addresses',
               content: ['f4:90:ea', '0c:4d:e9:b1:05:f0'],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -296,7 +296,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'Externally managed',
               content: [],
               proto: 'IPv4',
-              updatefreq: '',
+              updatefreq: 0,
               counters: true,
               enabled: true,
               ensure: 'present'
@@ -309,7 +309,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'bogon networks (internal)',
               content: [],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -322,7 +322,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'bogon networks IPv6 (internal)',
               content: [],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -335,7 +335,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'abuse lockout table (internal)',
               content: [],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -348,7 +348,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
               description: 'overload table for rate limitting (internal)',
               content: [],
               proto: '',
-              updatefreq: '',
+              updatefreq: 0,
               counters: false,
               enabled: true,
               ensure: 'present'
@@ -370,7 +370,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              description: 'bogon networks (internal)',
              content: [],
              proto: '',
-             updatefreq: '',
+             updatefreq: 0,
              counters: false,
              enabled: true,
              ensure: 'present'
@@ -383,7 +383,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              description: 'bogon networks IPv6 (internal)',
              content: [],
              proto: '',
-             updatefreq: '',
+             updatefreq: 0,
              counters: false,
              enabled: true,
              ensure: 'present'
@@ -396,7 +396,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              description: 'abuse lockout table (internal)',
              content: [],
              proto: '',
-             updatefreq: '',
+             updatefreq: 0,
              counters: false,
              enabled: true,
              ensure: 'present'
@@ -409,7 +409,7 @@ RSpec.describe Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias do
              description: 'overload table for rate limitting (internal)',
              content: [],
              proto: '',
-             updatefreq: '',
+             updatefreq: 0,
              counters: false,
              enabled: true,
              ensure: 'present'

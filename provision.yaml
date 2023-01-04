@@ -1,14 +1,9 @@
 ---
 default:
   provisioner: docker_exp
-  images: [ 'litmusimage/centos:8' ]
+  images: [ 'litmusimage/rockylinux:8' ]
 acceptance:
   provisioner: docker_exp
-  images: [ 'litmusimage/centos:8' ]
+  images: [ 'litmusimage/rockylinux:8' ]
 opnsense:
   provisioner: vagrant
-
-
-
-
-

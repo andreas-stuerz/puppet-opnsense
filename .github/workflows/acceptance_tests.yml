@@ -10,7 +10,7 @@ on:
 jobs:
 
   Acceptance:
-    name: "OPNsense 21.7.4, CentOS-8, puppet7"
+    name: "OPNsense 21.7.4, Rocky-8, puppet7"
     runs-on: macOS-10.15
     strategy:
       fail-fast: false

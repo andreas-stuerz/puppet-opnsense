@@ -24,7 +24,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
       description: json_list_item['description'],
       content: json_list_item['content'].split(','),
       proto: json_list_item['proto'],
-      updatefreq: json_list_item['updatefreq'].empty? ? '' : json_list_item['updatefreq'].to_f,
+      updatefreq: json_list_item['updatefreq'].nil? ? '' : json_list_item['updatefreq'].to_f,
       counters: bool_from_value(json_list_item['counters']),
       enabled: bool_from_value(json_list_item['enabled']),
       ensure: 'present',

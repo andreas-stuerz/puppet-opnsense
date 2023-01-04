@@ -59,9 +59,14 @@ RSpec.describe 'the opnsense_firewall_alias type' do
       expect(fw_alias[:proto]).to eq('')
     end
 
-    it 'accepts a updatefreq' do
+    it 'accepts a updatefreq as Float' do
       fw_alias[:updatefreq] = 0.5
       expect(fw_alias[:updatefreq]).to eq(0.5)
+    end
+
+    it 'accepts a updatefreq as Integer' do
+      fw_alias[:updatefreq] = 0
+      expect(fw_alias[:updatefreq]).to eq(0)
     end
 
     it 'accepts counters' do

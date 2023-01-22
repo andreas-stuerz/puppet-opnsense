@@ -1,2 +1,2 @@
 #!/bin/bash
-pdk test unit
+RSPEC_DEBUG=1 pdk test unit

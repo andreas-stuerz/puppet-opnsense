@@ -18,26 +18,14 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Checkout Source
+      - name: Checkout source
         uses: actions/checkout@v2
 
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "2.7"
-          bundler-cache: true
-
-      - name: Install pdk
-        run: |
-         wget https://apt.puppet.com/puppet-tools-release-focal.deb
-         sudo dpkg -i puppet-tools-release-focal.deb
-         sudo apt-get update
-         sudo apt-get install pdk
-
       - name: Run pdk validate
-        run: |
-          pdk validate --format=text additional_opts="--puppet-version ${{ matrix.puppet_version }}"
-
+        uses: puppets-epic-show-theatre/action-pdk-validate@v1.1.0
+        with:
+          puppet-version: ${{ matrix.puppet_version }}
+          pdk-image: puppet/pdk:2.6.0.0
 
       - name: Run pdk test unit
         uses: puppets-epic-show-theatre/action-pdk-test-unit@193987acba9977d1825fefbcbaf8d02d6af78106

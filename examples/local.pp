@@ -11,7 +11,24 @@ class { 'opnsense':
       'ca'         => '~/.opn-cli/ca.pem',
       'plugins'    => {
         'os-helloworld' => {}
-      }
+      },
+      nodeexporter => {
+        enabled        => true,
+        listen_address => '192.168.1.1',
+        listen_port    => '9200',
+        cpu            => false,
+        exec           => false,
+        filesystem     => false,
+        loadavg        => false,
+        meminfo        => false,
+        netdev         => false,
+        time           => false,
+        devstat        => false,
+        interrupts     => true,
+        ntp            => true,
+        zfs            => true,
+      },
+      "ensure"      => "present"
     }
   },
   aliases => {

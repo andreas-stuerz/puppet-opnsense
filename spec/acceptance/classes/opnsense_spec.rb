@@ -17,6 +17,22 @@ describe 'class opnsense' do
               "plugins"     => {
                 "os-helloworld" => {},
               },
+              nodeexporter => {
+                enabled        => true,
+                listen_address => '192.168.1.1',
+                listen_port    => '9200',
+                cpu            => false,
+                exec           => false,
+                filesystem     => false,
+                loadavg        => false,
+                meminfo        => false,
+                netdev         => false,
+                time           => false,
+                devstat        => false,
+                interrupts     => true,
+                ntp            => true,
+                zfs            => true,
+              },
               "ensure"      => "present"
             }
           },
@@ -102,6 +118,25 @@ describe 'class opnsense' do
         end
       end
 
+      it 'find the nodeexporter configuration via the cli', retry: 3, retry_wait: 10 do
+        run_shell(build_opn_cli_cmd('nodeexporter config show -o yaml')) do |r|
+          expect(r.stdout).to match %r{enabled: '1'}
+          expect(r.stdout).to match %r{listenaddress: 192.168.1.1}
+          expect(r.stdout).to match %r{listenport: '9200'}
+          expect(r.stdout).to match %r{cpu: '0'}
+          expect(r.stdout).to match %r{exec: '0'}
+          expect(r.stdout).to match %r{filesystem: '0'}
+          expect(r.stdout).to match %r{loadavg: '0'}
+          expect(r.stdout).to match %r{meminfo: '0'}
+          expect(r.stdout).to match %r{netdev: '0'}
+          expect(r.stdout).to match %r{time: '0'}
+          expect(r.stdout).to match %r{devstat: '0'}
+          expect(r.stdout).to match %r{interrupts: '1'}
+          expect(r.stdout).to match %r{ntp: '1'}
+          expect(r.stdout).to match %r{zfs: '1'}
+        end
+      end
+
       it 'find the created firewall aliases via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('firewall alias list -o plain -c name')) do |r|
           expect(r.stdout).to match %r{my_http_ports_remote\n}
@@ -144,7 +179,23 @@ describe 'class opnsense' do
                 "os-helloworld" => {
                   "ensure" => "absent"
                 }
-              }
+              },
+              nodeexporter => {
+                enabled        => false,
+                listen_address => '0.0.0.0',
+                listen_port    => '9100',
+                cpu            => true,
+                exec           => true,
+                filesystem     => true,
+                loadavg        => true,
+                meminfo        => true,
+                netdev         => true,
+                time           => true,
+                devstat        => true,
+                interrupts     => false,
+                ntp            => false,
+                zfs            => false,
+              },
             }
           },
           firewall => {
@@ -213,6 +264,25 @@ describe 'class opnsense' do
         run_shell(build_opn_cli_cmd('plugin installed -o plain -c name')) do |r|
           expect(r.stdout).not_to match %r{os-xen\n}
           expect(r.stdout).not_to match %r{os-helloworld\n}
+        end
+      end
+
+      it 'ensure nodeexporter configuration is reset via the cli', retry: 3, retry_wait: 10 do
+        run_shell(build_opn_cli_cmd('nodeexporter config show -o yaml')) do |r|
+          expect(r.stdout).to match %r{enabled: '0'}
+          expect(r.stdout).to match %r{listenaddress: 0.0.0.0}
+          expect(r.stdout).to match %r{listenport: '9100'}
+          expect(r.stdout).to match %r{cpu: '1'}
+          expect(r.stdout).to match %r{exec: '1'}
+          expect(r.stdout).to match %r{filesystem: '1'}
+          expect(r.stdout).to match %r{loadavg: '1'}
+          expect(r.stdout).to match %r{meminfo: '1'}
+          expect(r.stdout).to match %r{netdev: '1'}
+          expect(r.stdout).to match %r{time: '1'}
+          expect(r.stdout).to match %r{devstat: '1'}
+          expect(r.stdout).to match %r{interrupts: '0'}
+          expect(r.stdout).to match %r{ntp: '0'}
+          expect(r.stdout).to match %r{zfs: '0'}
         end
       end
 

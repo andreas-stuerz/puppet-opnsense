@@ -138,6 +138,7 @@ RSpec.configure do |c|
 
     install_opnsense_plugin('os-firewall')
     install_opnsense_plugin('os-haproxy')
+    install_opnsense_plugin('os-node_exporter')
 
     puts 'Deploying fixtures to /fixtures'
     deploy_fixtures('/fixtures/acceptance', '/fixtures')

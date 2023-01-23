@@ -2,5 +2,6 @@
 # run single test on single os
 test_path=${1:-}
 localhost_port=${2:-2222}
+container_id=$(grep 'container_id' spec/fixtures/litmus_inventory.yaml| awk -F ' ' '{print $2}')
 pdk bundle exec rake litmus:reinstall_module && \
-RSPEC_DEBUG=1 TARGET_HOST=localhost:${localhost_port} pdk bundle exec rspec ${test_path}
+RSPEC_DEBUG=1 rake litmus:acceptance:${container_id} ${test_path}

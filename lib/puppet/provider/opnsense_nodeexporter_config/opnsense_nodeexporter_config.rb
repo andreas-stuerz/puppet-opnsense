@@ -40,8 +40,8 @@ class Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporterConfig <
   # @param [String] id
   # @param [Hash<Symbol>] puppet_resource
   # @return [Array<String>]
-  def _translate_puppet_resource_to_command_args(mode, id, puppet_resource)
-    args = [@group, @command, mode, id]
+  def _translate_puppet_resource_to_command_args(mode, puppet_resource)
+    args = [@group, @command, mode]
     args.push('--enabled') if bool_from_value(puppet_resource[:enabled]) == true
     args.push('--no-enabled') if bool_from_value(puppet_resource[:enabled]) == false
     args.push('--listenaddress', puppet_resource[:listen_address])

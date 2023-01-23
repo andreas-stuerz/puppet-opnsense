@@ -152,7 +152,7 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @param [String] device_name
   # @return [Puppet::Util::Execution::ProcessOutput]
   def _edit_single_object(device_name, should)
-    args = _translate_puppet_resource_to_command_args('edit', '', should)
+    args = _translate_puppet_resource_to_command_args('edit', should)
     device_name = should[:device].to_s
     opn_cli_base_cmd(device_name, args)
   end
@@ -210,7 +210,7 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   end
 
   # @param [String] value
-  # @return [Array]
+  # @return [Array<String>]
   def array_from_value(value)
     value == [] ? value : value.split(',')
   end

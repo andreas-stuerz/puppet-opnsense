@@ -113,27 +113,65 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
     end
   end
 
-  # describe 'create(context, name, should)' do
-  #   it 'creates the resource' do
-  #     expect(context).to receive(:notice).with(%r{\ACreating 'a'})
-  #
-  #     provider.create(context, 'a', name: 'a', ensure: 'present')
-  #   end
-  # end
-  #
-  # describe 'update(context, name, should)' do
-  #   it 'updates the resource' do
-  #     expect(context).to receive(:notice).with(%r{\AUpdating 'foo'})
-  #
-  #     provider.update(context, 'foo', name: 'foo', ensure: 'present')
-  #   end
-  # end
-  #
-  # describe 'delete(context, name)' do
-  #   it 'deletes the resource' do
-  #     expect(context).to receive(:notice).with(%r{\ADeleting 'foo'})
-  #
-  #     provider.delete(context, 'foo')
-  #   end
-  # end
+  describe 'create(context, name, should)' do
+    it 'also updates the resource' do
+      expect(Puppet::Util::Execution).to receive(:execute)
+                                           .and_return('{"result": "saved"}')
+
+      provider.create(context, 'opnsense1.example.com',
+                      title: 'opnsense1.example.com',
+                      enabled: false,
+                      listen_address: '192.168.0.5',
+                      listen_port: '9501',
+                      cpu: true,
+                      exec: true,
+                      filesystem: true,
+                      loadavg: true,
+                      meminfo: true,
+                      netdev: true,
+                      time: true,
+                      devstat: true,
+                      interrupts: true,
+                      ntp: true,
+                      zfs: true,
+                      device: 'opnsense1.example.com',
+                      ensure: 'present',
+                      )
+    end
+  end
+
+  describe 'update(context, name, should)' do
+    it 'updates the resource' do
+      expect(Puppet::Util::Execution).to receive(:execute)
+        .and_return('{"result": "saved"}')
+
+      provider.update(context, 'opnsense1.example.com',
+                      title: 'opnsense1.example.com',
+                      enabled: true,
+                      listen_address: '192.168.0.1',
+                      listen_port: '9500',
+                      cpu: false,
+                      exec: false,
+                      filesystem: false,
+                      loadavg: false,
+                      meminfo: false,
+                      netdev: false,
+                      time: false,
+                      devstat: false,
+                      interrupts: false,
+                      ntp: false,
+                      zfs: false,
+                      device: 'opnsense1.example.com',
+                      ensure: 'present',
+      )
+    end
+  end
+
+  describe 'delete opnsense2.example.com' do
+    it 'is not implemented' do
+      expect {
+        provider.delete(context, 'opnsense2.example.com')
+      }.to raise_error(NotImplementedError, %r{not implemented})
+    end
+  end
 end

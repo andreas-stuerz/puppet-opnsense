@@ -9,24 +9,25 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     super
     @group = 'firewall'
     @command = 'alias'
+    @resource_type = 'list'
     @find_uuid_by_column = :name
     @create_key = :name
   end
 
   # @param [String] device
-  # @param [Hash] json_list_item
-  def _translate_json_list_item_to_puppet_resource(device, json_list_item)
+  # @param [Hash] json_object
+  def _translate_json_object_to_puppet_resource(device, json_object)
     {
-      title: json_list_item['name'] + '@' + device,
-      name: json_list_item['name'],
+      title: json_object['name'] + '@' + device,
+      name: json_object['name'],
       device: device,
-      type: json_list_item['type'],
-      description: json_list_item['description'],
-      content: json_list_item['content'].split(','),
-      proto: json_list_item['proto'],
-      updatefreq: json_list_item['updatefreq'].nil? ? '' : json_list_item['updatefreq'].to_f,
-      counters: bool_from_value(json_list_item['counters']),
-      enabled: bool_from_value(json_list_item['enabled']),
+      type: json_object['type'],
+      description: json_object['description'],
+      content: json_object['content'].split(','),
+      proto: json_object['proto'],
+      updatefreq: json_object['updatefreq'].nil? ? '' : json_object['updatefreq'].to_f,
+      counters: bool_from_value(json_object['counters']),
+      enabled: bool_from_value(json_object['enabled']),
       ensure: 'present',
     }
   end
@@ -79,5 +80,5 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     opn_cli_base_cmd(device_name, [@group, @command, 'delete', alias_name, '-o', 'json'])
   end
   #
-  private :_translate_json_list_item_to_puppet_resource, :_translate_puppet_resource_to_command_args
+  private :_translate_json_object_to_puppet_resource, :_translate_puppet_resource_to_command_args
 end

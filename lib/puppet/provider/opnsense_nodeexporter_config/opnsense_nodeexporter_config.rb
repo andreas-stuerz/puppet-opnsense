@@ -5,71 +5,73 @@ require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provi
 
 # Implementation for the opnsense_nodeexporter_config type using the Resource API.
 class Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporterConfig < Puppet::Provider::OpnsenseProvider
-  # @param [Puppet::ResourceApi::BaseContext] _context
-  # @param [Array<Hash<Symbol>>] filter
-  # @return [Array<Hash<Symbol>>]
-  def get(_context, filter)
-    device_names = get_device_names_by_filter(filter)
-    _get_nodeexporter_config_from_devices(device_names)
+  # @return [void]
+  def initialize
+    super
+    @group = 'nodeexporter'
+    @command = 'config'
+    @resource_type = 'single'
   end
 
-  # @param [Array<String>] devices
-  # @return [Hash<Symbol>]
-  def _get_nodeexporter_config_from_devices(devices)
-    result = []
-    devices.each do |device|
-      nodeexporter_config = _nodeexporter_config_object(device)
-      result.push({
-          title: device,
-          enabled: bool_from_value(nodeexporter_config['enabled']),
-          listen_address: nodeexporter_config['listenaddress'],
-          listen_port: nodeexporter_config['listenport'],
-          cpu: bool_from_value(nodeexporter_config['cpu']),
-          exec: bool_from_value(nodeexporter_config['exec']),
-          filesystem: bool_from_value(nodeexporter_config['filesystem']),
-          loadavg: bool_from_value(nodeexporter_config['loadavg']),
-          meminfo: bool_from_value(nodeexporter_config['meminfo']),
-          netdev: bool_from_value(nodeexporter_config['netdev']),
-          time: bool_from_value(nodeexporter_config['time']),
-          devstat: bool_from_value(nodeexporter_config['devstat']),
-          interrupts: bool_from_value(nodeexporter_config['interrupts']),
-          ntp: bool_from_value(nodeexporter_config['ntp']),
-          zfs: bool_from_value(nodeexporter_config['zfs']),
-          ensure: 'present',
-          device: device,
-        }
-      )
-    end
-    result
+  # @param [String] device
+  # @param [Hash] json_object
+  def _translate_json_object_to_puppet_resource(device, json_object)
+    {
+      title: device,
+      enabled: bool_from_value(json_object['enabled']),
+      listen_address: json_object['listenaddress'],
+      listen_port: json_object['listenport'],
+      cpu: bool_from_value(json_object['cpu']),
+      exec: bool_from_value(json_object['exec']),
+      filesystem: bool_from_value(json_object['filesystem']),
+      loadavg: bool_from_value(json_object['loadavg']),
+      meminfo: bool_from_value(json_object['meminfo']),
+      netdev: bool_from_value(json_object['netdev']),
+      time: bool_from_value(json_object['time']),
+      devstat: bool_from_value(json_object['devstat']),
+      interrupts: bool_from_value(json_object['interrupts']),
+      ntp: bool_from_value(json_object['ntp']),
+      zfs: bool_from_value(json_object['zfs']),
+      ensure: 'present',
+      device: device,
+    }
   end
 
-  # @param [String] device_name
-  # @return [Hash<String>]
-  def _nodeexporter_config_object(device_name)
-    json_output = opn_cli_base_cmd(device_name, ['nodeexporter', 'config', 'show', '-o', 'json'])
-    JSON.parse(json_output)
+  # @param [Integer] mode
+  # @param [String] id
+  # @param [Hash<Symbol>] puppet_resource
+  # @return [Array<String>]
+  def _translate_puppet_resource_to_command_args(mode, id, puppet_resource)
+    args = [@group, @command, mode, id]
+    args.push('--enabled') if bool_from_value(puppet_resource[:enabled]) == true
+    args.push('--no-enabled') if bool_from_value(puppet_resource[:enabled]) == false
+    args.push('--listenaddress', puppet_resource[:listen_address])
+    args.push('--listenport', puppet_resource[:listen_port])
+    args.push('--cpu') if bool_from_value(puppet_resource[:cpu]) == true
+    args.push('--no-cpu') if bool_from_value(puppet_resource[:cpu]) == false
+    args.push('--exec') if bool_from_value(puppet_resource[:exec]) == true
+    args.push('--no-exec') if bool_from_value(puppet_resource[:exec]) == false
+    args.push('--filesystem') if bool_from_value(puppet_resource[:filesystem]) == true
+    args.push('--no-filesystem') if bool_from_value(puppet_resource[:filesystem]) == false
+    args.push('--loadavg') if bool_from_value(puppet_resource[:loadavg]) == true
+    args.push('--no-loadavg') if bool_from_value(puppet_resource[:loadavg]) == false
+    args.push('--meminfo') if bool_from_value(puppet_resource[:meminfo]) == true
+    args.push('--no-meminfo') if bool_from_value(puppet_resource[:meminfo]) == false
+    args.push('--netdev') if bool_from_value(puppet_resource[:netdev]) == true
+    args.push('--no-netdev') if bool_from_value(puppet_resource[:netdev]) == false
+    args.push('--time') if bool_from_value(puppet_resource[:time]) == true
+    args.push('--no-time') if bool_from_value(puppet_resource[:time]) == false
+    args.push('--devstat') if bool_from_value(puppet_resource[:devstat]) == true
+    args.push('--no-devstat') if bool_from_value(puppet_resource[:devstat]) == false
+    args.push('--interrupts') if bool_from_value(puppet_resource[:interrupts]) == true
+    args.push('--no-interrupts') if bool_from_value(puppet_resource[:interrupts]) == false
+    args.push('--ntp') if bool_from_value(puppet_resource[:ntp]) == true
+    args.push('--no-ntp') if bool_from_value(puppet_resource[:ntp]) == false
+    args.push('--zfs') if bool_from_value(puppet_resource[:zfs]) == true
+    args.push('--no-zfs') if bool_from_value(puppet_resource[:zfs]) == false
+    args
   end
 
-  # @param [Puppet::ResourceApi::BaseContext] _context
-  # @param [String] _name
-  # @param [Hash<Symbol>] should
-  # @return [Puppet::Util::Execution::ProcessOutput]
-  def create(_context, _name, should)
-    _nodeexporter_config_install(should[:device].to_s, should[:name].to_s)
-  end
-
-  # @param [Puppet::ResourceApi::BaseContext] _context
-  # @param [String] _name
-  # @param [Hash<Symbol>] should
-  # @return [Puppet::Util::Execution::ProcessOutput]
-  def update(_context, _name, should)
-    _nodeexporter_config_install(should[:device].to_s, should[:name].to_s)
-  end
-
-  # @param [String] device_name
-  # @param [String] nodeexporter_config_name
-  # @return [Puppet::Util::Execution::ProcessOutput]
-  def _nodeexporter_config_install(device_name, nodeexporter_config_name)
-    opn_cli_base_cmd(device_name, ['nodeexporter', 'config', 'install', nodeexporter_config_name.to_s, '-o', 'json'])
-  end
+  #
+  private :_translate_json_object_to_puppet_resource, :_translate_puppet_resource_to_command_args
 end

@@ -67,8 +67,27 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @param [Array<String>] device_names
   # @return [void]
   def _fetch_resource_list(device_names)
-    @resource_list = _get_resources_from_devices(device_names)
+    case @resource_type
+    when 'single'
+      @resource_list = _get_resource_from_devices(device_names)
+    when 'list'
+      @resource_list = _get_resources_from_devices(device_names)
+    else
+      raise Puppet::ResourceError, "Could not find resource type '#{@resource_type}'"
+    end
+
     @resource_list
+  end
+
+  # @param [Array<String>] devices
+  # @return [Hash<Symbol>]
+  def _get_resource_from_devices(devices)
+    result = []
+    devices.each do |device|
+      json_object = get_opn_cli_json_show(device, @group, @command)
+      result.push(_translate_json_object_to_puppet_resource(device, json_object))
+    end
+    result
   end
 
   # @param [Array<String>] devices
@@ -78,7 +97,7 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     devices.each do |device|
       json_list = get_opn_cli_json_list(device, @group, @command)
       json_list.each do |json_list_item|
-        result.push(_translate_json_list_item_to_puppet_resource(device, json_list_item))
+        result.push(_translate_json_object_to_puppet_resource(device, json_list_item))
       end
     end
     result
@@ -89,8 +108,13 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def create(_context, _name, should)
-    args = _translate_puppet_resource_to_command_args('create', should[@create_key], should)
     device_name = should[:device].to_s
+
+    if @resource_type == 'single'
+      return _edit_single_object(_name, should)
+    end
+
+    args = _translate_puppet_resource_to_command_args('create', should[@create_key], should)
     opn_cli_base_cmd(device_name, args, '-o', 'json')
   end
 
@@ -99,6 +123,12 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
   def update(_context, name, should)
+    device_name = should[:device].to_s
+
+    if @resource_type == 'single'
+      return _edit_single_object(device_name, should)
+    end
+
     uuid = _find_uuid_by_namevars(name, @find_uuid_by_column)
     args = _translate_puppet_resource_to_command_args('update', uuid, should)
     device_name = should[:device].to_s
@@ -109,9 +139,21 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @param [String] name
   # @return [Puppet::Util::Execution::ProcessOutput]
   def delete(_context, name)
+    if @resource_type == 'single'
+      raise NotImplementedError, "Single resource type #{self.class} has not implemented `delete`"
+    end
+
     uuid = _find_uuid_by_namevars(name, @find_uuid_by_column)
     device_name = name.fetch(:device).to_s
     opn_cli_base_cmd(device_name, [@group, @command, 'delete', uuid, '-o', 'json'])
+  end
+
+  # @param [String] device_name
+  # @return [Puppet::Util::Execution::ProcessOutput]
+  def _edit_single_object(device_name, should)
+    args = _translate_puppet_resource_to_command_args('edit', '', should)
+    device_name = should[:device].to_s
+    opn_cli_base_cmd(device_name, args)
   end
 
   # @param [hash] namevars
@@ -178,6 +220,15 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # @return [Object]
   def get_opn_cli_json_list(device_name, group, command)
     json_output = opn_cli_base_cmd(device_name, [group, command, 'list', '-o', 'json'])
+    JSON.parse(json_output)
+  end
+
+  # @param [Object] device_name
+  # @param [Object] group
+  # @param [Object] command
+  # @return [Object]
+  def get_opn_cli_json_show(device_name, group, command)
+    json_output = opn_cli_base_cmd(device_name, [group, command, 'show', '-o', 'json'])
     JSON.parse(json_output)
   end
 

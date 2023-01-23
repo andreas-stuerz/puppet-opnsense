@@ -11,26 +11,27 @@ spec/spec_helper.rb:
     - require 'spec_helper_local'
   mock_with: ':rspec'
   coverage_report: true
-  minimum_code_coverage_percentage: 95
+  minimum_code_coverage_percentage: 100
 Gemfile:
   optional:
     ':default':
       - gem: 'puppet-resource_api'
     ":development":
       - gem: 'github_changelog_generator'
+        version: '= 1.15.2'
       - gem: 'fakefs'
       - gem: 'rspec-retry'
 .github/workflows/nightly.yml:
-  unmanaged: false
+  unmanaged: true
 .github/workflows/pr_test.yml:
-  unmanaged: false
+  unmanaged: true
 .github/workflows/auto_release.yml:
-  unmanaged: false
+  unmanaged: true
 .github/workflows/spec.yml:
   checks: 'syntax lint metadata_lint check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop'
-  unmanaged: false
+  unmanaged: true
 .github/workflows/release.yml:
-  unmanaged: false
+  unmanaged: true
 .travis.yml:
   delete: true
 

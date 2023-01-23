@@ -5,7 +5,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_nodeexporter_config',
   docs: <<-EOS,
-  @summary 
+  @summary#{' '}
     Manage opnsense nodeexporter config
   @example
     opnsense_nodeexporter_config { 'opnsense.example.com':

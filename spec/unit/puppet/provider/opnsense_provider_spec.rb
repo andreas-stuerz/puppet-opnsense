@@ -57,4 +57,13 @@ RSpec.describe Puppet::Provider::OpnsenseProvider do
       expect { provider.bool_from_value('something') }.to raise_error(ArgumentError, %r{invalid value for Boolean()})
     end
   end
+
+  describe 'unknow resource type' do
+    it 'raise ArgumentError if resource type is unknown' do
+      expect {
+        provider.resource_type = 'unknown'
+        provider._fetch_resource_list(['opnsense.example.com'])
+      }.to raise_error(Puppet::ResourceError, %r{Unknown resource type})
+    end
+  end
 end

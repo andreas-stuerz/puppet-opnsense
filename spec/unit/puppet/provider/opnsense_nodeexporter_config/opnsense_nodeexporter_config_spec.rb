@@ -13,22 +13,22 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
   let(:devices) { ['opnsense1.example.com', 'opnsense2.example.com'] }
 
   let(:nodeexporter_config_device_1) do
-      {
-        "enabled": '0',
-        "listenaddress": '0.0.0.0',
-        "listenport": '9100',
-        "cpu": '1',
-        "exec": '1',
-        "filesystem": '1',
-        "loadavg": '1',
-        "meminfo": '1',
-        "netdev": '1',
-        "time": '1',
-        "devstat": '1',
-        "interrupts": '0',
-        "ntp": '0',
-        "zfs": '0',
-      }
+    {
+      "enabled": '0',
+      "listenaddress": '0.0.0.0',
+      "listenport": '9100',
+      "cpu": '1',
+      "exec": '1',
+      "filesystem": '1',
+      "loadavg": '1',
+      "meminfo": '1',
+      "netdev": '1',
+      "time": '1',
+      "devstat": '1',
+      "interrupts": '0',
+      "ntp": '0',
+      "zfs": '0',
+    }
   end
   let(:nodeexporter_config_device_2) do
     {
@@ -59,7 +59,7 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
             ['nodeexporter', 'config', 'show', '-o', 'json']
           ],
           { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true, combine: true },
-          ).and_return(nodeexporter_config_device_1.to_json)
+        ).and_return(nodeexporter_config_device_1.to_json)
 
         expect(Puppet::Util::Execution).to receive(:execute).with(
           [
@@ -67,47 +67,47 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
             ['nodeexporter', 'config', 'show', '-o', 'json']
           ],
           { custom_environment: { 'LC_ALL' => 'en_US.utf8' }, failonfail: true, combine: true },
-          ).and_return(nodeexporter_config_device_2.to_json)
+        ).and_return(nodeexporter_config_device_2.to_json)
 
         expect(provider.get(context, [])).to eq [
-            {
-              title: 'opnsense1.example.com',
-              enabled: false,
-              listen_address: '0.0.0.0',
-              listen_port: '9100',
-              cpu: true,
-              exec: true,
-              filesystem: true,
-              loadavg: true,
-              meminfo: true,
-              netdev: true,
-              time: true,
-              devstat: true,
-              interrupts: false,
-              ntp: false,
-              zfs: false,
-              device: 'opnsense1.example.com',
-              ensure: 'present',
-            },
-            {
-              title: 'opnsense2.example.com',
-              enabled: true,
-              listen_address: '10.0.0.1',
-              listen_port: '9200',
-              cpu: true,
-              exec: false,
-              filesystem: false,
-              loadavg: false,
-              meminfo: false,
-              netdev: false,
-              time: false,
-              devstat: false,
-              interrupts: false,
-              ntp: false,
-              zfs: false,
-              device: 'opnsense2.example.com',
-              ensure: 'present',
-            },
+          {
+            title: 'opnsense1.example.com',
+            enabled: false,
+            listen_address: '0.0.0.0',
+            listen_port: '9100',
+            cpu: true,
+            exec: true,
+            filesystem: true,
+            loadavg: true,
+            meminfo: true,
+            netdev: true,
+            time: true,
+            devstat: true,
+            interrupts: false,
+            ntp: false,
+            zfs: false,
+            device: 'opnsense1.example.com',
+            ensure: 'present',
+          },
+          {
+            title: 'opnsense2.example.com',
+            enabled: true,
+            listen_address: '10.0.0.1',
+            listen_port: '9200',
+            cpu: true,
+            exec: false,
+            filesystem: false,
+            loadavg: false,
+            meminfo: false,
+            netdev: false,
+            time: false,
+            devstat: false,
+            interrupts: false,
+            ntp: false,
+            zfs: false,
+            device: 'opnsense2.example.com',
+            ensure: 'present',
+          },
         ]
       end
     end
@@ -116,7 +116,7 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
   describe 'create(context, name, should)' do
     it 'also updates the resource' do
       expect(Puppet::Util::Execution).to receive(:execute)
-                                           .and_return('{"result": "saved"}')
+        .and_return('{"result": "saved"}')
 
       provider.create(context, 'opnsense1.example.com',
                       title: 'opnsense1.example.com',
@@ -135,8 +135,7 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
                       ntp: true,
                       zfs: true,
                       device: 'opnsense1.example.com',
-                      ensure: 'present',
-                      )
+                      ensure: 'present')
     end
   end
 
@@ -162,8 +161,7 @@ RSpec.describe Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporte
                       ntp: false,
                       zfs: false,
                       device: 'opnsense1.example.com',
-                      ensure: 'present',
-      )
+                      ensure: 'present')
     end
   end
 

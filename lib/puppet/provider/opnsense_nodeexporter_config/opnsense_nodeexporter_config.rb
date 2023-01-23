@@ -2,7 +2,6 @@
 
 require File.expand_path(File.join(File.dirname(__FILE__), '..', 'opnsense_provider'))
 
-
 # Implementation for the opnsense_nodeexporter_config type using the Resource API.
 class Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporterConfig < Puppet::Provider::OpnsenseProvider
   # @return [void]

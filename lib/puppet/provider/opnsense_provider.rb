@@ -6,6 +6,7 @@ require 'json'
 class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   # writer for testing
   attr_writer :resource_list
+  attr_writer :resource_type
 
   # @return [void]
   def initialize
@@ -73,7 +74,7 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
     when 'list'
       @resource_list = _get_resources_from_devices(device_names)
     else
-      raise Puppet::ResourceError, "Could not find resource type '#{@resource_type}'"
+      raise Puppet::ResourceError, "Unknown resource type '#{@resource_type}'"
     end
 
     @resource_list
@@ -104,14 +105,14 @@ class Puppet::Provider::OpnsenseProvider < Puppet::ResourceApi::SimpleProvider
   end
 
   # @param [Puppet::ResourceApi::BaseContext] _context
-  # @param [String] _name
+  # @param [String] name
   # @param [Hash<Symbol>] should
   # @return [Puppet::Util::Execution::ProcessOutput]
-  def create(_context, _name, should)
+  def create(_context, name, should)
     device_name = should[:device].to_s
 
     if @resource_type == 'single'
-      return _edit_single_object(_name, should)
+      return _edit_single_object(name, should)
     end
 
     args = _translate_puppet_resource_to_command_args('create', should[@create_key], should)

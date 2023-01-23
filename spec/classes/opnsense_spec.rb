@@ -42,6 +42,9 @@ describe 'opnsense' do
           is_expected.to contain_opnsense_plugin('os-haproxy').with(
               'device' => 'opnsense.example.com',
             )
+          is_expected.to contain_opnsense_plugin('os-node_exporter').with(
+            'device' => 'opnsense.example.com',
+          )
 
           is_expected.to contain_opnsense_firewall_alias('hosts_alias@opnsense.example.com')
           is_expected.to contain_opnsense_firewall_alias('network_alias@opnsense.example.com')

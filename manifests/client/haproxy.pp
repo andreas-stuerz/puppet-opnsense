@@ -50,15 +50,15 @@ class opnsense::client::haproxy (
   Hash $servers,
   Hash $backends,
   Hash $frontends,
-){
+) {
   $servers.map |$server_name, $server_options| {
     $server_options['devices'].each |$device_name| {
       $server_options_filtered = delete($server_options, ['devices', 'description'])
-        @@opnsense_haproxy_server { "${server_name}@${device_name}":
-          description => "${::fqdn} - ${server_options['description']}",
-          *           => $server_options_filtered,
-          tag         => $device_name,
-        }
+      @@opnsense_haproxy_server { "${server_name}@${device_name}":
+        description => "${facts['networking']['fqdn']} - ${server_options['description']}",
+        *           => $server_options_filtered,
+        tag         => $device_name,
+      }
     }
   }
 
@@ -66,7 +66,7 @@ class opnsense::client::haproxy (
     $backend_options['devices'].each |$device_name| {
       $backend_options_filtered = delete($backend_options, ['devices', 'description'])
       @@opnsense_haproxy_backend { "${backend_name}@${device_name}":
-        description => "${::fqdn} - ${backend_options['description']}",
+        description => "${facts['networking']['fqdn']} - ${backend_options['description']}",
         *           => $backend_options_filtered,
         tag         => $device_name,
       }
@@ -77,11 +77,10 @@ class opnsense::client::haproxy (
     $frontend_options['devices'].each |$device_name| {
       $frontend_options_filtered = delete($frontend_options, ['devices', 'description'])
       @@opnsense_haproxy_frontend { "${frontend_name}@${device_name}":
-        description => "${::fqdn} - ${frontend_options['description']}",
+        description => "${facts['networking']['fqdn']} - ${frontend_options['description']}",
         *           => $frontend_options_filtered,
         tag         => $device_name,
       }
     }
   }
-
 }

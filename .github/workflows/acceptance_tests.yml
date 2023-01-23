@@ -3,9 +3,9 @@ name: "Acceptance Tests"
 on:
   push:
     branches:
-      - main
+      - main_
   pull_request:
-    branches: [ main ]
+    branches: [ main_ ]
 
 jobs:
 

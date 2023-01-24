@@ -28,7 +28,7 @@ jobs:
 
       - name: Prepare test environment
         run: |
-          mkdir -p -m 777 /github/home/.puppet-opnsense
+          mkdir -p -m 777 /home/runner/work/_temp/_github_home/.puppet-opnsense
 
       - name: Run pdk test unit
         uses: puppets-epic-show-theatre/action-pdk-test-unit@193987acba9977d1825fefbcbaf8d02d6af78106

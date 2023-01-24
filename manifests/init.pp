@@ -45,7 +45,24 @@
 #         "ca"         => '~/.opn-cli/ca.pem',
 #         "plugins"    => {
 #           "os-helloworld" => {}
-#         }
+#         },
+#         nodeexporter => {
+#           enabled        => false,
+#           listen_address => '0.0.0.0',
+#           listen_port    => '9100',
+#           cpu            => true,
+#           exec           => true,
+#           filesystem     => true,
+#           loadavg        => true,
+#           meminfo        => true,
+#           netdev         => true,
+#           time           => true,
+#           devstat        => true,
+#           interrupts     => false,
+#           ntp            => false,
+#           zfs            => false,
+#         },
+#         ensure           => "present"
 #       }
 #     },
 #     firewall => {
@@ -118,7 +135,7 @@ class opnsense (
   Stdlib::Absolutepath $system_ca_file,
   Stdlib::Absolutepath $opncli_configdir,
   Optional[String] $ca_content,
-){
+) {
   if $manage_ca {
     file { 'Create opn-cli config directory':
       ensure => directory,
@@ -146,20 +163,27 @@ class opnsense (
 
   $devices.each |$device_name, $device_conf| {
     # generate devices configurations
-    $device_conf_filtered = delete($device_conf, ['plugins'])
+    $device_conf_filtered = delete($device_conf, ['plugins', 'nodeexporter'])
     if !empty($device_conf_filtered) {
       opnsense_device { $device_name:
-        * => $device_conf_filtered
+        * => $device_conf_filtered,
       }
     }
 
     # install required and individual plugins on device
-    $device_plugins = if $device_conf['plugins'] { $device_conf['plugins'] } else { {} }
+    $device_plugins = if $device_conf['plugins'] { $device_conf['plugins'] } else {{} }
     $plugins_to_install = $device_plugins + $required_plugins
     $plugins_to_install.each |$plugin_name, $plugin_options| {
       opnsense_plugin { $plugin_name:
         device => $device_name,
         *      => $plugin_options,
+      }
+    }
+
+    # configure nodeexporter on device
+    if $device_conf['nodeexporter'] {
+      opnsense_nodeexporter_config { $device_name:
+        * => $device_conf['nodeexporter'],
       }
     }
 
@@ -224,6 +248,5 @@ class opnsense (
       Opnsense_haproxy_backend <<| tag == $device_name |>>
       Opnsense_haproxy_frontend <<| tag == $device_name |>>
     }
-
   }
 }

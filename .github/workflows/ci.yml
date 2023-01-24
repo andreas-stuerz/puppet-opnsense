@@ -1,17 +1,66 @@
-name: "Acceptance Tests"
+---
+name: ci
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
+  unit-tests:
+    strategy:
+      fail-fast: false
+      matrix:
+        puppet_version: [6,7]
 
-  Acceptance:
-    name: "OPNsense 21.7.4, Rocky-8, puppet7"
-    runs-on: macOS-10.15
+    name: Check / Puppet ${{ matrix.puppet_version }}
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Run pdk validate
+        uses: puppets-epic-show-theatre/action-pdk-validate@v1.1.0
+        with:
+          puppet-version: ${{ matrix.puppet_version }}
+
+      - name: Run pdk test unit
+        uses: puppets-epic-show-theatre/action-pdk-test-unit@193987acba9977d1825fefbcbaf8d02d6af78106
+        with:
+          puppet-version: ${{ matrix.puppet_version }}
+
+  coverage:
+    strategy:
+      fail-fast: false
+      matrix:
+        puppet_version: [7]
+
+    name: Coverage
+    runs-on: ubuntu-20.04
+    needs:
+      - unit-tests
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "2.7"
+          bundler-cache: true
+
+      - name: Run test coverage
+        run: |
+          bundle exec rake spec:simplecov
+
+  acceptance:
+    name: "OPNsense 22.7.10, Rocky-8, puppet7"
+    runs-on: macOS-12
+    needs:
+      - unit-tests
     strategy:
       fail-fast: false
 

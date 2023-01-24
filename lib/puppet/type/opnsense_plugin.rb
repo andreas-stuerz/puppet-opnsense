@@ -11,7 +11,7 @@ Puppet::ResourceApi.register_type(
     https://docs.opnsense.org/plugins.html
   @example
     opnsense_plugin { 'os-acme-client':
-      device => 'opnsense.example.com'
+      device => 'opnsense.example.com',
       ensure => 'present',
     }
 

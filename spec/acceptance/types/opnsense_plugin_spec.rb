@@ -31,7 +31,7 @@ describe 'opnsense_plugin' do
         apply_manifest(pp, catch_failures: true)
       end
 
-      it 'displays the plugin as installed via the cli', retry: 3, retry_wait: 10 do
+      it 'displays the plugin as unistalled via the cli', retry: 3, retry_wait: 20 do
         run_shell(build_opn_cli_cmd('plugin installed -o plain -c name')) do |r|
           expect(r.stdout).not_to match %r{os-helloworld}
         end

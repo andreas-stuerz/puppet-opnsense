@@ -7,7 +7,7 @@ class { 'opnsense::client::firewall':
       'content'     => ['client1.example.com'],
       'description' => 'client.example.com alias',
       'enabled'     => true,
-      'ensure'      => present
+      'ensure'      => present,
     },
     'client1_dmz_example_com' => {
       'devices'     => ['fw01.dmz.example.de'],
@@ -15,7 +15,7 @@ class { 'opnsense::client::firewall':
       'content'     => ['client1.dmz.example.com'],
       'description' => 'client.dmz.example.com alias',
       'enabled'     => true,
-      'ensure'      => present
+      'ensure'      => present,
     },
   },
   rules   => {
@@ -27,7 +27,7 @@ class { 'opnsense::client::firewall':
       'protocol'         => 'TCP',
       'destination_net'  => 'client1_example_com',
       'destination_port' => 'https',
-      'ensure'           => present
+      'ensure'           => present,
     },
     'allow https from wan to client1.example.com' => {
       'devices'          => ['fw01.dmz.example.de'],
@@ -37,9 +37,7 @@ class { 'opnsense::client::firewall':
       'protocol'         => 'TCP',
       'destination_net'  => 'client1_dmz_example_com',
       'destination_port' => 'https',
-      'ensure'           => present
+      'ensure'           => present,
     },
-  }
+  },
 }
-
-

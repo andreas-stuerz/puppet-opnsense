@@ -27,7 +27,7 @@ class { 'opnsense':
       'plugins'    => {
         'os-acme-client' => {},
         'os-bind'        => {},
-      }
+      },
     },
     'fw01.dmz.example.de' => {
       'url'        => 'https://fw01.dmz.example.de/api',
@@ -38,9 +38,8 @@ class { 'opnsense':
       'ca'         => '~/.opn-cli/ca2.pem',
       'plugins'    => {
         'os-haproxy' => {},
-      }
+      },
     },
-
   },
   aliases          => {
     'my_http_ports_remote' => {
@@ -48,7 +47,7 @@ class { 'opnsense':
       'type'        => 'port',
       'content'     => ['80', '443'],
       'description' => 'example remote http ports',
-      'enabled'     => true
+      'enabled'     => true,
     },
   },
   rules            => {
@@ -56,8 +55,8 @@ class { 'opnsense':
       'devices'   => ['fw01.example.de', 'fw01.dmz.example.de'],
       'sequence'  => '1',
       'action'    => 'pass',
-      'interface' => ['lan', 'wan']
-    }
+      'interface' => ['lan', 'wan'],
+    },
   },
-  manage_resources => true
+  manage_resources => true,
 }

@@ -115,6 +115,7 @@ RSpec.describe Puppet::Provider::OpnsenseDevice::OpnsenseDevice do
     it 'creates the device configfile' do
       FakeFS.activate!
       FakeFS::FileSystem.clone(fakefs_root)
+      FakeFS::FileUtils.mkdir_p(config_basedir)
 
       provider.create(context, 'opn.example.com',
                       name: 'opn.example.com',
@@ -137,6 +138,7 @@ RSpec.describe Puppet::Provider::OpnsenseDevice::OpnsenseDevice do
     it 'updates the device configfile' do
       FakeFS.activate!
       FakeFS::FileSystem.clone(fakefs_root)
+      FakeFS::FileUtils.mkdir_p(config_basedir)
 
       provider.update(context, 'opn.example.com',
                       name: 'opn.example.com',

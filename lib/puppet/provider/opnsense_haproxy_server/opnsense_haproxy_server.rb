@@ -9,39 +9,40 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
     super
     @group = 'haproxy'
     @command = 'server'
+    @resource_type = 'list'
     @find_uuid_by_column = :name
     @create_key = :name
   end
 
   # @param [String] device
-  # @param [Hash] json_list_item
-  def _translate_json_list_item_to_puppet_resource(device, json_list_item)
+  # @param [Hash] json_object
+  def _translate_json_object_to_puppet_resource(device, json_object)
     {
-      title: "#{json_list_item['name']}@#{device}",
-      name: json_list_item['name'],
+      title: "#{json_object['name']}@#{device}",
+      name: json_object['name'],
       device: device,
-      uuid: json_list_item['uuid'],
-      enabled: bool_from_value(json_list_item['enabled']),
-      description: json_list_item['description'],
-      address: json_list_item['address'],
-      port: json_list_item['port'],
-      checkport: json_list_item['checkport'],
-      mode: json_list_item['mode'],
-      type: json_list_item['type'],
-      service_name: json_list_item['serviceName'],
-      linked_resolver: json_list_item['Resolver'],
-      resolver_opts: json_list_item['resolverOpts'].split(','),
-      resolve_prefer: json_list_item['resolvePrefer'],
-      ssl: bool_from_value(json_list_item['ssl']),
-      ssl_verify: bool_from_value(json_list_item['sslVerify']),
-      ssl_ca: json_list_item['sslCA'].split(','),
-      ssl_crl: json_list_item['sslCRL'].split(','),
-      ssl_client_certificate: json_list_item['sslClientCertificate'],
-      weight: json_list_item['weight'],
-      check_interval: json_list_item['checkInterval'],
-      check_down_interval: json_list_item['checkDownInterval'],
-      source: json_list_item['source'],
-      advanced: json_list_item['advanced'],
+      uuid: json_object['uuid'],
+      enabled: bool_from_value(json_object['enabled']),
+      description: json_object['description'],
+      address: json_object['address'],
+      port: json_object['port'],
+      checkport: json_object['checkport'],
+      mode: json_object['mode'],
+      type: json_object['type'],
+      service_name: json_object['serviceName'],
+      linked_resolver: json_object['Resolver'],
+      resolver_opts: json_object['resolverOpts'].split(','),
+      resolve_prefer: json_object['resolvePrefer'],
+      ssl: bool_from_value(json_object['ssl']),
+      ssl_verify: bool_from_value(json_object['sslVerify']),
+      ssl_ca: json_object['sslCA'].split(','),
+      ssl_crl: json_object['sslCRL'].split(','),
+      ssl_client_certificate: json_object['sslClientCertificate'],
+      weight: json_object['weight'],
+      check_interval: json_object['checkInterval'],
+      check_down_interval: json_object['checkDownInterval'],
+      source: json_object['source'],
+      advanced: json_object['advanced'],
       ensure: 'present',
     }
   end
@@ -87,5 +88,5 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
     args
   end
   #
-  private :_translate_json_list_item_to_puppet_resource, :_translate_puppet_resource_to_command_args
+  private :_translate_json_object_to_puppet_resource, :_translate_puppet_resource_to_command_args
 end

@@ -10,9 +10,9 @@ class { 'opnsense':
       'timeout'    => 60,
       'ca'         => '~/.opn-cli/ca.pem',
       'plugins'    => {
-        'os-helloworld' => {}
-      }
-    }
+        'os-helloworld' => {},
+      },
+    },
   },
   aliases          => {
     'my_http_ports_local' => {
@@ -20,7 +20,7 @@ class { 'opnsense':
       'type'        => 'port',
       'content'     => ['80', '443'],
       'description' => 'example local http ports',
-      'enabled'     => true
+      'enabled'     => true,
     },
   },
   rules            => {
@@ -28,10 +28,10 @@ class { 'opnsense':
       'devices'   => ['localhost'],
       'sequence'  => '1',
       'action'    => 'pass',
-      'interface' => ['lan', 'wan']
-    }
+      'interface' => ['lan', 'wan'],
+    },
   },
-  manage_resources => true
+  manage_resources => true,
 }
 
 class { 'opnsense::client::firewall':
@@ -42,7 +42,7 @@ class { 'opnsense::client::firewall':
       'content'     => ['80', '443'],
       'description' => '',
       'enabled'     => true,
-      'ensure'      => present
+      'ensure'      => present,
     },
   },
   rules   => {
@@ -51,8 +51,7 @@ class { 'opnsense::client::firewall':
       'sequence'  => '1',
       'action'    => 'pass',
       'interface' => ['lan', 'wan'],
-      'ensure'    => present
-    }
-  }
+      'ensure'    => present,
+    },
+  },
 }
-

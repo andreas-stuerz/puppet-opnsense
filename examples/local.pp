@@ -10,9 +10,26 @@ class { 'opnsense':
       'timeout'    => 60,
       'ca'         => '~/.opn-cli/ca.pem',
       'plugins'    => {
-        'os-helloworld' => {}
-      }
-    }
+        'os-helloworld' => {},
+      },
+      nodeexporter => {
+        enabled        => true,
+        listen_address => '192.168.1.1',
+        listen_port    => '9200',
+        cpu            => false,
+        exec           => false,
+        filesystem     => false,
+        loadavg        => false,
+        meminfo        => false,
+        netdev         => false,
+        time           => false,
+        devstat        => false,
+        interrupts     => true,
+        ntp            => true,
+        zfs            => true,
+      },
+      'ensure'     => 'present',
+    },
   },
   aliases => {
     'my_http_ports_local' => {
@@ -20,7 +37,7 @@ class { 'opnsense':
       'type'        => 'port',
       'content'     => ['80', '443'],
       'description' => 'example local http ports',
-      'enabled'     => true
+      'enabled'     => true,
     },
   },
   rules   => {
@@ -28,8 +45,7 @@ class { 'opnsense':
       'devices'   => ['localhost'],
       'sequence'  => '1',
       'action'    => 'pass',
-      'interface' => ['lan']
-    }
+      'interface' => ['lan'],
+    },
   },
 }
-

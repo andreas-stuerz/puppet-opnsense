@@ -1,5 +1,4 @@
-[![Unit Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml)
-[![Acceptance Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml)
+[![ci](https://github.com/andeman/puppet-opnsense/actions/workflows/ci.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/andeman/puppet-opnsense/branch/main/graph/badge.svg?token=0BoY091pEV)](https://codecov.io/gh/andeman/puppet-opnsense)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)
 [![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)
@@ -34,6 +33,10 @@
     + [Running unit tests](#running-unit-tests)
     + [Running acceptance tests](#running-acceptance-tests)
     + [Teardown](#teardown)
+  * [Release module to Puppet Forge](#release-module-to-puppet-forge)
+    + [Prepare](#prepare)
+    + [Commit and push](#commit-and-push)
+    + [configure github actions secrets](#configure-github-actions-secrets)
   * [Contributing](#contributing)
   * [Release Notes](#release-notes)
 
@@ -57,6 +60,7 @@ You can automate the following with the module:
 - haproxy servers
 - haproxy backends
 - haproxy frontends
+- prometheus nodeexporter
 
 
 ## Setup
@@ -143,7 +147,24 @@ class { 'opnsense':
       'ca'         => '~/.opn-cli/ca.pem',
       'plugins'    => {
         'os-helloworld' => {}
-      }
+      },
+      nodeexporter => {
+        enabled        => true,
+        listen_address => '192.168.1.1',
+        listen_port    => '9200',
+        cpu            => false,
+        exec           => false,
+        filesystem     => false,
+        loadavg        => false,
+        meminfo        => false,
+        netdev         => false,
+        time           => false,
+        devstat        => false,
+        interrupts     => true,
+        ntp            => true,
+        zfs            => true,
+      },
+      "ensure"      => "present"      
     }
   },
   firewall => {
@@ -335,6 +356,26 @@ scripts/acceptance_tests
 ```
 scripts/remove_test_env
 ```
+## Release module to Puppet Forge
+
+### Prepare
+First prepare the release with:
+
+```
+./scripts/release_prep
+```
+
+This will set the version in `metadata.json`, create `REFERENCE.md` and  `CHANGELOG.md`.
+
+### Commit and push
+Then commit the changes and push them to the repository.
+
+### configure github actions secrets
+https://github.com/andeman/puppet-opnsense/settings/secrets/actions
+
+Ensure that the following secrets are set in the github repository:
+- FORGE_API_KEY (your puppet forge api key)
+
 
 ## Contributing
 

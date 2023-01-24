@@ -9,34 +9,35 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
     super
     @group = 'firewall'
     @command = 'rule'
+    @resource_type = 'list'
     @find_uuid_by_column = :description
     @create_key = :sequence
   end
 
   # @param [String] device
   # @param [Hash] json_list_item
-  def _translate_json_list_item_to_puppet_resource(device, json_list_item)
+  def _translate_json_object_to_puppet_resource(device, json_object)
     {
-      title: "#{json_list_item['description']}@#{device}",
-      sequence: json_list_item['sequence'],
-      description: json_list_item['description'],
+      title: "#{json_object['description']}@#{device}",
+      sequence: json_object['sequence'],
+      description: json_object['description'],
       device: device,
-      uuid: json_list_item['uuid'],
-      action: json_list_item['action'],
-      interface: json_list_item['interface'].split(','),
-      direction: json_list_item['direction'],
-      quick: bool_from_value(json_list_item['quick']),
-      ipprotocol: json_list_item['ipprotocol'],
-      protocol: json_list_item['protocol'],
-      source_net: json_list_item['source_net'],
-      source_port: json_list_item['source_port'],
-      source_not:  bool_from_value(json_list_item['source_not']),
-      destination_net: json_list_item['destination_net'],
-      destination_port: json_list_item['destination_port'],
-      destination_not:  bool_from_value(json_list_item['destination_not']),
-      gateway: json_list_item['gateway'],
-      log:  bool_from_value(json_list_item['log']),
-      enabled:  bool_from_value(json_list_item['enabled']),
+      uuid: json_object['uuid'],
+      action: json_object['action'],
+      interface: json_object['interface'].split(','),
+      direction: json_object['direction'],
+      quick: bool_from_value(json_object['quick']),
+      ipprotocol: json_object['ipprotocol'],
+      protocol: json_object['protocol'],
+      source_net: json_object['source_net'],
+      source_port: json_object['source_port'],
+      source_not:  bool_from_value(json_object['source_not']),
+      destination_net: json_object['destination_net'],
+      destination_port: json_object['destination_port'],
+      destination_not:  bool_from_value(json_object['destination_not']),
+      gateway: json_object['gateway'],
+      log:  bool_from_value(json_object['log']),
+      enabled:  bool_from_value(json_object['enabled']),
       ensure: 'present',
     }
   end
@@ -73,5 +74,5 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
     args
   end
   #
-  private :_translate_json_list_item_to_puppet_resource, :_translate_puppet_resource_to_command_args
+  private :_translate_json_object_to_puppet_resource, :_translate_puppet_resource_to_command_args
 end

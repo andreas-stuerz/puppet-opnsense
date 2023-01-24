@@ -10,6 +10,7 @@ opnsense::haproxy:
 opnsense::required_plugins:
   "os-firewall": {}
   "os-haproxy": {}
+  "os-node_exporter": {}
 opnsense::api_manager_prefix: "%{fqdn} api manager - "
 opnsense::manage_resources: false
 opnsense::manage_ca: true

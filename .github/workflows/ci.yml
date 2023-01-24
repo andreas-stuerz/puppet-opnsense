@@ -57,7 +57,7 @@ jobs:
           bundle exec rake spec:simplecov
 
   acceptance:
-    name: "OPNsense 21.7.4, Rocky-8, puppet7"
+    name: "OPNsense 22.7.10, Rocky-8, puppet7"
     runs-on: macOS-12
     needs:
       - unit-tests

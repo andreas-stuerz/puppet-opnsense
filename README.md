@@ -1,5 +1,4 @@
-[![Unit Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/unit_tests.yml)
-[![Acceptance Tests](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/acceptance_tests.yml)
+[![ci](https://github.com/andeman/puppet-opnsense/actions/workflows/ci.yml/badge.svg)](https://github.com/andeman/puppet-opnsense/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/andeman/puppet-opnsense/branch/main/graph/badge.svg?token=0BoY091pEV)](https://codecov.io/gh/andeman/puppet-opnsense)
 [![Puppet Forge](https://img.shields.io/puppetforge/v/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)
 [![Puppet Forge Downloads](http://img.shields.io/puppetforge/dt/andeman/opnsense.svg)](https://forge.puppetlabs.com/andeman/opnsense)

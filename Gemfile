@@ -35,10 +35,16 @@ group :development do
   gem "rubocop-rspec", '= 2.0.1',                      require: false
   gem "rb-readline", '= 0.5.5',                        require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "github_changelog_generator", '= 1.15.2',        require: false
+  gem "concurrent-ruby", '< 1.2.0',                    require: false
+  gem "fakefs",                                        require: false
+  gem "rspec-retry",                                   require: false
 end
 group :system_tests do
   gem "puppet_litmus", '< 1.0.0', require: false, platforms: [:ruby]
   gem "serverspec", '~> 2.41',    require: false
+end
+group :default do
+  gem "puppet-resource_api", require: false
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

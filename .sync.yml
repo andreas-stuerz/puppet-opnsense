@@ -12,6 +12,8 @@ spec/spec_helper.rb:
   mock_with: ':rspec'
   coverage_report: true
   minimum_code_coverage_percentage: 100
+.gitignore:
+  unmanaged: true
 Gemfile:
   optional:
     ':default':
@@ -19,6 +21,9 @@ Gemfile:
     ":development":
       - gem: 'github_changelog_generator'
         version: '= 1.15.2'
+      # workaround for pupet 7.22.0
+      - gem: 'concurrent-ruby'
+        version: '< 1.2.0'
       - gem: 'fakefs'
       - gem: 'rspec-retry'
 .github/workflows/nightly.yml:

@@ -22,18 +22,18 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run pdk validate
-        env:
-            PDKIMAGE: puppet/pdk:2.6.0.0
         uses: puppets-epic-show-theatre/action-pdk-validate@v1.1.0
         with:
           puppet-version: ${{ matrix.puppet_version }}
-          pdk-image: puppet/pdk:2.6.0.0
+
+      - name: Prepare test environment
+        run: |
+          mkdir -p -m 777 /github/home/.puppet-opnsense
 
       - name: Run pdk test unit
         uses: puppets-epic-show-theatre/action-pdk-test-unit@193987acba9977d1825fefbcbaf8d02d6af78106
         with:
           puppet-version: ${{ matrix.puppet_version }}
-          pdk-image: puppet/pdk:2.6.0.0
 
   coverage:
     strategy:

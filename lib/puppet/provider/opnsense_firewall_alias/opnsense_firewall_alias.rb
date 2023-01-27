@@ -19,16 +19,16 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def _translate_json_object_to_puppet_resource(device, json_object)
     {
       title: json_object['name'] + '@' + device,
-      name: json_object['name'],
-      device: device,
-      type: json_object['type'],
-      description: json_object['description'],
-      content: json_object['content'].split(','),
-      proto: json_object['proto'],
-      updatefreq: json_object['updatefreq'].nil? ? '' : json_object['updatefreq'].to_f,
-      counters: bool_from_value(json_object['counters']),
-      enabled: bool_from_value(json_object['enabled']),
-      ensure: 'present',
+        name: json_object['name'],
+        device: device,
+        type: json_object['type'],
+        description: json_object['description'],
+        content: json_object['content'].split(','),
+        proto: json_object['proto'],
+        updatefreq: json_object['updatefreq'],
+        counters: bool_from_value(json_object['counters']),
+        enabled: bool_from_value(json_object['enabled']),
+        ensure: 'present',
     }
   end
 
@@ -42,7 +42,7 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
     args.push('-d', puppet_resource[:description])
     args.push('-C', puppet_resource[:content].join(','))
     args.push('-p', puppet_resource[:proto]) if puppet_resource[:proto]
-    args.push('-u', puppet_resource[:updatefreq].to_f) if puppet_resource[:updatefreq]
+    args.push('-u', puppet_resource[:updatefreq]) if puppet_resource[:updatefreq]
     args.push('--counters') if bool_from_value(puppet_resource[:counters]) == true
     args.push('--no-counters') if bool_from_value(puppet_resource[:counters]) == false
     args.push('--enabled') if  bool_from_value(puppet_resource[:enabled]) == true

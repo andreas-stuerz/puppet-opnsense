@@ -15,7 +15,7 @@ class Puppet::Provider::OpnsenseFirewallRule::OpnsenseFirewallRule < Puppet::Pro
   end
 
   # @param [String] device
-  # @param [Hash] json_list_item
+  # @param [Hash] json_object
   def _translate_json_object_to_puppet_resource(device, json_object)
     {
       title: "#{json_object['description']}@#{device}",

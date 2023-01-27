@@ -21,9 +21,12 @@ Gemfile:
     ":development":
       - gem: 'github_changelog_generator'
         version: '= 1.15.2'
+      - gem: 'puppet-strings'
+        git: 'https://github.com/andeman/puppet-strings'
+        branch: 'fix_resource_api_defaults'
       # workaround for pupet 7.22.0
-      - gem: 'concurrent-ruby'
-        version: '< 1.2.0'
+      #- gem: 'concurrent-ruby'
+      #  version: '< 1.2.0'
       - gem: 'fakefs'
       - gem: 'rspec-retry'
 .github/workflows/nightly.yml:

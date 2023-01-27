@@ -37,7 +37,6 @@ class Puppet::Provider::OpnsenseNodeexporterConfig::OpnsenseNodeexporterConfig <
   end
 
   # @param [Integer] mode
-  # @param [String] id
   # @param [Hash<Symbol>] puppet_resource
   # @return [Array<String>]
   def _translate_puppet_resource_to_command_args(mode, puppet_resource)

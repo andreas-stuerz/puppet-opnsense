@@ -49,7 +49,7 @@ class Puppet::Provider::OpnsenseHaproxyServer::OpnsenseHaproxyServer < Puppet::P
 
   # @param [Integer] mode
   # @param [String] id
-  # @param [Hash<Symbol>] should
+  # @param [Hash<Symbol>] puppet_resource
   # @return [Array<String>]
   def _translate_puppet_resource_to_command_args(mode, id, puppet_resource)
     args = [@group, @command, mode, id]

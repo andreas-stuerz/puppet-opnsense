@@ -145,22 +145,22 @@ EOS
       default: []
     },
     proto: {
-      type: 'Optional[Enum["", "IPv4", "IPv6", "IPv4,IPv6"]]',
+      type: 'Enum["", "IPv4", "IPv6", "IPv4,IPv6"]',
       desc: 'The ip protocol which should be used by the firewall alias.',
       default: ''
     },
     updatefreq: {
-      type: 'Variant[Enum[""], Numeric]',
+      type: 'Numeric',
       desc: 'How often should the alias be updated in days.',
-      default: 0
+      default: 0,
     },
     counters: {
-      type: 'Optional[Variant[Enum[""], Boolean]]',
+      type: 'Boolean',
       desc: 'Enable or disable pfTable statistics for the firewall alias.',
       default: false,
     },
     enabled: {
-      type: 'Optional[Variant[Enum[""], Boolean]]',
+      type: 'Boolean',
       desc: 'Enable or disable the firewall alias.',
       default: true,
     },

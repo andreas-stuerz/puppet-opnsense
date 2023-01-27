@@ -7,8 +7,8 @@
 ### Classes
 
 * [`opnsense`](#opnsense): Automate opnsense firewalls
-* [`opnsense::client::firewall`](#opnsenseclientfirewall): Use exported resources to collect firewall configurations from clients.
-* [`opnsense::client::haproxy`](#opnsenseclienthaproxy): Use exported resources to collect haproxy configurations from clients.
+* [`opnsense::client::firewall`](#opnsense--client--firewall): Use exported resources to collect firewall configurations from clients.
+* [`opnsense::client::haproxy`](#opnsense--client--haproxy): Use exported resources to collect haproxy configurations from clients.
 
 ### Resource types
 
@@ -16,6 +16,9 @@
 * [`opnsense_firewall_alias`](#opnsense_firewall_alias): Manage opnsense firewall aliases.
 * [`opnsense_firewall_rule`](#opnsense_firewall_rule): Manage opnsense firewall rules
 * [`opnsense_haproxy_backend`](#opnsense_haproxy_backend): Manage opnsense haproxy backends
+* [`opnsense_haproxy_frontend`](#opnsense_haproxy_frontend): Manage opnsense haproxy frontends
+* [`opnsense_haproxy_server`](#opnsense_haproxy_server): Manage opnsense haproxy servers
+* [`opnsense_nodeexporter_config`](#opnsense_nodeexporter_config): Manage opnsense prometheus nodeexporter config
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
 
 ## Classes
@@ -40,7 +43,24 @@ class { 'opnsense':
       "ca"         => '~/.opn-cli/ca.pem',
       "plugins"    => {
         "os-helloworld" => {}
-      }
+      },
+      nodeexporter => {
+        enabled        => false,
+        listen_address => '0.0.0.0',
+        listen_port    => '9100',
+        cpu            => true,
+        exec           => true,
+        filesystem     => true,
+        loadavg        => true,
+        meminfo        => true,
+        netdev         => true,
+        time           => true,
+        devstat        => true,
+        interrupts     => false,
+        ntp            => false,
+        zfs            => false,
+      },
+      ensure           => "present"
     }
   },
   firewall => {
@@ -105,32 +125,32 @@ class { 'opnsense':
 
 The following parameters are available in the `opnsense` class:
 
-* [`devices`](#devices)
-* [`api_manager_prefix`](#api_manager_prefix)
-* [`manage_resources`](#manage_resources)
-* [`required_plugins`](#required_plugins)
-* [`firewall`](#firewall)
-* [`haproxy`](#haproxy)
-* [`manage_ca`](#manage_ca)
-* [`ca_content`](#ca_content)
-* [`ca_file`](#ca_file)
-* [`use_system_ca`](#use_system_ca)
-* [`system_ca_file`](#system_ca_file)
-* [`opncli_configdir`](#opncli_configdir)
+* [`devices`](#-opnsense--devices)
+* [`api_manager_prefix`](#-opnsense--api_manager_prefix)
+* [`manage_resources`](#-opnsense--manage_resources)
+* [`required_plugins`](#-opnsense--required_plugins)
+* [`firewall`](#-opnsense--firewall)
+* [`haproxy`](#-opnsense--haproxy)
+* [`manage_ca`](#-opnsense--manage_ca)
+* [`ca_content`](#-opnsense--ca_content)
+* [`ca_file`](#-opnsense--ca_file)
+* [`use_system_ca`](#-opnsense--use_system_ca)
+* [`system_ca_file`](#-opnsense--system_ca_file)
+* [`opncli_configdir`](#-opnsense--opncli_configdir)
 
-##### <a name="devices"></a>`devices`
+##### <a name="-opnsense--devices"></a>`devices`
 
 Data type: `Hash`
 
 The devices that wil be managed by this class
 
-##### <a name="api_manager_prefix"></a>`api_manager_prefix`
+##### <a name="-opnsense--api_manager_prefix"></a>`api_manager_prefix`
 
 Data type: `String`
 
 Prefix that will be added to the description fields for non exported resource items
 
-##### <a name="manage_resources"></a>`manage_resources`
+##### <a name="-opnsense--manage_resources"></a>`manage_resources`
 
 Data type: `Boolean`
 
@@ -139,64 +159,64 @@ When set to true, you'll need to configure 'storeconfigs' to make
 this happen. Default is set to false, as not everyone has this
 enabled.
 
-##### <a name="required_plugins"></a>`required_plugins`
+##### <a name="-opnsense--required_plugins"></a>`required_plugins`
 
 Data type: `Hash`
 
 The required opnsense plugins to support all features.
 
-##### <a name="firewall"></a>`firewall`
+##### <a name="-opnsense--firewall"></a>`firewall`
 
 Data type: `Hash`
 
 Configured the opnsense firewall.
 
-##### <a name="haproxy"></a>`haproxy`
+##### <a name="-opnsense--haproxy"></a>`haproxy`
 
 Data type: `Hash`
 
 Configured the opnsense haproxy loadbalancer.
 
-##### <a name="manage_ca"></a>`manage_ca`
+##### <a name="-opnsense--manage_ca"></a>`manage_ca`
 
 Data type: `Boolean`
 
 When true, the CA file used by opn-cli will be managed to ensure that
 the communication to the OPNsense API is possible.
 
-##### <a name="ca_content"></a>`ca_content`
+##### <a name="-opnsense--ca_content"></a>`ca_content`
 
 Data type: `Optional[String]`
 
 A string containing a CA certificate that should be written to the
 file specified in `$ca_file`.
 
-##### <a name="ca_file"></a>`ca_file`
+##### <a name="-opnsense--ca_file"></a>`ca_file`
 
 Data type: `Stdlib::Absolutepath`
 
 The absolute path to the CA file that should be used by opn-cli.
 
-##### <a name="use_system_ca"></a>`use_system_ca`
+##### <a name="-opnsense--use_system_ca"></a>`use_system_ca`
 
 Data type: `Boolean`
 
 This instructs opn-cli to use the system-wide installed CA certificates
 when verifying the connection to the OPNsense API.
 
-##### <a name="system_ca_file"></a>`system_ca_file`
+##### <a name="-opnsense--system_ca_file"></a>`system_ca_file`
 
 Data type: `Stdlib::Absolutepath`
 
 The absolute path to the system-wide CA certificate file.
 
-##### <a name="opncli_configdir"></a>`opncli_configdir`
+##### <a name="-opnsense--opncli_configdir"></a>`opncli_configdir`
 
 Data type: `Stdlib::Absolutepath`
 
 The config directory used by opn-cli.
 
-### <a name="opnsenseclientfirewall"></a>`opnsense::client::firewall`
+### <a name="opnsense--client--firewall"></a>`opnsense::client::firewall`
 
 This will create resources for firewall configurations into puppetdb
 for automatically configuring them on one or more opnsense firewall.
@@ -233,22 +253,22 @@ class { 'opnsense::client::firewall':
 
 The following parameters are available in the `opnsense::client::firewall` class:
 
-* [`aliases`](#aliases)
-* [`rules`](#rules)
+* [`aliases`](#-opnsense--client--firewall--aliases)
+* [`rules`](#-opnsense--client--firewall--rules)
 
-##### <a name="aliases"></a>`aliases`
+##### <a name="-opnsense--client--firewall--aliases"></a>`aliases`
 
 Data type: `Hash`
 
 Firewall aliases that are associated with this client.
 
-##### <a name="rules"></a>`rules`
+##### <a name="-opnsense--client--firewall--rules"></a>`rules`
 
 Data type: `Hash`
 
 Firewall rules that are associated with this client.
 
-### <a name="opnsenseclienthaproxy"></a>`opnsense::client::haproxy`
+### <a name="opnsense--client--haproxy"></a>`opnsense::client::haproxy`
 
 This will create resources for haproxy configurations into puppetdb
 for automatically configuring them on one or more opnsense firewall.
@@ -298,23 +318,23 @@ class { 'opnsense::client::haproxy':
 
 The following parameters are available in the `opnsense::client::haproxy` class:
 
-* [`servers`](#servers)
-* [`backends`](#backends)
-* [`frontends`](#frontends)
+* [`servers`](#-opnsense--client--haproxy--servers)
+* [`backends`](#-opnsense--client--haproxy--backends)
+* [`frontends`](#-opnsense--client--haproxy--frontends)
 
-##### <a name="servers"></a>`servers`
+##### <a name="-opnsense--client--haproxy--servers"></a>`servers`
 
 Data type: `Hash`
 
 HaProxy servers that are associated with this client.
 
-##### <a name="backends"></a>`backends`
+##### <a name="-opnsense--client--haproxy--backends"></a>`backends`
 
 Data type: `Hash`
 
 HaProxy backends that are associated with this client.
 
-##### <a name="frontends"></a>`frontends`
+##### <a name="-opnsense--client--haproxy--frontends"></a>`frontends`
 
 Data type: `Hash`
 
@@ -325,9 +345,6 @@ Firewall rules that are associated with this client.
 ### <a name="opnsense_device"></a>`opnsense_device`
 
 This type provides Puppet with the capabilities to manage OPNSense device access data.
-
-* **See also**
-  * https://docs.opnsense.org/development/how-tos/api.html#use-the-api
 
 #### Examples
 
@@ -340,7 +357,7 @@ opnsense_device { 'opnsense.example.com':
   api_secret => Sensitive('your_api_secret'),
   timeout    => 60,
   ssl_verify => true,
-      ca     => '/path/to/ca.pem',
+  ca     => '/path/to/ca.pem',
   ensure     => 'present',
 }
 ```
@@ -401,9 +418,9 @@ The api url of the OPNsense device.
 
 The following parameters are available in the `opnsense_device` type.
 
-* [`name`](#name)
+* [`name`](#-opnsense_device--name)
 
-##### <a name="name"></a>`name`
+##### <a name="-opnsense_device--name"></a>`name`
 
 namevar
 
@@ -572,20 +589,20 @@ The type of the firewall alias.
 
 ##### `updatefreq`
 
-Data type: `Variant[Enum[""], Float]`
+Data type: `Numeric`
 
 How often should the alias be updated in days.
 
-Default value: `''`
+Default value: `0`
 
 #### Parameters
 
 The following parameters are available in the `opnsense_firewall_alias` type.
 
-* [`device`](#device)
-* [`name`](#name)
+* [`device`](#-opnsense_firewall_alias--device)
+* [`name`](#-opnsense_firewall_alias--name)
 
-##### <a name="device"></a>`device`
+##### <a name="-opnsense_firewall_alias--device"></a>`device`
 
 namevar
 
@@ -593,7 +610,7 @@ Data type: `String`
 
 The name of the opnsense_device type you want to manage.
 
-##### <a name="name"></a>`name`
+##### <a name="-opnsense_firewall_alias--name"></a>`name`
 
 namevar
 
@@ -794,10 +811,10 @@ The uuid of the rule.
 
 The following parameters are available in the `opnsense_firewall_rule` type.
 
-* [`description`](#description)
-* [`device`](#device)
+* [`description`](#-opnsense_firewall_rule--description)
+* [`device`](#-opnsense_firewall_rule--device)
 
-##### <a name="description"></a>`description`
+##### <a name="-opnsense_firewall_rule--description"></a>`description`
 
 namevar
 
@@ -805,7 +822,7 @@ Data type: `String`
 
 The rule description.
 
-##### <a name="device"></a>`device`
+##### <a name="-opnsense_firewall_rule--device"></a>`device`
 
 namevar
 
@@ -1287,10 +1304,10 @@ The uuid of the backend.
 
 The following parameters are available in the `opnsense_haproxy_backend` type.
 
-* [`device`](#device)
-* [`name`](#name)
+* [`device`](#-opnsense_haproxy_backend--device)
+* [`name`](#-opnsense_haproxy_backend--name)
 
-##### <a name="device"></a>`device`
+##### <a name="-opnsense_haproxy_backend--device"></a>`device`
 
 namevar
 
@@ -1298,13 +1315,962 @@ Data type: `String`
 
 The name of the opnsense_device type you want to manage.
 
-##### <a name="name"></a>`name`
+##### <a name="-opnsense_haproxy_backend--name"></a>`name`
 
 namevar
 
 Data type: `String`
 
 The name of the resource you want to manage.
+
+### <a name="opnsense_haproxy_frontend"></a>`opnsense_haproxy_frontend`
+
+This type provides Puppet with the capabilities to manage opnsense haproxy frontends.
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_haproxy_frontend { 'webserver_frontend':
+  device                           => 'opnsense-test.device.com',
+  enabled                          => true,
+  description                      => 'frontend for webserver',
+  bind                             => '127.0.0.1:8080',
+  bind_options                     => '',
+  mode                             => 'http',
+  default_backend                  => '',
+  ssl_enabled                      => true,
+  ssl_certificates                 => ['60cc4641eb577', '5eba6f0f352e3'],
+  ssl_default_certificate          => '60cc4641eb577',
+  ssl_custom_options               => '',
+  ssl_advanced_enabled             => true,
+  ssl_bind_options                 => ['prefer-client-ciphers'],
+  ssl_min_version                  => 'TLSv1.2',
+  ssl_max_version                  => '',
+  ssl_cipher_list                  => 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
+  ssl_cipher_suites                => 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256',
+  ssl_hsts_enabled                 => true,
+  ssl_hsts_include_sub_domains     => true,
+  ssl_hsts_preload                 => true,
+  ssl_hsts_max_age                 => '15768000',
+  ssl_client_auth_enabled          => true,
+  ssl_client_auth_verify           => 'required',
+  ssl_client_auth_cas              => [],
+  ssl_client_auth_crls             => [],
+  basic_auth_enabled               => true,
+  basic_auth_users                 => [],
+  basic_auth_groups                => [],
+  tuning_max_connections           => '',
+  tuning_timeout_client            => '',
+  tuning_timeout_http_req          => '',
+  tuning_timeout_http_keep_alive   => '',
+  linked_cpu_affinity_rules        => [],
+  logging_dont_log_null            => true,
+  logging_dont_log_normal          => true,
+  logging_log_separate_errors      => true,
+  logging_detailed_log             => true,
+  logging_socket_stats             => true,
+  stickiness_pattern               => '',
+  stickiness_data_types            => [''],
+  stickiness_expire                => '30m',
+  stickiness_size                  => '50k',
+  stickiness_counter               => true,
+  stickiness_counter_key           => 'src',
+  stickiness_length                => '',
+  stickiness_conn_rate_period      => '10s',
+  stickiness_sess_rate_period      => '10s',
+  stickiness_http_req_rate_period  => '10s',
+  stickiness_http_err_rate_period  => '10s',
+  stickiness_bytes_in_rate_period  => '1m',
+  stickiness_bytes_out_rate_period => '1m',
+  http2_enabled                    => true,
+  http2_enabled_nontls             => true,
+  advertised_protocols             => ['h2', 'http11'],
+  forward_for                      => true,
+  connection_behaviour             => 'http-keep-alive',
+  custom_options                   => '',
+  linked_actions                   => [],
+  linked_errorfiles                => [],
+  ensure                           => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_haproxy_frontend` type.
+
+##### `advertised_protocols`
+
+Data type: `Array[Enum['', 'h2', 'http11', 'http10']]`
+
+When using the TLS ALPN extension, HAProxy advertises the specified protocol list as supported on top of ALPN.
+
+Default value: `["h2"]`
+
+##### `basic_auth_enabled`
+
+Data type: `Boolean`
+
+Enable HTTP Basic Authentication.
+
+Default value: `true`
+
+##### `basic_auth_groups`
+
+Data type: `Array[String]`
+
+Specify the uuids of the basic auth groups for this frontend.
+
+Default value: `[]`
+
+##### `basic_auth_users`
+
+Data type: `Array[String]`
+
+Specify the uuids of the basic auth users for this frontend.
+
+Default value: `[]`
+
+##### `bind`
+
+Data type: `String`
+
+Configure listen addresses for this public service, i.e. 127.0.0.1:8080.
+
+##### `bind_options`
+
+Data type: `Optional[String]`
+
+A list of parameters that will be appended to every Listen Address line e.g. accept-proxy npn http/1.1.
+
+##### `connection_behaviour`
+
+Data type: `Enum['http-keep-alive', 'http-tunnel', 'httpclose', 'http-server-close', 'forceclose']`
+
+The HaProxy connection behaviour.
+
+Default value: `http-keep-alive`
+
+##### `custom_options`
+
+Data type: `String`
+
+These lines will be added to the HAProxy frontend configuration.
+
+Default value: `''`
+
+##### `default_backend`
+
+Data type: `String`
+
+Set the default backend pool to use for this public service.
+
+Default value: `''`
+
+##### `description`
+
+Data type: `String`
+
+The backend description.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable this frontend.
+
+Default value: `true`
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `forward_for`
+
+Data type: `Boolean`
+
+Enable insertion of the X-Forwarded-For header to requests sent to servers.
+
+Default value: `true`
+
+##### `http2_enabled`
+
+Data type: `Boolean`
+
+Enable support for HTTP/2.
+
+Default value: `true`
+
+##### `http2_enabled_nontls`
+
+Data type: `Boolean`
+
+Enable support for HTTP/2 even if TLS (SSL offloading) is not enabled.
+
+Default value: `true`
+
+##### `linked_actions`
+
+Data type: `Array[String]`
+
+Choose uuid of rules to be included in this public service.
+
+Default value: `[]`
+
+##### `linked_cpu_affinity_rules`
+
+Data type: `Array[String]`
+
+Choose CPU affinity rules that should be applied to this public service.
+
+Default value: `[]`
+
+##### `linked_errorfiles`
+
+Data type: `Array[String]`
+
+Choose uuid of error messages to be included in this public service.
+
+Default value: `[]`
+
+##### `logging_detailed_log`
+
+Data type: `Boolean`
+
+Enable or disable verbose logging. Each log line turns into a much richer format.
+
+Default value: `true`
+
+##### `logging_dont_log_normal`
+
+Data type: `Boolean`
+
+Enable or disable logging of normal, successful connections.
+
+Default value: `true`
+
+##### `logging_dont_log_null`
+
+Data type: `Boolean`
+
+Enable or disable logging of connections with no data.
+
+Default value: `true`
+
+##### `logging_log_separate_errors`
+
+Data type: `Boolean`
+
+Allow HAProxy to automatically raise log level for non-completely successful connections to aid debugging.
+
+Default value: `true`
+
+##### `logging_socket_stats`
+
+Data type: `Boolean`
+
+Enable or disable collecting & providing separate statistics for each socket.
+
+Default value: `true`
+
+##### `mode`
+
+Data type: `Enum['http', 'ssl', 'tcp']`
+
+Set the running mode or protocol for this public service.
+
+Default value: `http`
+
+##### `ssl_advanced_enabled`
+
+Data type: `Boolean`
+
+Enable or disable advanced SSL settings.
+
+Default value: `true`
+
+##### `ssl_bind_options`
+
+Data type: `Array[Enum[
+            '', 'no-sslv3', 'no-tlsv10', 'no-tlsv11', 'no-tlsv12', 'no-tlsv13', 'no-tls-tickets', 'force-sslv3',
+            'force-tlsv10', 'force-tlsv11', 'force-tlsv12', 'force-tlsv13', 'prefer-client-ciphers', 'strict-sni'
+            ]]`
+
+Used to enforce or disable certain SSL options.
+
+Default value: `["prefer-client-ciphers"]`
+
+##### `ssl_certificates`
+
+Data type: `Array[String]`
+
+Select certificates to use for SSL offloading.
+
+Default value: `[]`
+
+##### `ssl_cipher_list`
+
+Data type: `String`
+
+The default string describing the list of cipher algorithms ("cipher suite") that are negotiated during the SSL/TLS handshake up to TLSv1.2.
+
+Default value:
+
+```ruby
+ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:
+ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256
+```
+
+##### `ssl_cipher_suites`
+
+Data type: `String`
+
+The default string describing the list of cipher algorithms ("cipher suite") that are negotiated during the SSL/TLS handshake for TLSv1.3.
+
+Default value: `TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256`
+
+##### `ssl_client_auth_cas`
+
+Data type: `Array[String]`
+
+Select CA certificates to use for client certificate authentication.
+
+Default value: `[]`
+
+##### `ssl_client_auth_crls`
+
+Data type: `Array[String]`
+
+Select CRLs to use for client certificate authentication.
+
+Default value: `[]`
+
+##### `ssl_client_auth_enabled`
+
+Data type: `Boolean`
+
+Enable client certificate authentication.
+
+Default value: `true`
+
+##### `ssl_client_auth_verify`
+
+Data type: `Enum['', 'none', 'optional', 'required']`
+
+If set to 'optional' or 'required', client certificate is requested.
+
+Default value: `required`
+
+##### `ssl_custom_options`
+
+Data type: `String`
+
+Pass additional SSL parameters to the HAProxy configuration.
+
+Default value: `''`
+
+##### `ssl_default_certificate`
+
+Data type: `String`
+
+This certificate will be presented if no SNI is provided by the client if the client provides an SNI hostname which does not match any certificate.
+
+Default value: `''`
+
+##### `ssl_enabled`
+
+Data type: `Boolean`
+
+Enable SSL offloading.
+
+Default value: `true`
+
+##### `ssl_hsts_enabled`
+
+Data type: `Boolean`
+
+Enable HTTP Strict Transport Security.
+
+Default value: `true`
+
+##### `ssl_hsts_include_sub_domains`
+
+Data type: `Boolean`
+
+Enable or disable if all present and future subdomains will be HTTPS.
+
+Default value: `true`
+
+##### `ssl_hsts_max_age`
+
+Data type: `String`
+
+Future requests to the domain should use only HTTPS for the specified time (in seconds).
+
+Default value: `15768000`
+
+##### `ssl_hsts_preload`
+
+Data type: `Boolean`
+
+Enable if you like this domain to be included in the HSTS preload list.
+
+Default value: `true`
+
+##### `ssl_max_version`
+
+Data type: `Enum['', 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2', 'TLSv1.3']`
+
+Used to enforce or disable certain SSL options.
+
+Default value: `''`
+
+##### `ssl_min_version`
+
+Data type: `Enum['', 'SSLv3', 'TLSv1.0', 'TLSv1.1', 'TLSv1.2', 'TLSv1.3']`
+
+Used to enforce or disable certain SSL options.
+
+Default value: `TLSv1.2`
+
+##### `stickiness_bytes_in_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `1m`
+
+##### `stickiness_bytes_out_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `1m`
+
+##### `stickiness_conn_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_counter`
+
+Data type: `Boolean`
+
+Enable to be able to retrieve values from sticky counters.
+
+Default value: `true`
+
+##### `stickiness_counter_key`
+
+Data type: `String`
+
+Describes what elements of the incoming request or connection will be analyzed, extracted, combined, and used to select which table entry to update the counters.
+
+Default value: `src`
+
+##### `stickiness_data_types`
+
+Data type: `Array[Enum[
+            '', 'conn_cnt', 'conn_cur', 'conn_rate', 'sess_cnt', 'sess_rate', 'http_req_cnt', 'http_req_rate',
+            'http_err_cnt', 'http_err_rate', 'bytes_in_cnt', 'bytes_in_rate', 'bytes_out_cnt', 'bytes_out_rate'
+            ]]`
+
+This is used to store additional information in the stick-table.
+
+Default value: `[]`
+
+##### `stickiness_expire`
+
+Data type: `String`
+
+This configures the maximum duration of an entry in the stick-table since it was last created, refreshed or matched. Valid suffixes d, h, m, s, ms.
+
+Default value: `30m`
+
+##### `stickiness_http_err_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_http_req_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_length`
+
+Data type: `String`
+
+Specify the maximum length for a value in the stick-table.
+
+Default value: `''`
+
+##### `stickiness_pattern`
+
+Data type: `Enum['', 'ipv4', 'ipv6', 'integer', 'string', 'binary']`
+
+Choose the type of data that should be stored in this stick-table.
+
+Default value: `''`
+
+##### `stickiness_sess_rate_period`
+
+Data type: `String`
+
+The length of the period over which the average is measured. Valid suffixes d, h, m, s, ms, us
+
+Default value: `10s`
+
+##### `stickiness_size`
+
+Data type: `String`
+
+This configures the maximum number of entries that can fit in the table. Valid suffixes k, m, g.
+
+Default value: `50k`
+
+##### `tuning_max_connections`
+
+Data type: `String`
+
+Set the maximum number of concurrent connections for this public service.
+
+Default value: `''`
+
+##### `tuning_timeout_client`
+
+Data type: `String`
+
+Set the maximum inactivity time on the client side. Defaults to milliseconds. Valid suffixes d, h, m, s, ms, us
+
+Default value: `''`
+
+##### `tuning_timeout_http_keep_alive`
+
+Data type: `String`
+
+Set the maximum allowed time to wait for a new HTTP request to appear. Defaults to milliseconds. Valid suffixes d, h, m, s, ms, us
+
+Default value: `''`
+
+##### `tuning_timeout_http_req`
+
+Data type: `String`
+
+Set the maximum allowed time to wait for a complete HTTP request. Defaults to milliseconds. Valid suffixes d, h, m, s, ms, us
+
+Default value: `''`
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the frontend.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_haproxy_frontend` type.
+
+* [`device`](#-opnsense_haproxy_frontend--device)
+* [`name`](#-opnsense_haproxy_frontend--name)
+
+##### <a name="-opnsense_haproxy_frontend--device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
+
+##### <a name="-opnsense_haproxy_frontend--name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the resource you want to manage.
+
+### <a name="opnsense_haproxy_server"></a>`opnsense_haproxy_server`
+
+This type provides Puppet with the capabilities to manage opnsense haproxy server
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_haproxy_server { 'webserver1':
+  device                 => 'opnsense-test.device.com',
+  enabled                => true,
+  description            => 'primary webserver',
+  address                => 'webserver1.example.com',
+  port                   => '443',
+  checkport              => '80',
+  mode                   => 'active',
+  type                   => 'static',
+  service_name           => '',
+  linked_resolver        => '',
+  resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+  resolve_prefer         => 'ipv4',
+  ssl                    => true,
+  ssl_verify             => true,
+  ssl_ca                 => [],
+  ssl_crl                => [],
+  ssl_client_certificate => '5eba6f0f352e3',
+  weight                 => '10',
+  check_interval         => '100',
+  check_down_interval    => '200',
+  source                 => '10.0.0.1',
+  advanced               => 'send-proxy',
+  ensure                 => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_haproxy_server` type.
+
+##### `address`
+
+Data type: `String`
+
+The FQDN or the IP address of this server.
+
+##### `advanced`
+
+Data type: `Optional[String]`
+
+list of parameters that will be appended to the server line in every backend where this server will be used.
+
+##### `check_down_interval`
+
+Data type: `Optional[String]`
+
+Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN.
+
+##### `check_interval`
+
+Data type: `Optional[String]`
+
+Sets the interval (in milliseconds) for running health checks on this server.
+
+##### `checkport`
+
+Data type: `Optional[String]`
+
+Provide the TCP communication port to use during check.
+
+##### `description`
+
+Data type: `String`
+
+The server description.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable this server.
+
+Default value: `true`
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `linked_resolver`
+
+Data type: `Optional[String]`
+
+Specify the uuid of the resolver to discover available services via DNS.
+
+##### `mode`
+
+Data type: `Enum['', 'active', 'backup', 'disabled']`
+
+Sets the operation mode to use for this server.
+
+Default value: `active`
+
+##### `number`
+
+Data type: `Optional[String]`
+
+The number of servers this template initializes, i.e. 5 or 1-5.
+
+##### `port`
+
+Data type: `String`
+
+Provide the TCP or UDP communication port for this server.
+
+##### `resolve_prefer`
+
+Data type: `Enum['', 'ipv4', 'ipv6']`
+
+When DNS resolution is enabled and multiple IP addresses from different families are returned use this.
+
+Default value: `''`
+
+##### `resolver_opts`
+
+Data type: `Optional[Array[String]]`
+
+Add resolver options.
+
+Default value: `[]`
+
+##### `service_name`
+
+Data type: `Optional[String]`
+
+FQDN for all the servers this template initializes or a service name to discover via DNS SRV records.
+
+##### `source`
+
+Data type: `Optional[String]`
+
+Sets the source address which will be used when connecting to the server.
+
+##### `ssl`
+
+Data type: `Boolean`
+
+Enable or disable SSL communication with this server.
+
+Default value: `true`
+
+##### `ssl_ca`
+
+Data type: `Optional[Array[String]]`
+
+These CA Ids will be used to verify server's certificate.
+
+Default value: `[]`
+
+##### `ssl_client_certificate`
+
+Data type: `Optional[String]`
+
+This certificate will be sent if the server send a client certificate request.
+
+##### `ssl_crl`
+
+Data type: `Optional[Array[String]]`
+
+This certificate revocation list Ids will be used to verify server's certificate.
+
+Default value: `[]`
+
+##### `ssl_verify`
+
+Data type: `Boolean`
+
+Enable or disable server ssl certificate verification.
+
+Default value: `true`
+
+##### `type`
+
+Data type: `Enum['static', 'template']`
+
+Sets the operation mode to use for this server.
+
+Default value: `static`
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the server.
+
+##### `weight`
+
+Data type: `Optional[String]`
+
+Adjust the server's weight relative to other servers.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_haproxy_server` type.
+
+* [`device`](#-opnsense_haproxy_server--device)
+* [`name`](#-opnsense_haproxy_server--name)
+
+##### <a name="-opnsense_haproxy_server--device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
+
+##### <a name="-opnsense_haproxy_server--name"></a>`name`
+
+namevar
+
+Data type: `String`
+
+The name of the resource you want to manage.
+
+### <a name="opnsense_nodeexporter_config"></a>`opnsense_nodeexporter_config`
+
+This type provides Puppet with the capabilities to manage opnsense nodeexporter config.
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_nodeexporter_config { 'opnsense.example.com':
+  device         => 'opnsense.example.com',
+  enabled        => false,
+  listen_address => '0.0.0.0',
+  listen_port    => '9100',
+  cpu            => true,
+  exec           => true,
+  filesystem     => true,
+  loadavg        => true,
+  meminfo        => true,
+  netdev         => true,
+  time           => true,
+  devstat        => true,
+  interrupts     => false,
+  ntp            => false,
+  zfs            => false,
+  ensure         => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_nodeexporter_config` type.
+
+##### `cpu`
+
+Data type: `Boolean`
+
+Enable or disable the cpu collector.
+
+##### `devstat`
+
+Data type: `Boolean`
+
+Enable or disable the devstat collector.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Enable or disable the node_exporter plugin.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `exec`
+
+Data type: `Boolean`
+
+Enable or disable the exec collector.
+
+##### `filesystem`
+
+Data type: `Boolean`
+
+Enable or disable the filesystem collector.
+
+##### `interrupts`
+
+Data type: `Boolean`
+
+Enable or disable the interrupts collector.
+
+##### `listen_address`
+
+Data type: `String`
+
+Set node_exporter\'s listen address. By default, node_exporter will listen on 0.0.0.0 (all interfaces).
+
+##### `listen_port`
+
+Data type: `String`
+
+Set node_exporter\'s listen port. By default, node_exporter will listen on port 9100.
+
+##### `loadavg`
+
+Data type: `Boolean`
+
+Enable or disable the loadavg collector.
+
+##### `meminfo`
+
+Data type: `Boolean`
+
+Enable or disable the meminfo collector.
+
+##### `netdev`
+
+Data type: `Boolean`
+
+Enable or disable the netdev collector.
+
+##### `ntp`
+
+Data type: `Boolean`
+
+Enable or disable the ntp collector.
+
+##### `time`
+
+Data type: `Boolean`
+
+Enable or disable the time collector.
+
+##### `zfs`
+
+Data type: `Boolean`
+
+Enable or disable the zfs collector.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_nodeexporter_config` type.
+
+* [`device`](#-opnsense_nodeexporter_config--device)
+
+##### <a name="-opnsense_nodeexporter_config--device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
 
 ### <a name="opnsense_plugin"></a>`opnsense_plugin`
 
@@ -1319,7 +2285,7 @@ This type provides Puppet with the capabilities to manage opnsense plugins.
 
 ```puppet
 opnsense_plugin { 'os-acme-client':
-  device => 'opnsense.example.com'
+  device => 'opnsense.example.com',
   ensure => 'present',
 }
 ```
@@ -1340,10 +2306,10 @@ Default value: `present`
 
 The following parameters are available in the `opnsense_plugin` type.
 
-* [`device`](#device)
-* [`name`](#name)
+* [`device`](#-opnsense_plugin--device)
+* [`name`](#-opnsense_plugin--name)
 
-##### <a name="device"></a>`device`
+##### <a name="-opnsense_plugin--device"></a>`device`
 
 namevar
 
@@ -1351,7 +2317,7 @@ Data type: `String`
 
 The name of the opnsense_device type you want to manage.
 
-##### <a name="name"></a>`name`
+##### <a name="-opnsense_plugin--name"></a>`name`
 
 namevar
 

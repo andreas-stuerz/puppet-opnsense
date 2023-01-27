@@ -25,7 +25,7 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
     filter
   end
 
-  # @param [Array<String>] device_names
+  # @param [Array<Hash<Symbol>> | Array<String>] device_names
   # @return [Array<Hash<Symbol>>]
   def _get_devices(device_names)
     result = []
@@ -116,6 +116,7 @@ class Puppet::Provider::OpnsenseDevice::OpnsenseDevice < Puppet::Provider::Opnse
   # @param [String] path
   # @param [Hash] data
   # @param [Integer] mode
+  # @return [Integer]
   def _write_yaml(path, data, mode = 0o600)
     File.open(path, 'w') do |file|
       file.write(YAML.dump(data))

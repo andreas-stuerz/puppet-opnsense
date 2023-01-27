@@ -8,7 +8,6 @@
 ## Table of Contents
 
 - [opnsense](#opnsense)
-  * [Table of Contents](#table-of-contents)
   * [Module description](#module-description)
   * [Setup](#setup)
     + [OPNsense firewall](#opnsense-firewall)

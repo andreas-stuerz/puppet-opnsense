@@ -357,7 +357,7 @@ opnsense_device { 'opnsense.example.com':
   api_secret => Sensitive('your_api_secret'),
   timeout    => 60,
   ssl_verify => true,
-  ca     => '/path/to/ca.pem',
+  ca         => '/path/to/ca.pem',
   ensure     => 'present',
 }
 ```
@@ -589,7 +589,7 @@ The type of the firewall alias.
 
 ##### `updatefreq`
 
-Data type: `Numeric`
+Data type: `Variant[Enum[""], Numeric]`
 
 How often should the alias be updated in days.
 
@@ -1619,12 +1619,7 @@ Data type: `String`
 
 The default string describing the list of cipher algorithms ("cipher suite") that are negotiated during the SSL/TLS handshake up to TLSv1.2.
 
-Default value:
-
-```ruby
-ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:
-ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256
-```
+Default value: `ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256`
 
 ##### `ssl_cipher_suites`
 

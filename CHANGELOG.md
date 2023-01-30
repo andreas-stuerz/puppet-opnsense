@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v2.1.0](https://github.com/andeman/puppet-opnsense/tree/v2.1.0) (2023-01-27)
+## [v2.1.0](https://github.com/andeman/puppet-opnsense/tree/v2.1.0) (2023-01-30)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v2.0.0...v2.1.0)
 
@@ -12,6 +12,7 @@ All notable changes to this project will be documented in this file. The format 
 
 ### Fixed
 
+- Fix puppet strings generation [\#21](https://github.com/andeman/puppet-opnsense/pull/21) ([andeman](https://github.com/andeman))
 - change data type + default value of updatefreq to Numeric [\#14](https://github.com/andeman/puppet-opnsense/pull/14) ([fraenki](https://github.com/fraenki))
 
 ## [v2.0.0](https://github.com/andeman/puppet-opnsense/tree/v2.0.0) (2021-11-04)

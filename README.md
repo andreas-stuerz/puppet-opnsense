@@ -85,8 +85,7 @@ If you want a bastion hosts running a puppet-agent which could manage multiple f
 
 
 #### Requirements
-* [opn-cli](https://pypi.org/project/opn-cli/)
-* puppetlabs/resource_api (puppet < 6.0)
+* [opn-cli](https://pypi.org/project/opn-cli/) >= 1.5.0
 
 #### Install requirements
 ```

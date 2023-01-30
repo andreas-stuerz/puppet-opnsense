@@ -21,7 +21,11 @@ Gemfile:
     ":development":
       - gem: 'github_changelog_generator'
         version: '= 1.15.2'
-      # workaround for pupet 7.22.0
+      - gem: 'puppet-strings'
+        git: 'https://github.com/andeman/puppet-strings'
+        branch: 'fix_resource_api_defaults'
+        condition: 'ENV["GITHUB_ACTIONS"] != "true"'
+      # workaround for pupet 6.28.0
       - gem: 'concurrent-ruby'
         version: '< 1.2.0'
       - gem: 'fakefs'
@@ -39,6 +43,13 @@ Gemfile:
   unmanaged: true
 .travis.yml:
   delete: true
+.rubocop.yml:
+  default_configs:
+    Layout/LineLength:
+      Description: People have wide screens, use them.
+      Max: 200
+      Exclude:
+          - 'lib/puppet/type/opnsense_haproxy_frontend.rb'
 
 
 

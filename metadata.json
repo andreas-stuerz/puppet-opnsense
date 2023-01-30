@@ -1,6 +1,6 @@
 {
   "name": "andeman-opnsense",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": "andeman",
   "summary": "Manage OPNsense firewalls",
   "license": "Apache-2.0",
@@ -8,10 +8,6 @@
   "project_page": "https://github.com/andeman/puppet-opnsense",
   "issues_url": "https://github.com/andeman/puppet-opnsense/issues",
   "dependencies": [
-    {
-      "name": "puppetlabs/resource_api",
-      "version_requirement": ">= 1.0.0 < 2.0.0"
-    },
     {
       "name": "puppetlabs-stdlib",
       "version_requirement": ">= 6.0.0 < 9.0.0"
@@ -49,7 +45,7 @@
     "firewall",
     "network"
   ],
-  "pdk-version": "2.6.0",
+  "pdk-version": "2.6.1",
   "template-url": "pdk-default#2.7.1",
   "template-ref": "tags/2.7.1-0-g9a16c87"
 }

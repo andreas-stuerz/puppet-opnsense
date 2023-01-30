@@ -152,7 +152,7 @@ EOS
     updatefreq: {
       type: 'Variant[Enum[""], Numeric]',
       desc: 'How often should the alias be updated in days.',
-      default: 0
+      default: 0,
     },
     counters: {
       type: 'Optional[Variant[Enum[""], Boolean]]',

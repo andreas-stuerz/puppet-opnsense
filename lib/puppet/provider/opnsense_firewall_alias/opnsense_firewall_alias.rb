@@ -19,16 +19,16 @@ class Puppet::Provider::OpnsenseFirewallAlias::OpnsenseFirewallAlias < Puppet::P
   def _translate_json_object_to_puppet_resource(device, json_object)
     {
       title: json_object['name'] + '@' + device,
-      name: json_object['name'],
-      device: device,
-      type: json_object['type'],
-      description: json_object['description'],
-      content: json_object['content'].split(','),
-      proto: json_object['proto'],
-      updatefreq: json_object['updatefreq'].nil? ? '' : json_object['updatefreq'].to_f,
-      counters: bool_from_value(json_object['counters']),
-      enabled: bool_from_value(json_object['enabled']),
-      ensure: 'present',
+        name: json_object['name'],
+        device: device,
+        type: json_object['type'],
+        description: json_object['description'],
+        content: json_object['content'].split(','),
+        proto: json_object['proto'],
+        updatefreq: json_object['updatefreq'].nil? ? '' : json_object['updatefreq'].to_f,
+        counters: bool_from_value(json_object['counters']),
+        enabled: bool_from_value(json_object['enabled']),
+        ensure: 'present',
     }
   end
 

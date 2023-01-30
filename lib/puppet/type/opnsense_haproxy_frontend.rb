@@ -5,7 +5,7 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_haproxy_frontend',
   docs: <<-EOS,
-  @summary#{' '}
+  @summary
     Manage opnsense haproxy frontends
   @example
     opnsense_haproxy_frontend { 'webserver_frontend':
@@ -71,7 +71,7 @@ Puppet::ResourceApi.register_type(
       ensure                           => 'present',
     }
 
-This type provides Puppet with the capabilities to manage opnsense haproxy frontends.
+  This type provides Puppet with the capabilities to manage opnsense haproxy frontends.
 
 EOS
   features: ['simple_get_filter'],
@@ -179,10 +179,7 @@ EOS
     ssl_cipher_list: {
       type: 'String',
         desc: 'The default string describing the list of cipher algorithms ("cipher suite") that are negotiated during the SSL/TLS handshake up to TLSv1.2.',
-        default: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:'\
-                 'ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:'\
-                 'ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:'\
-                 'ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
+        default: 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
     },
     ssl_cipher_suites: {
       type: 'String',
@@ -304,8 +301,8 @@ EOS
             '', 'conn_cnt', 'conn_cur', 'conn_rate', 'sess_cnt', 'sess_rate', 'http_req_cnt', 'http_req_rate',
             'http_err_cnt', 'http_err_rate', 'bytes_in_cnt', 'bytes_in_rate', 'bytes_out_cnt', 'bytes_out_rate'
             ]]",
-        desc: 'This is used to store additional information in the stick-table.',
-        default: [],
+      desc: 'This is used to store additional information in the stick-table.',
+      default: [],
     },
     stickiness_expire: {
       type: 'String',

@@ -5,29 +5,29 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_nodeexporter_config',
   docs: <<-EOS,
-  @summary#{' '}
-    Manage opnsense nodeexporter config
-  @example
-    opnsense_nodeexporter_config { 'opnsense.example.com':
-      device         => 'opnsense.example.com',
-      enabled        => false,
-      listen_address => '0.0.0.0',
-      listen_port    => '9100',
-      cpu            => true,
-      exec           => true,
-      filesystem     => true,
-      loadavg        => true,
-      meminfo        => true,
-      netdev         => true,
-      time           => true,
-      devstat        => true,
-      interrupts     => false,
-      ntp            => false,
-      zfs            => false,
-      ensure         => 'present',
-    }
+    @summary
+      Manage opnsense prometheus nodeexporter config
+    @example
+      opnsense_nodeexporter_config { 'opnsense.example.com':
+        device         => 'opnsense.example.com',
+        enabled        => false,
+        listen_address => '0.0.0.0',
+        listen_port    => '9100',
+        cpu            => true,
+        exec           => true,
+        filesystem     => true,
+        loadavg        => true,
+        meminfo        => true,
+        netdev         => true,
+        time           => true,
+        devstat        => true,
+        interrupts     => false,
+        ntp            => false,
+        zfs            => false,
+        ensure         => 'present',
+      }
 
-  This type provides Puppet with the capabilities to manage opnsense nodeexporter config.
+    This type provides Puppet with the capabilities to manage opnsense nodeexporter config.
 
 EOS
   features: ['simple_get_filter'],

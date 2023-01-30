@@ -17,7 +17,7 @@ RSpec.describe 'the opnsense_firewall_alias type' do
   context 'geoip_alias on opnsense.example.com' do
     let(:fw_alias) do
       Puppet::Type.type(:opnsense_firewall_alias).new(
-          name: 'geoip_alias',
+          name: 'geoip_alias_unit',
           device: 'opnsense.example.com',
           type: 'geoip',
           content: ['DE', 'GR'],

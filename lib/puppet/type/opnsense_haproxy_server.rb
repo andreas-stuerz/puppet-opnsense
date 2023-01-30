@@ -5,37 +5,36 @@ require 'puppet/resource_api'
 Puppet::ResourceApi.register_type(
   name: 'opnsense_haproxy_server',
   docs: <<-EOS,
-  @summary
-    Manage opnsense haproxy servers
-  @example
-    opnsense_haproxy_server { 'webserver1':
-      device                 => 'opnsense-test.device.com',
-      enabled                => true,
-      description            => 'primary webserver',
-      address                => 'webserver1.example.com',
-      port                   => '443',
-      checkport              => '80',
-      mode                   => 'active',
-      type                   => 'static',
-      service_name           => '',
-      linked_resolver        => '',
-      resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
-      resolve_prefer         => 'ipv4',
-      ssl                    => true,
-      ssl_verify             => true,
-      ssl_ca                 => [],
-      ssl_crl                => [],
-      ssl_client_certificate => '5eba6f0f352e3',
-      weight                 => '10',
-      check_interval         => '100',
-      check_down_interval    => '200',
-      source                 => '10.0.0.1',
-      advanced               => 'send-proxy',
-      ensure                 => 'present',
-    }
+    @summary
+        Manage opnsense haproxy servers
+    @example
+      opnsense_haproxy_server { 'webserver1':
+        device                 => 'opnsense-test.device.com',
+        enabled                => true,
+        description            => 'primary webserver',
+        address                => 'webserver1.example.com',
+        port                   => '443',
+        checkport              => '80',
+        mode                   => 'active',
+        type                   => 'static',
+        service_name           => '',
+        linked_resolver        => '',
+        resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
+        resolve_prefer         => 'ipv4',
+        ssl                    => true,
+        ssl_verify             => true,
+        ssl_ca                 => [],
+        ssl_crl                => [],
+        ssl_client_certificate => '5eba6f0f352e3',
+        weight                 => '10',
+        check_interval         => '100',
+        check_down_interval    => '200',
+        source                 => '10.0.0.1',
+        advanced               => 'send-proxy',
+        ensure                 => 'present',
+      }
 
-  This type provides Puppet with the capabilities to manage opnsense haproxy server
-
+    This type provides Puppet with the capabilities to manage opnsense haproxy server
 EOS
   features: ['simple_get_filter'],
   title_patterns: [
@@ -144,31 +143,27 @@ EOS
     },
     ssl_client_certificate: {
       type: 'Optional[String]',
-        desc: 'This certificate will be sent if the server send a client certificate request.',
+      desc: 'This certificate will be sent if the server send a client certificate request.',
     },
     weight: {
       type: 'Optional[String]',
-        desc: "Adjust the server's weight relative to other servers.",
+      desc: "Adjust the server's weight relative to other servers.",
     },
     check_interval: {
       type: 'Optional[String]',
-        desc: 'Sets the interval (in milliseconds) for running health checks on this server.',
+      desc: 'Sets the interval (in milliseconds) for running health checks on this server.',
     },
     check_down_interval: {
       type: 'Optional[String]',
-        desc: (
-          'Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN.'
-        ),
+      desc: 'Sets the interval (in milliseconds) for running health checks on the server when the server state is DOWN.',
     },
     source: {
       type: 'Optional[String]',
-        desc: 'Sets the source address which will be used when connecting to the server.',
+      desc: 'Sets the source address which will be used when connecting to the server.',
     },
     advanced: {
       type: 'Optional[String]',
-        desc: (
-          'list of parameters that will be appended to the server line in every backend where this server will be used.'
-        ),
+      desc: 'list of parameters that will be appended to the server line in every backend where this server will be used.',
     },
   },
 )

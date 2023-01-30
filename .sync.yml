@@ -24,6 +24,7 @@ Gemfile:
       - gem: 'puppet-strings'
         git: 'https://github.com/andeman/puppet-strings'
         branch: 'fix_resource_api_defaults'
+        condition: 'ENV["PUPPET_GEM_VERSION"] =~ %r{^7}'
       # workaround for pupet 6.28.0
       - gem: 'concurrent-ruby'
         version: '< 1.2.0'
@@ -42,6 +43,13 @@ Gemfile:
   unmanaged: true
 .travis.yml:
   delete: true
+.rubocop.yml:
+  default_configs:
+    Layout/LineLength:
+      Description: People have wide screens, use them.
+      Max: 200
+      Exclude:
+          - 'lib/puppet/type/opnsense_haproxy_frontend.rb'
 
 
 

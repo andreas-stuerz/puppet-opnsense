@@ -14,7 +14,7 @@ Puppet::ResourceApi.register_type(
       api_secret => Sensitive('your_api_secret'),
       timeout    => 60,
       ssl_verify => true,
-      ca     => '/path/to/ca.pem',
+      ca         => '/path/to/ca.pem',
       ensure     => 'present',
     }
 
@@ -47,8 +47,8 @@ EOS
     },
     timeout: {
       type: 'Integer',
-        desc: 'The timeout for API calls in seconds.',
-        default: '60',
+      desc: 'The timeout for API calls in seconds.',
+      default: 60,
     },
     ssl_verify: {
       type: 'Boolean',

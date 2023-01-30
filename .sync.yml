@@ -24,9 +24,9 @@ Gemfile:
       - gem: 'puppet-strings'
         git: 'https://github.com/andeman/puppet-strings'
         branch: 'fix_resource_api_defaults'
-      # workaround for pupet 7.22.0
-      #- gem: 'concurrent-ruby'
-      #  version: '< 1.2.0'
+      # workaround for pupet 6.28.0
+      - gem: 'concurrent-ruby'
+        version: '< 1.2.0'
       - gem: 'fakefs'
       - gem: 'rspec-retry'
 .github/workflows/nightly.yml:

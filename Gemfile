@@ -35,7 +35,7 @@ group :development do
   gem "rubocop-rspec", '= 2.0.1',                      require: false
   gem "rb-readline", '= 0.5.5',                        require: false, platforms: [:mswin, :mingw, :x64_mingw]
   gem "github_changelog_generator", '= 1.15.2',        require: false
-  gem "puppet-strings",                                require: false, git: 'https://github.com/andeman/puppet-strings', branch: 'fix_resource_api_defaults' if ENV["PUPPET_GEM_VERSION"] =~ %r{^7}
+  gem "puppet-strings",                                require: false, git: 'https://github.com/andeman/puppet-strings', branch: 'fix_resource_api_defaults' if ENV["GITHUB_ACTIONS"] != "true"
   gem "concurrent-ruby", '< 1.2.0',                    require: false
   gem "fakefs",                                        require: false
   gem "rspec-retry",                                   require: false

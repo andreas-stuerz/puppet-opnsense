@@ -24,7 +24,7 @@ Gemfile:
       - gem: 'puppet-strings'
         git: 'https://github.com/andeman/puppet-strings'
         branch: 'fix_resource_api_defaults'
-        condition: 'ENV["PUPPET_GEM_VERSION"] =~ %r{^7}'
+        condition: 'ENV["GITHUB_ACTIONS"] != "true"'
       # workaround for pupet 6.28.0
       - gem: 'concurrent-ruby'
         version: '< 1.2.0'

@@ -26,15 +26,15 @@ Puppet::ResourceApi.register_type(
       ssl_max_version                  => '',
       ssl_cipher_list                  => 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
       ssl_cipher_suites                => 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256',
-      ssl_hsts_enabled                 => true,
-      ssl_hsts_include_sub_domains     => true,
-      ssl_hsts_preload                 => true,
+      ssl_hsts_enabled                 => false,
+      ssl_hsts_include_sub_domains     => false,
+      ssl_hsts_preload                 => false,
       ssl_hsts_max_age                 => '15768000',
-      ssl_client_auth_enabled          => true,
+      ssl_client_auth_enabled          => false,
       ssl_client_auth_verify           => 'required',
       ssl_client_auth_cas              => [],
       ssl_client_auth_crls             => [],
-      basic_auth_enabled               => true,
+      basic_auth_enabled               => false,
       basic_auth_users                 => [],
       basic_auth_groups                => [],
       tuning_max_connections           => '',
@@ -42,11 +42,11 @@ Puppet::ResourceApi.register_type(
       tuning_timeout_http_req          => '',
       tuning_timeout_http_keep_alive   => '',
       linked_cpu_affinity_rules        => [],
-      logging_dont_log_null            => true,
-      logging_dont_log_normal          => true,
-      logging_log_separate_errors      => true,
+      logging_dont_log_null            => false,
+      logging_dont_log_normal          => false,
+      logging_log_separate_errors      => false,
       logging_detailed_log             => true,
-      logging_socket_stats             => true,
+      logging_socket_stats             => false,
       stickiness_pattern               => '',
       stickiness_data_types            => [''],
       stickiness_expire                => '30m',
@@ -60,10 +60,10 @@ Puppet::ResourceApi.register_type(
       stickiness_http_err_rate_period  => '10s',
       stickiness_bytes_in_rate_period  => '1m',
       stickiness_bytes_out_rate_period => '1m',
-      http2_enabled                    => true,
-      http2_enabled_nontls             => true,
+      http2_enabled                    => false,
+      http2_enabled_nontls             => false,
       advertised_protocols             => ['h2', 'http11'],
-      forward_for                      => true,
+      forward_for                      => false,
       connection_behaviour             => 'http-keep-alive',
       custom_options                   => '',
       linked_actions                   => [],
@@ -136,7 +136,7 @@ EOS
     ssl_enabled: {
       type: 'Boolean',
         desc: 'Enable SSL offloading.',
-        default: true
+        default: false
     },
     ssl_certificates: {
       type: 'Array[String]',
@@ -156,7 +156,7 @@ EOS
     ssl_advanced_enabled: {
       type: 'Boolean',
         desc: 'Enable or disable advanced SSL settings.',
-        default: true
+        default: false
     },
     ssl_bind_options: {
       type: "Array[Enum[
@@ -194,12 +194,12 @@ EOS
     ssl_hsts_include_sub_domains: {
       type: 'Boolean',
         desc: 'Enable or disable if all present and future subdomains will be HTTPS.',
-        default: true
+        default: false
     },
     ssl_hsts_preload: {
       type: 'Boolean',
         desc: 'Enable if you like this domain to be included in the HSTS preload list.',
-        default: true
+        default: false
     },
     ssl_hsts_max_age: {
       type: 'String',
@@ -209,7 +209,7 @@ EOS
     ssl_client_auth_enabled: {
       type: 'Boolean',
         desc: 'Enable client certificate authentication.',
-        default: true
+        default: false
     },
     ssl_client_auth_verify: {
       type: "Enum['', 'none', 'optional', 'required']",
@@ -229,7 +229,7 @@ EOS
     basic_auth_enabled: {
       type: 'Boolean',
         desc: 'Enable HTTP Basic Authentication.',
-        default: true
+        default: false
     },
     basic_auth_users: {
       type: 'Array[String]',
@@ -274,27 +274,27 @@ EOS
     logging_dont_log_null: {
       type: 'Boolean',
         desc: 'Enable or disable logging of connections with no data.',
-        default: true
+        default: false
     },
     logging_dont_log_normal: {
       type: 'Boolean',
         desc: 'Enable or disable logging of normal, successful connections.',
-        default: true
+        default: false
     },
     logging_log_separate_errors: {
       type: 'Boolean',
         desc: 'Allow HAProxy to automatically raise log level for non-completely successful connections to aid debugging.',
-        default: true
+        default: false
     },
     logging_detailed_log: {
       type: 'Boolean',
         desc: 'Enable or disable verbose logging. Each log line turns into a much richer format.',
-        default: true
+        default: false
     },
     logging_socket_stats: {
       type: 'Boolean',
         desc: 'Enable or disable collecting & providing separate statistics for each socket.',
-        default: true
+        default: false
     },
     stickiness_pattern: {
       type: "Enum['', 'ipv4', 'ipv6', 'integer', 'string', 'binary']",
@@ -367,12 +367,12 @@ EOS
     http2_enabled: {
       type: 'Boolean',
         desc: 'Enable support for HTTP/2.',
-        default: true
+        default: false
     },
     http2_enabled_nontls: {
       type: 'Boolean',
         desc: 'Enable support for HTTP/2 even if TLS (SSL offloading) is not enabled.',
-        default: true
+        default: false
     },
     advertised_protocols: {
       type: "Array[Enum['', 'h2', 'http11', 'http10']]",
@@ -382,7 +382,7 @@ EOS
     forward_for: {
       type: 'Boolean',
         desc: 'Enable insertion of the X-Forwarded-For header to requests sent to servers.',
-        default: true
+        default: false
     },
     connection_behaviour: {
       type: "Enum['http-keep-alive', 'httpclose', 'http-server-close']",

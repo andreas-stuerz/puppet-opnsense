@@ -21,7 +21,7 @@ Puppet::ResourceApi.register_type(
         linked_resolver        => '',
         resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
         resolve_prefer         => 'ipv4',
-        ssl                    => true,
+        ssl                    => false,
         ssl_verify             => true,
         ssl_ca                 => [],
         ssl_crl                => [],
@@ -124,7 +124,7 @@ EOS
     ssl: {
       type: 'Boolean',
         desc: 'Enable or disable SSL communication with this server.',
-        default: true
+        default: false
     },
     ssl_verify: {
       type: 'Boolean',

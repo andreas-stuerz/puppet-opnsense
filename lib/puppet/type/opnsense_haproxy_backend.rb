@@ -23,19 +23,19 @@ Puppet::ResourceApi.register_type(
       source                           => '',
       health_check_enabled             => true,
       health_check                     => '',
-      health_check_log_status          => true,
+      health_check_log_status          => false,
       check_interval                   => '',
       check_down_interval              => '',
       health_check_fall                => '',
       health_check_rise                => '',
       linked_mailer                    => '',
-      http2_enabled                    => true,
-      http2_enabled_nontls             => true,
+      http2_enabled                    => false,
+      http2_enabled_nontls             => false,
       ba_advertised_protocols          => ['h2', 'http11'],
       persistence                      => 'sticktable',
       persistence_cookiemode           => 'piggyback',
       persistence_cookiename           => 'SRVCOOKIE',
-      persistence_stripquotes          => true,
+      persistence_stripquotes          => false,
       stickiness_pattern               => 'sourceipv4',
       stickiness_data_types            => [],
       stickiness_expire                => '30m',
@@ -48,7 +48,7 @@ Puppet::ResourceApi.register_type(
       stickiness_http_err_rate_period  => '10s',
       stickiness_bytes_in_rate_period  => '1m',
       stickiness_bytes_out_rate_period => '1m',
-      basic_auth_enabled               => true,
+      basic_auth_enabled               => false,
       basic_auth_users                 => [],
       basic_auth_groups                => [],
       tuning_timeout_connect           => '',
@@ -57,9 +57,9 @@ Puppet::ResourceApi.register_type(
       tuning_retries                   => '',
       custom_options                   => '',
       tuning_defaultserver             => '',
-      tuning_noport                    => true,
+      tuning_noport                    => false,
       tuning_httpreuse                 => 'safe',
-      tuning_caching                   => true,
+      tuning_caching                   => false,
       linked_actions                   => [],
       linked_errorfiles                => [],
       ensure                           => 'present',
@@ -164,7 +164,7 @@ EOS
     health_check_log_status: {
       type: 'Boolean',
         desc: 'Enable to log health check status updates.',
-        default: true
+        default: false
     },
     check_interval: {
       type: 'Optional[String]',
@@ -189,12 +189,12 @@ EOS
     http2_enabled: {
       type: 'Boolean',
         desc: 'Enable support for end-to-end HTTP/2 communication.',
-        default: true
+        default: false
     },
     http2_enabled_nontls: {
       type: 'Boolean',
         desc: 'Enable support for HTTP/2 even if TLS is not enabled.',
-        default: true
+        default: false
     },
     ba_advertised_protocols: {
       type: 'Array[String]',
@@ -285,7 +285,7 @@ EOS
     basic_auth_enabled: {
       type: 'Boolean',
         desc: 'Enable HTTP basic authentication.',
-        default: true
+        default: false
     },
     basic_auth_users: {
       type: 'Array[String]',
@@ -324,7 +324,7 @@ EOS
     tuning_noport: {
       type: 'Boolean',
         desc: "Don't use port on server, use the same port as frontend receive.",
-        default: true
+        default: false
     },
     tuning_httpreuse: {
       type: "Enum['', 'never', 'safe', 'aggressive', 'always']",
@@ -334,7 +334,7 @@ EOS
     tuning_caching: {
       type: 'Boolean',
         desc: 'Enable caching of responses from this backend.',
-        default: true
+        default: false
     },
     linked_actions: {
       type: 'Array[String]',

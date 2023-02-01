@@ -51,6 +51,7 @@ RSpec.describe 'the opnsense_haproxy_frontend type' do
           tuning_timeout_http_req: '',
           tuning_timeout_http_keep_alive: '',
           linked_cpu_affinity_rules: [],
+          tuning_shards: '',
           logging_dont_log_null: true,
           logging_dont_log_normal: true,
           logging_log_separate_errors: true,
@@ -241,6 +242,11 @@ RSpec.describe 'the opnsense_haproxy_frontend type' do
       expect(frontend[:linked_cpu_affinity_rules]).to eq(['0e4748b9-d435-4c95-9f1d-3f76650e2a29'])
     end
 
+    it 'accepts tuning_shards' do
+      frontend[:tuning_shards] = '2'
+      expect(frontend[:tuning_shards]).to eq('2')
+    end
+
     it 'accepts logging_dont_log_null' do
       frontend[:logging_dont_log_null] = false
       expect(frontend[:logging_dont_log_null]).to eq(:false)
@@ -352,8 +358,8 @@ RSpec.describe 'the opnsense_haproxy_frontend type' do
     end
 
     it 'accepts connection_behaviour' do
-      frontend[:connection_behaviour] = 'http-tunnel'
-      expect(frontend[:connection_behaviour]).to eq('http-tunnel')
+      frontend[:connection_behaviour] = 'httpclose'
+      expect(frontend[:connection_behaviour]).to eq('httpclose')
     end
 
     it 'accepts custom_options' do

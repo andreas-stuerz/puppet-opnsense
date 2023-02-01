@@ -61,6 +61,7 @@ describe 'opnsense_haproxy_frontend' do
         advertised_protocols             => ['h2', 'http11'],
         forward_for                      => true,
         connection_behaviour             => 'http-keep-alive',
+        tuning_shards                    => '2',
         custom_options                   => '',
         linked_actions                   => [],
         linked_errorfiles                => [],
@@ -79,7 +80,7 @@ describe 'opnsense_haproxy_frontend' do
           'ssl_hstsIncludeSubDomains', 'ssl_hstsPreload', 'ssl_hstsMaxAge', 'ssl_clientAuthEnabled',
           'ssl_clientAuthVerify', 'ssl_clientAuthCAs', 'ssl_clientAuthCRLs', 'basicAuthEnabled', 'basicAuthUsers',
           'basicAuthGroups', 'tuning_maxConnections', 'tuning_timeoutClient', 'tuning_timeoutHttpReq',
-          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'logging_dontLogNull', 'logging_dontLogNormal',
+          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'tuning_shards', 'logging_dontLogNull', 'logging_dontLogNormal',
           'logging_logSeparateErrors', 'logging_detailedLog', 'logging_socketStats', 'stickiness_pattern',
           'stickiness_dataTypes', 'stickiness_expire', 'stickiness_size', 'stickiness_counter', 'stickiness_counter_key',
           'stickiness_length', 'stickiness_connRatePeriod', 'stickiness_sessRatePeriod', 'stickiness_httpReqRatePeriod',
@@ -121,6 +122,7 @@ describe 'opnsense_haproxy_frontend' do
           expect(r.stdout).to match %r{tuning_timeoutHttpReq: ''}
           expect(r.stdout).to match %r{tuning_timeoutHttpKeepAlive: ''}
           expect(r.stdout).to match %r{linkedCpuAffinityRules: '\[\]'}
+          expect(r.stdout).to match %r{tuning_shards: '2'}
           expect(r.stdout).to match %r{logging_dontLogNull: '1'}
           expect(r.stdout).to match %r{logging_dontLogNormal: '1'}
           expect(r.stdout).to match %r{logging_logSeparateErrors: '1'}
@@ -187,6 +189,7 @@ describe 'opnsense_haproxy_frontend' do
         tuning_timeout_http_req          => '60s',
         tuning_timeout_http_keep_alive   => '60s',
         linked_cpu_affinity_rules        => [],
+        tuning_shards                    => '',
         logging_dont_log_null            => false,
         logging_dont_log_normal          => false,
         logging_log_separate_errors      => false,
@@ -209,7 +212,7 @@ describe 'opnsense_haproxy_frontend' do
         http2_enabled_nontls             => false,
         advertised_protocols             => ['h2'],
         forward_for                      => false,
-        connection_behaviour             => 'http-tunnel',
+        connection_behaviour             => 'http-keep-alive',
         custom_options                   => '',
         linked_actions                   => [],
         linked_errorfiles                => [],
@@ -228,7 +231,7 @@ describe 'opnsense_haproxy_frontend' do
           'ssl_hstsIncludeSubDomains', 'ssl_hstsPreload', 'ssl_hstsMaxAge', 'ssl_clientAuthEnabled',
           'ssl_clientAuthVerify', 'ssl_clientAuthCAs', 'ssl_clientAuthCRLs', 'basicAuthEnabled', 'basicAuthUsers',
           'basicAuthGroups', 'tuning_maxConnections', 'tuning_timeoutClient', 'tuning_timeoutHttpReq',
-          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'logging_dontLogNull', 'logging_dontLogNormal',
+          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'tuning_shards','logging_dontLogNull', 'logging_dontLogNormal',
           'logging_logSeparateErrors', 'logging_detailedLog', 'logging_socketStats', 'stickiness_pattern',
           'stickiness_dataTypes', 'stickiness_expire', 'stickiness_size', 'stickiness_counter', 'stickiness_counter_key',
           'stickiness_length', 'stickiness_connRatePeriod', 'stickiness_sessRatePeriod', 'stickiness_httpReqRatePeriod',
@@ -270,6 +273,7 @@ describe 'opnsense_haproxy_frontend' do
           expect(r.stdout).to match %r{tuning_timeoutHttpReq: 60s}
           expect(r.stdout).to match %r{tuning_timeoutHttpKeepAlive: 60s}
           expect(r.stdout).to match %r{linkedCpuAffinityRules: '\[\]'}
+          expect(r.stdout).to match %r{tuning_shards: ''}
           expect(r.stdout).to match %r{logging_dontLogNull: '0'}
           expect(r.stdout).to match %r{logging_dontLogNormal: '0'}
           expect(r.stdout).to match %r{logging_logSeparateErrors: '0'}
@@ -292,7 +296,7 @@ describe 'opnsense_haproxy_frontend' do
           expect(r.stdout).to match %r{http2Enabled_nontls: '0'}
           expect(r.stdout).to match %r{advertised_protocols: h2}
           expect(r.stdout).to match %r{forwardFor: '0'}
-          expect(r.stdout).to match %r{connectionBehaviour: http-tunnel}
+          expect(r.stdout).to match %r{connectionBehaviour: http-keep-alive}
           expect(r.stdout).to match %r{customOptions: ''}
           expect(r.stdout).to match %r{linkedActions: '\[\]'}
           expect(r.stdout).to match %r{linkedErrorfiles: '\[\]'}

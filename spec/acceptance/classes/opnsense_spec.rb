@@ -250,7 +250,13 @@ describe 'class opnsense' do
         }
       MANIFEST
 
-      it 'throws an error because dependecies are not removed' do
+      it 'throws an error because server and backends dependecies are not removed' do
+        apply_manifest(pp_items, expect_failures: true) do |r|
+          expect(r.stderr).to match %r{Deleting: Failed.*returned 1.*Item in use by}
+        end
+      end
+
+      it 'throws an error because servers dependecies are not removed' do
         apply_manifest(pp_items, expect_failures: true) do |r|
           expect(r.stderr).to match %r{Deleting: Failed.*returned 1.*Item in use by}
         end

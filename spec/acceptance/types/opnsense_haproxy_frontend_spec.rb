@@ -231,7 +231,7 @@ describe 'opnsense_haproxy_frontend' do
           'ssl_hstsIncludeSubDomains', 'ssl_hstsPreload', 'ssl_hstsMaxAge', 'ssl_clientAuthEnabled',
           'ssl_clientAuthVerify', 'ssl_clientAuthCAs', 'ssl_clientAuthCRLs', 'basicAuthEnabled', 'basicAuthUsers',
           'basicAuthGroups', 'tuning_maxConnections', 'tuning_timeoutClient', 'tuning_timeoutHttpReq',
-          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'tuning_shards','logging_dontLogNull', 'logging_dontLogNormal',
+          'tuning_timeoutHttpKeepAlive', 'linkedCpuAffinityRules', 'tuning_shards', 'logging_dontLogNull', 'logging_dontLogNormal',
           'logging_logSeparateErrors', 'logging_detailedLog', 'logging_socketStats', 'stickiness_pattern',
           'stickiness_dataTypes', 'stickiness_expire', 'stickiness_size', 'stickiness_counter', 'stickiness_counter_key',
           'stickiness_length', 'stickiness_connRatePeriod', 'stickiness_sessRatePeriod', 'stickiness_httpReqRatePeriod',

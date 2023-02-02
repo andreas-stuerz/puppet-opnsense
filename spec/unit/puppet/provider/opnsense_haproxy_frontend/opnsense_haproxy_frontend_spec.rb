@@ -79,7 +79,8 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
           "Groups": 'group1',
           "Cpus": 'cpu1',
           "Actions": 'action1',
-          "Errorfiles": 'errorfile1'
+          "Errorfiles": 'errorfile1',
+          tuning_shards: '2'
       },
     ]
   end
@@ -152,7 +153,8 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
           "Groups": '',
           "Cpus": '',
           "Actions": '',
-          "Errorfiles": ''
+          "Errorfiles": '',
+          tuning_shards: ''
       },
     ]
   end
@@ -239,6 +241,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
             custom_options: '',
             linked_actions: ['action1'],
             linked_errorfiles: ['errorfile1'],
+            tuning_shards: '2',
             ensure: 'present'
         },
         {
@@ -304,6 +307,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
             custom_options: '',
             linked_actions: [],
             linked_errorfiles: [],
+            tuning_shards: '',
             ensure: 'present'
         },
       ]
@@ -374,6 +378,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
                       custom_options: '',
                       linked_actions: [],
                       linked_errorfiles: [],
+                      tuning_shards: '2',
                       ensure: 'present')
     end
   end
@@ -443,6 +448,7 @@ RSpec.describe Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFronten
                       custom_options: '',
                       linked_actions: [],
                       linked_errorfiles: [],
+                      tuning_shards: '',
                       ensure: 'present')
     end
   end

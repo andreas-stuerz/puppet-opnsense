@@ -54,6 +54,7 @@ class Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFrontend < Puppe
       tuning_timeout_http_req: json_object['tuning_timeoutHttpReq'],
       tuning_timeout_http_keep_alive: json_object['tuning_timeoutHttpKeepAlive'],
       linked_cpu_affinity_rules: array_from_value(json_object['Cpus']),
+      tuning_shards: json_object['tuning_shards'],
       logging_dont_log_null: bool_from_value(json_object['logging_dontLogNull']),
       logging_dont_log_normal: bool_from_value(json_object['logging_dontLogNormal']),
       logging_log_separate_errors: bool_from_value(json_object['logging_logSeparateErrors']),
@@ -133,6 +134,7 @@ class Puppet::Provider::OpnsenseHaproxyFrontend::OpnsenseHaproxyFrontend < Puppe
     args.push('--tuning_timeoutHttpReq', puppet_resource[:tuning_timeout_http_req])
     args.push('--tuning_timeoutHttpKeepAlive', puppet_resource[:tuning_timeout_http_keep_alive])
     args.push('--linkedCpuAffinityRules', puppet_resource[:linked_cpu_affinity_rules].join(','))
+    args.push('--tuning_shards', puppet_resource[:tuning_shards])
     args.push('--logging_dontLogNull') if bool_from_value(puppet_resource[:logging_dont_log_null]) == true
     args.push('--no-logging_dontLogNull') if bool_from_value(puppet_resource[:logging_dont_log_null]) == false
     args.push('--logging_dontLogNormal') if bool_from_value(puppet_resource[:logging_dont_log_normal]) == true

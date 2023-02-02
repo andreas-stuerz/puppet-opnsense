@@ -266,6 +266,11 @@ EOS
         desc: 'Choose CPU affinity rules that should be applied to this public service.',
         default: []
     },
+    tuning_shards: {
+      type: 'String',
+      desc: 'Creates the specified number of listeners for every IP:port combination and evenly distributes them among available threads.',
+      default: ''
+    },
     logging_dont_log_null: {
       type: 'Boolean',
         desc: 'Enable or disable logging of connections with no data.',
@@ -380,7 +385,7 @@ EOS
         default: false
     },
     connection_behaviour: {
-      type: "Enum['http-keep-alive', 'http-tunnel', 'httpclose', 'http-server-close', 'forceclose']",
+      type: "Enum['http-keep-alive', 'httpclose', 'http-server-close']",
         desc: 'The HaProxy connection behaviour.',
         default: 'http-keep-alive',
     },

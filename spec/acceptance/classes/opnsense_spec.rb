@@ -154,7 +154,7 @@ describe 'class opnsense' do
         end
       end
       it 'find the created syslog destination via the cli', retry: 3, retry_wait: 10 do
-        run_shell(build_opn_cli_cmd("syslog destination list -o yaml")) do |r|
+        run_shell(build_opn_cli_cmd('syslog destination list -o yaml')) do |r|
           expect(r.stdout).to match %r{enabled: '1'}
           expect(r.stdout).to match %r{transport: tcp4}
           expect(r.stdout).to match %r{program: ntp,ntpdate}
@@ -180,7 +180,6 @@ describe 'class opnsense' do
           expect(r.stdout).to match %r{opnsense.remote.com api manager - allow all from lan and wan\n}
         end
       end
-
 
       it 'find the created haproxy servers via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('haproxy server list -o plain -c name')) do |r|
@@ -227,7 +226,7 @@ describe 'class opnsense' do
                 interrupts     => false,
                 ntp            => false,
                 zfs            => false,
-              } 
+              }#{' '}
             }
           },
           syslog => {

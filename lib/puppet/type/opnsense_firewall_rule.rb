@@ -32,7 +32,6 @@ Puppet::ResourceApi.register_type(
       destination_net  => 'any',
       destination_port => '',
       destination_not  => false,
-      description      => 'allow any from any to lan and wan',
       gateway          => '',
       quick            => true,
       log              => false,

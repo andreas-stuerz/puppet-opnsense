@@ -13,8 +13,10 @@
 #   enabled.
 # @param required_plugins
 #   The required opnsense plugins to support all features.
+# @param syslog
+#   Configure opnsense syslog.
 # @param firewall
-#   Configured the opnsense firewall.
+#   Configure the opnsense firewall.
 # @param haproxy
 #   Configured the opnsense haproxy loadbalancer.
 # @param manage_ca
@@ -64,6 +66,23 @@
 #         },
 #         ensure           => "present"
 #       }
+#     },
+#     syslog => {
+#       destinations => {
+#         'syslogger 1' => {
+#           devices     => ['localhost'],
+#           enabled     => true,
+#           transport   => 'tcp4',
+#           program     => 'ntp,ntpdate',
+#           level       => ['crit', 'alert', 'emerg'],
+#           facility    => ['ntp'],
+#           hostname    => 'syslog.example.com',
+#           certificate => '',
+#           port        => '514',
+#           rfc5424     => true,
+#           ensure      => present,
+#         },
+#       },
 #     },
 #     firewall => {
 #       aliases => {
@@ -127,6 +146,7 @@ class opnsense (
   String $api_manager_prefix,
   Boolean $manage_resources,
   Hash $required_plugins,
+  Hash $syslog,
   Hash $firewall,
   Hash $haproxy,
   Boolean $manage_ca,
@@ -184,6 +204,17 @@ class opnsense (
     if $device_conf['nodeexporter'] {
       opnsense_nodeexporter_config { $device_name:
         * => $device_conf['nodeexporter'],
+      }
+    }
+
+    # syslog destinations
+    $syslog['destinations'].map |$syslog_dest_name, $syslog_dest_options| {
+      if $device_name in $syslog_dest_options['devices'] {
+        $syslog_dest_options_filtered = delete($syslog_dest_options, ['devices', 'description'])
+        opnsense_syslog_destination { "${syslog_dest_name}@${device_name}":
+          description => "${api_manager_prefix}${syslog_dest_name}",
+          *           => $syslog_dest_options_filtered,
+        }
       }
     }
 

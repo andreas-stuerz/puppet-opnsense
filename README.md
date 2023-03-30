@@ -60,6 +60,7 @@ You can automate the following with the module:
 - haproxy backends
 - haproxy frontends
 - prometheus nodeexporter
+- syslog destinations
 
 
 ## Setup

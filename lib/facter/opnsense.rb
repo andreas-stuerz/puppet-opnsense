@@ -2,8 +2,8 @@ Facter.add(:opnsense) do
   confine kernel: 'FreeBSD'
   setcode do
     opnsense_version = Facter::Core::Execution.which('opnsense-version')
-    if opnsense_version.blank?
-      return
+    if opnsense_version.nil?
+      next
     end
 
     facts = {}

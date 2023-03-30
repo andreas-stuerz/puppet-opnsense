@@ -1,5 +1,7 @@
 ---
 opnsense::devices: {}
+opnsense::syslog:
+  destinations: {}
 opnsense::firewall:
   aliases: {}
   rules: {}

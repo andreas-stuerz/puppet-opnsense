@@ -30,7 +30,7 @@ describe :opnsense, type: :fact do
 
         expect(Facter::Core::Execution).to receive(:exec)
           .with('/usr/local/sbin/opnsense-version -NAVvfH')
-          .and_return("OPNsense amd64 23.1 23.1_6 OpenSSL 6621e1999\n")
+          .and_return("OPNsense amd64 23.1 23.1.5_2 OpenSSL 64de5df1a\n")
 
         expect(Facter::Core::Execution).to receive(:which)
           .with('pluginctl')
@@ -46,10 +46,10 @@ describe :opnsense, type: :fact do
               'architecture' => 'amd64',
               'release' => {
                 'major' => '23.1',
-                  'full' => '23.1_6',
-                  'minor' => nil,
+                  'full' => '23.1.5_2',
+                  'minor' => '5_2',
                   'flavour' => 'OpenSSL',
-                  'hash' => '6621e1999',
+                  'hash' => '64de5df1a',
               },
               'plugins' => [
                 'os-virtualbox',

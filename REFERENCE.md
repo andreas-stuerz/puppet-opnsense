@@ -20,6 +20,7 @@
 * [`opnsense_haproxy_server`](#opnsense_haproxy_server): Manage opnsense haproxy servers
 * [`opnsense_nodeexporter_config`](#opnsense_nodeexporter_config): Manage opnsense prometheus nodeexporter config
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
+* [`opnsense_syslog_destination`](#opnsense_syslog_destination): Manage opnsense syslog destination
 
 ## Classes
 
@@ -62,6 +63,23 @@ class { 'opnsense':
       },
       ensure           => "present"
     }
+  },
+  syslog => {
+    destinations => {
+      'syslogger 1' => {
+        devices     => ['localhost'],
+        enabled     => true,
+        transport   => 'tcp4',
+        program     => 'ntp,ntpdate',
+        level       => ['crit', 'alert', 'emerg'],
+        facility    => ['ntp'],
+        hostname    => 'syslog.example.com',
+        certificate => '',
+        port        => '514',
+        rfc5424     => true,
+        ensure      => present,
+      },
+    },
   },
   firewall => {
     aliases => {
@@ -129,6 +147,7 @@ The following parameters are available in the `opnsense` class:
 * [`api_manager_prefix`](#-opnsense--api_manager_prefix)
 * [`manage_resources`](#-opnsense--manage_resources)
 * [`required_plugins`](#-opnsense--required_plugins)
+* [`syslog`](#-opnsense--syslog)
 * [`firewall`](#-opnsense--firewall)
 * [`haproxy`](#-opnsense--haproxy)
 * [`manage_ca`](#-opnsense--manage_ca)
@@ -165,11 +184,17 @@ Data type: `Hash`
 
 The required opnsense plugins to support all features.
 
+##### <a name="-opnsense--syslog"></a>`syslog`
+
+Data type: `Hash`
+
+Configure opnsense syslog.
+
 ##### <a name="-opnsense--firewall"></a>`firewall`
 
 Data type: `Hash`
 
-Configured the opnsense firewall.
+Configure the opnsense firewall.
 
 ##### <a name="-opnsense--haproxy"></a>`haproxy`
 
@@ -651,7 +676,6 @@ opnsense_firewall_rule { 'full example - use description as resource title':
   destination_net  => 'any',
   destination_port => '',
   destination_not  => false,
-  description      => 'allow any from any to lan and wan',
   gateway          => '',
   quick            => true,
   log              => false,
@@ -854,19 +878,19 @@ opnsense_haproxy_backend { 'webserver_pool':
   source                           => '',
   health_check_enabled             => true,
   health_check                     => '',
-  health_check_log_status          => true,
+  health_check_log_status          => false,
   check_interval                   => '',
   check_down_interval              => '',
   health_check_fall                => '',
   health_check_rise                => '',
   linked_mailer                    => '',
-  http2_enabled                    => true,
-  http2_enabled_nontls             => true,
+  http2_enabled                    => false,
+  http2_enabled_nontls             => false,
   ba_advertised_protocols          => ['h2', 'http11'],
   persistence                      => 'sticktable',
   persistence_cookiemode           => 'piggyback',
   persistence_cookiename           => 'SRVCOOKIE',
-  persistence_stripquotes          => true,
+  persistence_stripquotes          => false,
   stickiness_pattern               => 'sourceipv4',
   stickiness_data_types            => [],
   stickiness_expire                => '30m',
@@ -879,7 +903,7 @@ opnsense_haproxy_backend { 'webserver_pool':
   stickiness_http_err_rate_period  => '10s',
   stickiness_bytes_in_rate_period  => '1m',
   stickiness_bytes_out_rate_period => '1m',
-  basic_auth_enabled               => true,
+  basic_auth_enabled               => false,
   basic_auth_users                 => [],
   basic_auth_groups                => [],
   tuning_timeout_connect           => '',
@@ -888,9 +912,9 @@ opnsense_haproxy_backend { 'webserver_pool':
   tuning_retries                   => '',
   custom_options                   => '',
   tuning_defaultserver             => '',
-  tuning_noport                    => true,
+  tuning_noport                    => false,
   tuning_httpreuse                 => 'safe',
-  tuning_caching                   => true,
+  tuning_caching                   => false,
   linked_actions                   => [],
   linked_errorfiles                => [],
   ensure                           => 'present',
@@ -922,8 +946,6 @@ Default value: `["h2"]`
 Data type: `Boolean`
 
 Enable HTTP basic authentication.
-
-Default value: `true`
 
 ##### `basic_auth_groups`
 
@@ -1007,8 +1029,6 @@ Data type: `Boolean`
 
 Enable to log health check status updates.
 
-Default value: `true`
-
 ##### `health_check_rise`
 
 Data type: `Optional[String]`
@@ -1021,15 +1041,11 @@ Data type: `Boolean`
 
 Enable support for end-to-end HTTP/2 communication.
 
-Default value: `true`
-
 ##### `http2_enabled_nontls`
 
 Data type: `Boolean`
 
 Enable support for HTTP/2 even if TLS is not enabled.
-
-Default value: `true`
 
 ##### `linked_actions`
 
@@ -1246,8 +1262,6 @@ Data type: `Boolean`
 
 Enable caching of responses from this backend.
 
-Default value: `true`
-
 ##### `tuning_defaultserver`
 
 Data type: `Optional[String]`
@@ -1267,8 +1281,6 @@ Default value: `safe`
 Data type: `Boolean`
 
 Don't use port on server, use the same port as frontend receive.
-
-Default value: `true`
 
 ##### `tuning_retries`
 
@@ -1350,15 +1362,15 @@ opnsense_haproxy_frontend { 'webserver_frontend':
   ssl_max_version                  => '',
   ssl_cipher_list                  => 'ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-SHA384:ECDHE-ECDSA-AES128-SHA256',
   ssl_cipher_suites                => 'TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256',
-  ssl_hsts_enabled                 => true,
-  ssl_hsts_include_sub_domains     => true,
-  ssl_hsts_preload                 => true,
+  ssl_hsts_enabled                 => false,
+  ssl_hsts_include_sub_domains     => false,
+  ssl_hsts_preload                 => false,
   ssl_hsts_max_age                 => '15768000',
-  ssl_client_auth_enabled          => true,
+  ssl_client_auth_enabled          => false,
   ssl_client_auth_verify           => 'required',
   ssl_client_auth_cas              => [],
   ssl_client_auth_crls             => [],
-  basic_auth_enabled               => true,
+  basic_auth_enabled               => false,
   basic_auth_users                 => [],
   basic_auth_groups                => [],
   tuning_max_connections           => '',
@@ -1366,11 +1378,11 @@ opnsense_haproxy_frontend { 'webserver_frontend':
   tuning_timeout_http_req          => '',
   tuning_timeout_http_keep_alive   => '',
   linked_cpu_affinity_rules        => [],
-  logging_dont_log_null            => true,
-  logging_dont_log_normal          => true,
-  logging_log_separate_errors      => true,
+  logging_dont_log_null            => false,
+  logging_dont_log_normal          => false,
+  logging_log_separate_errors      => false,
   logging_detailed_log             => true,
-  logging_socket_stats             => true,
+  logging_socket_stats             => false,
   stickiness_pattern               => '',
   stickiness_data_types            => [''],
   stickiness_expire                => '30m',
@@ -1384,10 +1396,10 @@ opnsense_haproxy_frontend { 'webserver_frontend':
   stickiness_http_err_rate_period  => '10s',
   stickiness_bytes_in_rate_period  => '1m',
   stickiness_bytes_out_rate_period => '1m',
-  http2_enabled                    => true,
-  http2_enabled_nontls             => true,
+  http2_enabled                    => false,
+  http2_enabled_nontls             => false,
   advertised_protocols             => ['h2', 'http11'],
-  forward_for                      => true,
+  forward_for                      => false,
   connection_behaviour             => 'http-keep-alive',
   custom_options                   => '',
   linked_actions                   => [],
@@ -1413,8 +1425,6 @@ Default value: `["h2"]`
 Data type: `Boolean`
 
 Enable HTTP Basic Authentication.
-
-Default value: `true`
 
 ##### `basic_auth_groups`
 
@@ -1446,7 +1456,7 @@ A list of parameters that will be appended to every Listen Address line e.g. acc
 
 ##### `connection_behaviour`
 
-Data type: `Enum['http-keep-alive', 'http-tunnel', 'httpclose', 'http-server-close', 'forceclose']`
+Data type: `Enum['http-keep-alive', 'httpclose', 'http-server-close']`
 
 The HaProxy connection behaviour.
 
@@ -1496,23 +1506,17 @@ Data type: `Boolean`
 
 Enable insertion of the X-Forwarded-For header to requests sent to servers.
 
-Default value: `true`
-
 ##### `http2_enabled`
 
 Data type: `Boolean`
 
 Enable support for HTTP/2.
 
-Default value: `true`
-
 ##### `http2_enabled_nontls`
 
 Data type: `Boolean`
 
 Enable support for HTTP/2 even if TLS (SSL offloading) is not enabled.
-
-Default value: `true`
 
 ##### `linked_actions`
 
@@ -1544,15 +1548,11 @@ Data type: `Boolean`
 
 Enable or disable verbose logging. Each log line turns into a much richer format.
 
-Default value: `true`
-
 ##### `logging_dont_log_normal`
 
 Data type: `Boolean`
 
 Enable or disable logging of normal, successful connections.
-
-Default value: `true`
 
 ##### `logging_dont_log_null`
 
@@ -1560,23 +1560,17 @@ Data type: `Boolean`
 
 Enable or disable logging of connections with no data.
 
-Default value: `true`
-
 ##### `logging_log_separate_errors`
 
 Data type: `Boolean`
 
 Allow HAProxy to automatically raise log level for non-completely successful connections to aid debugging.
 
-Default value: `true`
-
 ##### `logging_socket_stats`
 
 Data type: `Boolean`
 
 Enable or disable collecting & providing separate statistics for each socket.
-
-Default value: `true`
 
 ##### `mode`
 
@@ -1591,8 +1585,6 @@ Default value: `http`
 Data type: `Boolean`
 
 Enable or disable advanced SSL settings.
-
-Default value: `true`
 
 ##### `ssl_bind_options`
 
@@ -1651,8 +1643,6 @@ Data type: `Boolean`
 
 Enable client certificate authentication.
 
-Default value: `true`
-
 ##### `ssl_client_auth_verify`
 
 Data type: `Enum['', 'none', 'optional', 'required']`
@@ -1683,8 +1673,6 @@ Data type: `Boolean`
 
 Enable SSL offloading.
 
-Default value: `true`
-
 ##### `ssl_hsts_enabled`
 
 Data type: `Boolean`
@@ -1699,8 +1687,6 @@ Data type: `Boolean`
 
 Enable or disable if all present and future subdomains will be HTTPS.
 
-Default value: `true`
-
 ##### `ssl_hsts_max_age`
 
 Data type: `String`
@@ -1714,8 +1700,6 @@ Default value: `15768000`
 Data type: `Boolean`
 
 Enable if you like this domain to be included in the HSTS preload list.
-
-Default value: `true`
 
 ##### `ssl_max_version`
 
@@ -1848,6 +1832,14 @@ Set the maximum number of concurrent connections for this public service.
 
 Default value: `''`
 
+##### `tuning_shards`
+
+Data type: `String`
+
+Creates the specified number of listeners for every IP:port combination and evenly distributes them among available threads.
+
+Default value: `''`
+
 ##### `tuning_timeout_client`
 
 Data type: `String`
@@ -1923,7 +1915,7 @@ opnsense_haproxy_server { 'webserver1':
   linked_resolver        => '',
   resolver_opts          => ['allow-dup-ip','ignore-weight','prevent-dup-ip'],
   resolve_prefer         => 'ipv4',
-  ssl                    => true,
+  ssl                    => false,
   ssl_verify             => true,
   ssl_ca                 => [],
   ssl_crl                => [],
@@ -2052,8 +2044,6 @@ Sets the source address which will be used when connecting to the server.
 Data type: `Boolean`
 
 Enable or disable SSL communication with this server.
-
-Default value: `true`
 
 ##### `ssl_ca`
 
@@ -2319,4 +2309,134 @@ namevar
 Data type: `String`
 
 The name of the plugin you want to manage.
+
+### <a name="opnsense_syslog_destination"></a>`opnsense_syslog_destination`
+
+This type provides Puppet with the capabilities to manage opnsense syslog destination.
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_syslog_destination { 'example syslog destination':
+  device      => 'opnsense-test.device.com',
+  enabled     => true,
+  transport   => 'tls4',
+  program     => 'ntp,ntpdate,ntpd',
+  level       => ['info', 'notice', 'warn', 'err', 'crit', 'alert', 'emerg'],
+  facility    => ['ntp', 'security', 'console'],
+  hostname    => '10.0.0.2',
+  certificate => '60cc4641eb577',
+  port        => '514',
+  rfc5424     => true,
+  ensure      => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_syslog_destination` type.
+
+##### `certificate`
+
+Data type: `String`
+
+Transport certificate to use, please make sure to check the general system log when experiencing issues.
+Error messages can be a bit cryptic from time to time, in which case
+"https://support.oneidentity.com/kb/263658/common-issues-of-tls-encrypted-message-transfer this is a good
+resource for tracking common issues.
+
+##### `enabled`
+
+Data type: `Boolean`
+
+Set this option to enable this destination.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `facility`
+
+Data type: `Array[
+        Enum[
+            '', 'kern', 'user', 'mail', 'daemon', 'auth', 'syslog', 'lpr', 'news',
+            'uucp', 'cron', 'authpriv', 'ftp', 'ntp', 'security', 'console',
+            'local0', 'local1', 'local2', 'local3', 'local4', 'local5', 'local6', 'local7'
+        ]
+      ]`
+
+Choose which facilities to include, omit to select all.
+
+##### `hostname`
+
+Data type: `String`
+
+The hostname or ip address of the syslog destination.
+
+##### `level`
+
+Data type: `Array[
+        Enum['', 'debug', 'info', 'notice', 'warn', 'err', 'crit', 'alert', 'emerg']
+      ]`
+
+Choose which levels to include, omit to select all.
+
+##### `port`
+
+Data type: `String`
+
+The port of the syslog destination.
+
+##### `program`
+
+Data type: `String`
+
+Choose which applications should be forwarded to the specified target, omit to select all.
+
+##### `rfc5424`
+
+Data type: `Boolean`
+
+Use rfc5424 formated messages for this destination.
+
+##### `transport`
+
+Data type: `Enum['udp4', 'tcp4', 'udp6', 'tcp6', 'tls4', 'tls6']`
+
+Transport protocol
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the rule.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_syslog_destination` type.
+
+* [`description`](#-opnsense_syslog_destination--description)
+* [`device`](#-opnsense_syslog_destination--device)
+
+##### <a name="-opnsense_syslog_destination--description"></a>`description`
+
+namevar
+
+Data type: `String`
+
+You may enter a description here for your reference.
+
+##### <a name="-opnsense_syslog_destination--device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
 

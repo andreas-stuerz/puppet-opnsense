@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.2.0](https://github.com/andeman/puppet-opnsense/tree/v2.2.0) (2023-03-31)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v2.1.0...v2.2.0)
+
+### Added
+
+- add syslog destination feature [\#25](https://github.com/andeman/puppet-opnsense/pull/25) ([andeman](https://github.com/andeman))
+- Opnsense 23.1 compability [\#23](https://github.com/andeman/puppet-opnsense/pull/23) ([andeman](https://github.com/andeman))
+
+### Fixed
+
+- better align default values with upstream OPNsense HAProxy plugin [\#22](https://github.com/andeman/puppet-opnsense/pull/22) ([fraenki](https://github.com/fraenki))
+
 ## [v2.1.0](https://github.com/andeman/puppet-opnsense/tree/v2.1.0) (2023-01-30)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v2.0.0...v2.1.0)

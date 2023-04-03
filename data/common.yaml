@@ -2,6 +2,8 @@
 opnsense::devices: {}
 opnsense::syslog:
   destinations: {}
+opnsense::route:
+  static: {}
 opnsense::firewall:
   aliases: {}
   rules: {}

@@ -22,15 +22,15 @@ Puppet::ResourceApi.register_type(
 EOS
   features: ['simple_get_filter'],
     title_patterns: [
-    {
-      pattern: %r{^(?<descr>.*)@(?<device>.*)$},
-      desc: 'Where the descr and the device are provided with a @',
-    },
-    {
-      pattern: %r{^(?<descr>.*)$},
-      desc: 'Where only the descr is provided',
-    },
-  ],
+      {
+        pattern: %r{^(?<descr>.*)@(?<device>.*)$},
+        desc: 'Where the descr and the device are provided with a @',
+      },
+      {
+        pattern: %r{^(?<descr>.*)$},
+        desc: 'Where only the descr is provided',
+      },
+    ],
   attributes: {
     ensure: {
       type: 'Enum[present, absent]',
@@ -64,6 +64,6 @@ EOS
       type: 'Boolean',
       desc: 'Set this option to disable this static route without removing it from the list.',
     },
-    
+
   },
 )

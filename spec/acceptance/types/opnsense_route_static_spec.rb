@@ -5,13 +5,11 @@ describe 'opnsense_route_static' do
     describe 'add route_static acceptance test item' do
       pp = <<-MANIFEST
         opnsense_route_static { 'acceptance test item':
-          device           => 'opnsense-test.device.com',
-          network => 'TODO',
-          gateway => 'TODO',
-          
-          disabled => false,
-          
-          ensure           => 'present',
+          device    => 'opnsense-test.device.com',
+          network   => '10.0.0.98/24',
+          gateway   => 'WAN_DHCP',
+          disabled  => false,
+          ensure    => 'present',
         }
       MANIFEST
       it 'works without errors' do
@@ -24,14 +22,13 @@ describe 'opnsense_route_static' do
           'gateway',
           'descr',
           'disabled',
-          
+
         ].join(',')
         run_shell(build_opn_cli_cmd("route static list -o yaml -c #{cols}")) do |r|
-          expect(r.stdout).to match %r{network: TODO}
-          expect(r.stdout).to match %r{gateway: TODO}
+          expect(r.stdout).to match %r{network: 10.0.0.98/24}
+          expect(r.stdout).to match %r{gateway: WAN_DHCP}
           expect(r.stdout).to match %r{descr: acceptance test item}
           expect(r.stdout).to match %r{disabled: '0'}
-          
         end
       end
     end
@@ -39,13 +36,11 @@ describe 'opnsense_route_static' do
     describe 'update route_static acceptance test item' do
       pp = <<-MANIFEST
         opnsense_route_static { 'acceptance test item':
-          device           => 'opnsense-test.device.com',
-          network => 'TODO',
-          gateway => 'TODO',
-          
-          disabled => false,
-          
-          ensure           => 'present',
+          device    => 'opnsense-test.device.com',
+          network   => '192.168.1.0/24',
+          gateway   => 'NULL4',
+          disabled  => true,
+          ensure    => 'present',
         }
       MANIFEST
       it 'works without errors' do
@@ -58,14 +53,13 @@ describe 'opnsense_route_static' do
           'gateway',
           'descr',
           'disabled',
-          
+
         ].join(',')
         run_shell(build_opn_cli_cmd("route static list -o yaml -c #{cols}")) do |r|
-          expect(r.stdout).to match %r{network: TODO}
-          expect(r.stdout).to match %r{gateway: TODO}
+          expect(r.stdout).to match %r{network: 192.168.1.0/24}
+          expect(r.stdout).to match %r{gateway: NULL4}
           expect(r.stdout).to match %r{descr: acceptance test item}
-          expect(r.stdout).to match %r{disabled: '0'}
-          
+          expect(r.stdout).to match %r{disabled: '1'}
         end
       end
     end

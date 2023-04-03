@@ -23,7 +23,7 @@ RSpec.describe 'the opnsense_route_static type' do
         gateway: 'NULL4',
         disabled: true,
         ensure: 'present',
-        )
+      )
     end
 
     it 'accepts network' do
@@ -45,7 +45,5 @@ RSpec.describe 'the opnsense_route_static type' do
       route_static[:disabled] = false
       expect(route_static[:disabled]).to eq(:false)
     end
-
-    
   end
 end

@@ -53,6 +53,18 @@ describe 'class opnsense' do
               },
             },
           },
+          route => {
+            static => {
+              'static route 1' => {
+                network   => '10.0.0.98/24',
+                gateway   => 'WAN_DHCP',
+                disabled  => false,
+                ensure    => 'present',
+                devices    => ['opnsense.remote.com'],
+                ensure     => absent,
+              },
+            },
+          },
           firewall => {
             aliases => {
               'my_http_ports_remote' => {
@@ -153,6 +165,7 @@ describe 'class opnsense' do
           expect(r.stdout).to match %r{zfs: '1'}
         end
       end
+
       it 'find the created syslog destination via the cli', retry: 3, retry_wait: 10 do
         run_shell(build_opn_cli_cmd('syslog destination list -o yaml')) do |r|
           expect(r.stdout).to match %r{enabled: '1'}
@@ -165,6 +178,15 @@ describe 'class opnsense' do
           expect(r.stdout).to match %r{port: '10514'}
           expect(r.stdout).to match %r{rfc5424: '1'}
           expect(r.stdout).to match %r{description: opnsense.remote.com api manager - syslogger 1}
+        end
+      end
+
+      it 'find the created route static via the cli', retry: 3, retry_wait: 10 do
+        run_shell(build_opn_cli_cmd('route static list -o yaml')) do |r|
+          expect(r.stdout).to match %r{network: 10.0.0.98/24}
+          expect(r.stdout).to match %r{gateway: WAN_DHCP}
+          expect(r.stdout).to match %r{descr: opnsense.remote.com api manager - static route 1}
+          expect(r.stdout).to match %r{disabled: '0'}
         end
       end
 
@@ -226,12 +248,20 @@ describe 'class opnsense' do
                 interrupts     => false,
                 ntp            => false,
                 zfs            => false,
-              }#{' '}
+              }
             }
           },
           syslog => {
             destinations => {
               'syslogger 1' => {
+                devices    => ['opnsense.remote.com'],
+                ensure     => absent,
+              },
+            },
+          },
+          route => {
+            static => {
+              'static route 1' => {
                 devices    => ['opnsense.remote.com'],
                 ensure     => absent,
               },
@@ -322,6 +352,12 @@ describe 'class opnsense' do
       it 'ensure syslog destinations are deleted via the cli', retry: 3, retry_wait: 3 do
         run_shell(build_opn_cli_cmd('syslog destination list -o plain -c name')) do |r|
           expect(r.stdout).not_to match %r{opnsense.remote.com api manager - syslogger 1\n}
+        end
+      end
+
+      it 'ensure static routes are deleted via the cli', retry: 3, retry_wait: 3 do
+        run_shell(build_opn_cli_cmd('route static list -o plain -c description')) do |r|
+          expect(r.stdout).not_to match %r{opnsense.remote.com api manager - static route 1\n}
         end
       end
 

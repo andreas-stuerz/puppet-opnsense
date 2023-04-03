@@ -17,7 +17,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
         "gateway": 'WAN_DHCP',
         "descr": 'example route_static 1',
         "disabled": '1',
-        
+
         "uuid": '624cb3ca-3b76-4177-b736-4381c6525f37'
       },
       {
@@ -107,7 +107,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
             gateway: 'NULL4',
             descr: 'example route_static 1',
             disabled: true,
-            
+
             uuid: '731cb3ca-3b76-4177-b736-4381c6525f45',
             ensure: 'present'
           },
@@ -142,7 +142,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
                       network: '10.0.5.0/24',
                       gateway: 'WAN_DHCP',
                       disabled: true,
-                      
+
                       ensure: 'present')
     end
   end

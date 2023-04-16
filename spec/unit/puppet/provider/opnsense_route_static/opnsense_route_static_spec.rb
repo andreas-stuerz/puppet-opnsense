@@ -22,7 +22,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
       },
       {
         "network": '192.168.1.0/24',
-        "gateway": 'NULL4',
+        "gateway": 'Null4',
         "descr": 'example route_static 2',
         "disabled": '1',
         "uuid": '002db5b7-791e-4e2f-8625-4350ee5ae8ac'
@@ -34,7 +34,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
     [
       {
         "network": '10.0.4.0/24',
-        "gateway": 'NULL4',
+        "gateway": 'Null4',
         "descr": 'example route_static 1',
         "disabled": '1',
         "uuid": '731cb3ca-3b76-4177-b736-4381c6525f45'
@@ -76,7 +76,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
             title: 'example route_static 2@opnsense1.example.com',
               device: 'opnsense1.example.com',
               network: '192.168.1.0/24',
-              gateway: 'NULL4',
+              gateway: 'Null4',
               descr: 'example route_static 2',
               disabled: true,
               uuid: '002db5b7-791e-4e2f-8625-4350ee5ae8ac',
@@ -86,7 +86,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
             title: 'example route_static 1@opnsense2.example.com',
               device: 'opnsense2.example.com',
               network: '10.0.4.0/24',
-              gateway: 'NULL4',
+              gateway: 'Null4',
               descr: 'example route_static 1',
               disabled: true,
               uuid: '731cb3ca-3b76-4177-b736-4381c6525f45',
@@ -104,7 +104,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
             title: 'example route_static 1@opnsense2.example.com',
             device: 'opnsense2.example.com',
             network: '10.0.4.0/24',
-            gateway: 'NULL4',
+            gateway: 'Null4',
             descr: 'example route_static 1',
             disabled: true,
 
@@ -124,7 +124,7 @@ RSpec.describe Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic do
       provider.create(context, 'another_route_static@opnsense2.example.com',
                       device: 'opnsense2.example.com',
                       network: '10.0.4.0/2',
-                      gateway: 'NULL4',
+                      gateway: 'Null4',
                       disabled: true,
                       ensure: 'present')
     end

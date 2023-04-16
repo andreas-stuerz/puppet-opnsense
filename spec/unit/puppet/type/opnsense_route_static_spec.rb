@@ -20,7 +20,7 @@ RSpec.describe 'the opnsense_route_static type' do
         name: 'example route static',
         device: 'opnsense.example.com',
         network: '10.0.4.0/2',
-        gateway: 'NULL4',
+        gateway: 'Null4',
         disabled: true,
         ensure: 'present',
       )

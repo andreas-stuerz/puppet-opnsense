@@ -38,7 +38,7 @@ describe 'opnsense_route_static' do
         opnsense_route_static { 'acceptance test item':
           device    => 'opnsense-test.device.com',
           network   => '192.168.1.0/24',
-          gateway   => 'NULL4',
+          gateway   => 'Null4',
           disabled  => true,
           ensure    => 'present',
         }
@@ -57,7 +57,7 @@ describe 'opnsense_route_static' do
         ].join(',')
         run_shell(build_opn_cli_cmd("route static list -o yaml -c #{cols}")) do |r|
           expect(r.stdout).to match %r{network: 192.168.1.0/24}
-          expect(r.stdout).to match %r{gateway: NULL4}
+          expect(r.stdout).to match %r{gateway: Null4}
           expect(r.stdout).to match %r{descr: acceptance test item}
           expect(r.stdout).to match %r{disabled: '1'}
         end

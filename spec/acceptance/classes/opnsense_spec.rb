@@ -56,10 +56,10 @@ describe 'class opnsense' do
           route => {
             static => {
               'static route 1' => {
-                network   => '10.0.0.98/24',
-                gateway   => 'WAN_DHCP',
-                disabled  => false,
-                ensure    => 'present',
+                network    => '10.0.0.98/24',
+                gateway    => 'WAN_DHCP',
+                disabled   => false,
+                ensure     => 'present',
                 devices    => ['opnsense.remote.com'],
                 ensure     => absent,
               },

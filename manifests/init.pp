@@ -237,7 +237,7 @@ class opnsense (
     $route['static'].map |$route_static_name, $route_static_options| {
       if $device_name in $route_static_options['devices'] {
         $route_static_options_filtered = delete($route_static_options, ['devices', 'descr'])
-        opnsense_syslog_destination { "${route_static_name}@${device_name}":
+        opnsense_route_static { "${route_static_name}@${device_name}":
           descr => "${api_manager_prefix}${route_static_name}",
           *     => $route_static_options_filtered,
         }

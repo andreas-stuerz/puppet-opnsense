@@ -39,7 +39,7 @@ class Puppet::Provider::OpnsenseRouteStatic::OpnsenseRouteStatic < Puppet::Provi
 
     args.push('--network', puppet_resource[:network])
     args.push('--gateway', puppet_resource[:gateway])
-    args.push('--descr', puppet_resource[:descr]) if mode == 'update'
+    args.push('--descr', puppet_resource[:descr])
     args.push('--disabled') if bool_from_value(puppet_resource[:disabled]) == true
     args.push('--no-disabled') if bool_from_value(puppet_resource[:disabled]) == false
 

@@ -30,6 +30,7 @@ Gemfile:
         version: '< 1.2.0'
       - gem: 'fakefs'
       - gem: 'rspec-retry'
+      - gem: 'puppet-blacksmith'
 .github/workflows/nightly.yml:
   unmanaged: true
 .github/workflows/pr_test.yml:

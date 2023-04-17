@@ -15,6 +15,8 @@
 #   The required opnsense plugins to support all features.
 # @param syslog
 #   Configure opnsense syslog.
+# @param route
+#   Configure opnsense routing.
 # @param firewall
 #   Configure the opnsense firewall.
 # @param haproxy
@@ -84,6 +86,18 @@
 #         },
 #       },
 #     },
+#     route => {
+#       static => {
+#         'static route 1' => {
+#           network   => '10.0.0.98/24',
+#           gateway   => 'WAN_DHCP',
+#           disabled  => false,
+#           ensure    => 'present',
+#           devices    => ['opnsense.remote.com'],
+#           ensure     => absent,
+#         },
+#       },
+#     },
 #     firewall => {
 #       aliases => {
 #         "my_http_ports_local" => {
@@ -147,6 +161,7 @@ class opnsense (
   Boolean $manage_resources,
   Hash $required_plugins,
   Hash $syslog,
+  Hash $route,
   Hash $firewall,
   Hash $haproxy,
   Boolean $manage_ca,
@@ -214,6 +229,17 @@ class opnsense (
         opnsense_syslog_destination { "${syslog_dest_name}@${device_name}":
           description => "${api_manager_prefix}${syslog_dest_name}",
           *           => $syslog_dest_options_filtered,
+        }
+      }
+    }
+
+    # static routes
+    $route['static'].map |$route_static_name, $route_static_options| {
+      if $device_name in $route_static_options['devices'] {
+        $route_static_options_filtered = delete($route_static_options, ['devices', 'descr'])
+        opnsense_route_static { "${route_static_name}@${device_name}":
+          descr => "${api_manager_prefix}${route_static_name}",
+          *     => $route_static_options_filtered,
         }
       }
     }

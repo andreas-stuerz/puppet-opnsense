@@ -56,12 +56,11 @@ describe 'class opnsense' do
           route => {
             static => {
               'static route 1' => {
+                devices    => ['opnsense.remote.com'],
                 network    => '10.0.0.98/24',
                 gateway    => 'WAN_DHCP',
                 disabled   => false,
                 ensure     => 'present',
-                devices    => ['opnsense.remote.com'],
-                ensure     => absent,
               },
             },
           },
@@ -356,7 +355,7 @@ describe 'class opnsense' do
       end
 
       it 'ensure static routes are deleted via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('route static list -o plain -c description')) do |r|
+        run_shell(build_opn_cli_cmd('route static list -o plain -c descr')) do |r|
           expect(r.stdout).not_to match %r{opnsense.remote.com api manager - static route 1\n}
         end
       end

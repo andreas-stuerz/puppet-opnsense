@@ -76,7 +76,7 @@ describe 'opnsense_route_static' do
       end
 
       it 'displays the rule as deleted via the cli', retry: 3, retry_wait: 3 do
-        run_shell(build_opn_cli_cmd('route static list -o plain -c descr}')) do |r|
+        run_shell(build_opn_cli_cmd('route static list -o plain -c descr')) do |r|
           expect(r.stdout).not_to match %r{acceptance test item\n}
         end
       end

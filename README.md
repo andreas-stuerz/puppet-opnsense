@@ -61,6 +61,7 @@ You can automate the following with the module:
 - haproxy frontends
 - prometheus nodeexporter
 - syslog destinations
+- static routes
 
 
 ## Setup
@@ -185,6 +186,34 @@ class { 'opnsense':
         'interface' => ['lan']
       }
     }
+  },
+  syslog => {
+    destinations => {
+      'syslogger 1' => {
+        devices     => ['opnsense.example.com'],
+        enabled     => true,
+        transport   => 'tcp4',
+        program     => 'ntp,ntpdate',
+        level       => ['crit', 'alert', 'emerg'],
+        facility    => ['ntp'],
+        hostname    => 'syslog.example.com',
+        certificate => '',
+        port        => '10514',
+        rfc5424     => true,
+        ensure      => present,
+      },
+    },
+  },
+  route => {
+    static => {
+      'static route 1' => {
+        devices    => ['opnsense.example.com'],
+        network    => '10.0.0.98/24',
+        gateway    => 'WAN_DHCP',
+        disabled   => false,
+        ensure     => 'present',
+      },
+    },
   },
   haproxy => {
     servers => {

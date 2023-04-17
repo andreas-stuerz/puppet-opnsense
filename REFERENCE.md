@@ -20,6 +20,7 @@
 * [`opnsense_haproxy_server`](#opnsense_haproxy_server): Manage opnsense haproxy servers
 * [`opnsense_nodeexporter_config`](#opnsense_nodeexporter_config): Manage opnsense prometheus nodeexporter config
 * [`opnsense_plugin`](#opnsense_plugin): Manage installed opnsense plugins
+* [`opnsense_route_static`](#opnsense_route_static): Manage opnsense static routes
 * [`opnsense_syslog_destination`](#opnsense_syslog_destination): Manage opnsense syslog destination
 
 ## Classes
@@ -78,6 +79,18 @@ class { 'opnsense':
         port        => '514',
         rfc5424     => true,
         ensure      => present,
+      },
+    },
+  },
+  route => {
+    static => {
+      'static route 1' => {
+        network   => '10.0.0.98/24',
+        gateway   => 'WAN_DHCP',
+        disabled  => false,
+        ensure    => 'present',
+        devices    => ['opnsense.remote.com'],
+        ensure     => absent,
       },
     },
   },
@@ -148,6 +161,7 @@ The following parameters are available in the `opnsense` class:
 * [`manage_resources`](#-opnsense--manage_resources)
 * [`required_plugins`](#-opnsense--required_plugins)
 * [`syslog`](#-opnsense--syslog)
+* [`route`](#-opnsense--route)
 * [`firewall`](#-opnsense--firewall)
 * [`haproxy`](#-opnsense--haproxy)
 * [`manage_ca`](#-opnsense--manage_ca)
@@ -189,6 +203,12 @@ The required opnsense plugins to support all features.
 Data type: `Hash`
 
 Configure opnsense syslog.
+
+##### <a name="-opnsense--route"></a>`route`
+
+Data type: `Hash`
+
+Configure opnsense routing.
 
 ##### <a name="-opnsense--firewall"></a>`firewall`
 
@@ -2309,6 +2329,83 @@ namevar
 Data type: `String`
 
 The name of the plugin you want to manage.
+
+### <a name="opnsense_route_static"></a>`opnsense_route_static`
+
+This type provides Puppet with the capabilities to manage opnsense static routes.
+
+#### Examples
+
+##### 
+
+```puppet
+opnsense_route_static { 'example route static':
+  device      => 'opnsense-test.device.com',
+  network     => '10.0.0.98/24',
+  gateway     => 'WAN_DHCP',
+  disabled    => false,
+  ensure      => 'present',
+}
+```
+
+#### Properties
+
+The following properties are available in the `opnsense_route_static` type.
+
+##### `disabled`
+
+Data type: `Boolean`
+
+Set this option to disable this static route without removing it from the list.
+
+##### `ensure`
+
+Data type: `Enum[present, absent]`
+
+Whether this resource should be present or absent on the target system.
+
+Default value: `present`
+
+##### `gateway`
+
+Data type: `String`
+
+Choose which gateway this route applies to eg. Null4 for 127.0.01, Null6 for ::1 or see opn-cli route gateway status.
+
+##### `network`
+
+Data type: `String`
+
+Destination network for this static route
+
+##### `uuid`
+
+Data type: `Optional[String]`
+
+The uuid of the rule.
+
+#### Parameters
+
+The following parameters are available in the `opnsense_route_static` type.
+
+* [`descr`](#-opnsense_route_static--descr)
+* [`device`](#-opnsense_route_static--device)
+
+##### <a name="-opnsense_route_static--descr"></a>`descr`
+
+namevar
+
+Data type: `String`
+
+You may enter a description here for your reference (not parsed).
+
+##### <a name="-opnsense_route_static--device"></a>`device`
+
+namevar
+
+Data type: `String`
+
+The name of the opnsense_device type you want to manage.
 
 ### <a name="opnsense_syslog_destination"></a>`opnsense_syslog_destination`
 

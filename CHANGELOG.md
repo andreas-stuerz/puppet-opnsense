@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.3.0](https://github.com/andeman/puppet-opnsense/tree/v2.3.0) (2023-04-18)
+
+[Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v2.2.0...v2.3.0)
+
+### Added
+
+- Static route feature [\#26](https://github.com/andeman/puppet-opnsense/pull/26) ([andeman](https://github.com/andeman))
+
 ## [v2.2.0](https://github.com/andeman/puppet-opnsense/tree/v2.2.0) (2023-03-31)
 
 [Full Changelog](https://github.com/andeman/puppet-opnsense/compare/v2.1.0...v2.2.0)

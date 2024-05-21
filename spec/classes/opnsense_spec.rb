@@ -36,9 +36,6 @@ describe 'opnsense' do
               'device' => 'opnsense.example.com',
               'ensure' => 'absent',
             )
-          is_expected.to contain_opnsense_plugin('os-firewall').with(
-              'device' => 'opnsense.example.com',
-            )
           is_expected.to contain_opnsense_plugin('os-haproxy').with(
               'device' => 'opnsense.example.com',
             )

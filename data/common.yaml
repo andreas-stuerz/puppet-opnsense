@@ -12,7 +12,6 @@ opnsense::haproxy:
   backends: {}
   frontends: {}
 opnsense::required_plugins:
-  "os-firewall": {}
   "os-haproxy": {}
   "os-node_exporter": {}
 opnsense::api_manager_prefix: "%{fqdn} api manager - "

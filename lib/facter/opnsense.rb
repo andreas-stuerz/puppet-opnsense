@@ -7,7 +7,7 @@ Facter.add(:opnsense) do
     end
 
     facts = {}
-    opn_ver = Facter::Core::Execution.exec("#{opnsense_version} -NAVvfH")
+    opn_ver = Facter::Core::Execution.exec("#{opnsense_version} -NAVvH")
     if opn_ver
       facts['name'] = opn_ver.split(' ')[0]
       facts['architecture'] = opn_ver.split(' ')[1]
@@ -15,8 +15,7 @@ Facter.add(:opnsense) do
       release['major'] = opn_ver.split(' ')[2]
       release['full'] = opn_ver.split(' ')[3]
       release['minor'] = opn_ver.split(' ')[3].split('.')[2]
-      release['flavour'] = opn_ver.split(' ')[4]
-      release['hash'] = opn_ver.split(' ')[5]
+      release['hash'] = opn_ver.split(' ')[4]
       facts['release'] = release if release
     end
 
